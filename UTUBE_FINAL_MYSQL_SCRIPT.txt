@@ -1,0 +1,98 @@
+DROP DATABASE utube;
+
+CREATE DATABASE utube;
+
+CREATE TABLE users (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    	username VARCHAR(50) UNIQUE NOT NULL,
+    	password VARCHAR(255) NOT NULL,
+    	email VARCHAR(50) NOT NULL,
+    	first_name VARCHAR(50) NOT NULL,
+    	last_name VARCHAR(50) NOT NULL,
+	user_photo_url VARCHAR(255) NOT NULL,
+    	PRIMARY KEY (id)
+	);
+
+CREATE TABLE follows (
+	follower_id INT UNSIGNED NOT NULL,
+    	followed_id INT UNSIGNED NOT NULL,
+    	PRIMARY KEY (follower_id,followed_id),
+    	FOREIGN KEY (follower_id) REFERENCES users(id),
+    	FOREIGN KEY (followed_id) REFERENCES users(id)
+	);
+    
+CREATE TABLE videos (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+   	title VARCHAR(100) NOT NULL,
+    	description VARCHAR(200),
+    	date_added DATETIME NOT NULL,
+    	uploader_id INT UNSIGNED NOT NULL,
+	video_url VARCHAR(255),
+	hidden TINYINT NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY (uploader_id) REFERENCES users(id)
+	);
+    
+CREATE TABLE video_likes_dislikes (
+    	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		likes TINYINT NOT NULL,
+		video_id INT UNSIGNED NOT NULL,
+    	user_id INT UNSIGNED NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY (video_id) REFERENCES videos(id),
+		FOREIGN KEY (user_id) REFERENCES users(id)
+	);
+    
+    
+CREATE TABLE video_comments (
+		id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    	video_id INT UNSIGNED NOT NULL,
+		user_id INT UNSIGNED NOT NULL,
+    	text VARCHAR(255),
+    	date_added DATETIME NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY (video_id) REFERENCES videos(id),
+    	FOREIGN KEY (user_id) REFERENCES users(id)
+	);
+    
+CREATE TABLE comments_likes_dislikes (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	comment_id INT UNSIGNED NOT NULL,
+	user_id INT UNSIGNED NOT NULL,
+    	likes TINYINT NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY (comment_id) REFERENCES video_comments(id),
+	FOREIGN KEY (user_id) REFERENCES users(id)
+	);
+    
+    
+CREATE TABLE playlists (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    	creator_ID INT UNSIGNED NOT NULL,
+    	title VARCHAR(100) NOT NULL,
+    	date_added DATETIME NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY (creator_id) REFERENCES users(id)
+	);
+    
+CREATE TABLE playlists_videos (
+    	playlist_id INT UNSIGNED NOT NULL,
+    	video_id INT UNSIGNED NOT NULL,
+    	PRIMARY KEY (playlist_id, video_id),
+    	FOREIGN KEY (playlist_id) REFERENCES playlists(id),
+   	FOREIGN KEY (video_id) REFERENCES videos(id)
+	);
+
+CREATE TABLE tags (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	name VARCHAR(45),
+	PRIMARY KEY (id)
+	);
+
+CREATE TABLE tags_videos (
+	tag_id INT UNSIGNED NOT NULL,
+	video_id INT UNSIGNED NOT NULL,
+	PRIMARY KEY (tag_id, video_id),
+	FOREIGN KEY (tag_id) REFERENCES tags(id),
+	FOREIGN KEY (video_id) REFERENCES videos(id)
+	);

@@ -22,13 +22,8 @@ class User {
      * @param $firstName
      * @param $lastName
      */
-    public function __construct($username, $password, $email, $firstName, $lastName)
-    {
-        $this->username = $username;
-        $this->password = $password;
-        $this->email = $email;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
+    public function __construct($username, $password, $email, $firstName, $lastName) {
+
     }
 
     /**
@@ -93,6 +88,54 @@ class User {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @param mixed $userPhotoUrl
+     */
+    public function setUserPhotoUrl($userPhotoUrl)
+    {
+        $this->userPhotoUrl = $userPhotoUrl;
     }
 
 

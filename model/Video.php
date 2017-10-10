@@ -12,6 +12,27 @@ class Video {
     private $hidden;
 
     /**
+     * Video constructor.
+     * @param $id
+     * @param $title
+     * @param $description
+     * @param $dateAdded
+     * @param $uploaderID
+     * @param $videoURL
+     */
+    public function __construct($id = null, $title, $description, $dateAdded, $uploaderID, $videoURL)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->description = $description;
+        $this->dateAdded = $dateAdded;
+        $this->uploaderID = $uploaderID;
+        $this->videoURL = $videoURL;
+        $this->hidden = 0;
+    }
+
+
+    /**
      * @return mixed
      */
     public function getId()

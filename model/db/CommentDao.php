@@ -61,22 +61,17 @@ class CommentDao {
      */
     public function checkIfCommentIsLikedOrDislikedByUser($commentId, $userId) {
         //check if this comment has either like or dislike from the current user
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as number FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?");
+        $statement = $this->pdo->prepare("SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?");
         $statement->execute(array($commentId, $userId));
-        $recordExist = $statement->fetch(\PDO::FETCH_ASSOC)['number'] > 0;
-        $resultArray = array();
-        //if has any of them, check if it is a like or dislike
-        if ($recordExist) {
-            $statement = $this->pdo->prepare("SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?");
-            $statement->execute(array($commentId, $userId));
-            $result = $statement->fetch(\PDO::FETCH_ASSOC)['likes'];
-            if ($result == 1) {
-                return $resultArray['hasLike'] = true;
-            } else {
-                return $resultArray['hasDislike'] = true;
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        if (isset($result['likes'])) {
+            if ($result['likes'] == 1) {
+                return true;
+            } else if ($result['likes'] == 0) {
+                return false;
             }
         } else {
-            return $resultArray['hasLike'] = null;
+            return null;
         }
     }
 
@@ -86,14 +81,14 @@ class CommentDao {
      * @return bool
      */
     public function likeComment($commentId, $userId) {
-        $resultArray = $this->checkIfCommentIsLikedOrDislikedByUser($commentId, $userId);
+        $likes = $this->checkIfCommentIsLikedOrDislikedByUser($commentId, $userId);
 
         //if comment is not liked on pressing button 'like' like is added
-        if ($resultArray['hasLike'] = null) {
+        if ($likes == null) {
             $statement = $this->pdo->prepare("INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)");
             $result = $statement->execute(array($commentId, $userId));
             return $result;
-        } else if ($resultArray['hasLike'] == true) {
+        } else if ($likes == true) {
             //if already liked on pressing button 'like' again the like is removed
             $statement = $this->pdo->prepare("DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?");
             $result = $statement->execute(array($commentId, $userId));
@@ -107,14 +102,14 @@ class CommentDao {
      * @return bool
      */
     public function dislikeComment($commentId, $userId) {
-        $resultArray = $this->checkIfCommentIsLikedOrDislikedByUser($commentId, $userId);
+        $likes = $this->checkIfCommentIsLikedOrDislikedByUser($commentId, $userId);
 
         //if comment is not disliked on pressing button 'dislike' dislike is added
-        if ($resultArray['hasLike'] = null) {
+        if ($likes == null) {
             $statement = $this->pdo->prepare("INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 0)");
             $result = $statement->execute(array($commentId, $userId));
             return $result;
-        } else if ($resultArray['hasDislike'] == true) {
+        } else if ($likes == true) {
             //if already disliked on pressing button 'dislike' again the dislike is removed
             $statement = $this->pdo->prepare("DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?");
             $result = $statement->execute(array($commentId, $userId));

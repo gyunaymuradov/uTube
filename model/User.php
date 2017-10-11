@@ -22,7 +22,7 @@ class User {
      * @param $firstName
      * @param $lastName
      */
-    public function __construct($username, $password, $email, $firstName, $lastName) {
+    public function __construct() {
 
     }
 

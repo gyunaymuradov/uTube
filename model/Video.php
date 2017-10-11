@@ -20,7 +20,7 @@ class Video {
      * @param $uploaderID
      * @param $videoURL
      */
-    public function __construct($id = null, $title, $description, $dateAdded, $uploaderID, $videoURL)
+    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL)
     {
         $this->id = $id;
         $this->title = $title;

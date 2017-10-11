@@ -5,10 +5,10 @@ namespace model\db;
 class DBManager {
     private static $instance;
     private $pdo;
-    const DB_IP = "";
-    const DB_PORT = "";
-    const DB_NAME = "";
-    const DB_USER = "";
+    const DB_IP = "127.0.0.1";
+    const DB_PORT = "3306";
+    const DB_NAME = "utube";
+    const DB_USER = "root";
     const DB_PASS = "";
 
     private function __construct() {
@@ -16,7 +16,6 @@ class DBManager {
             $this->pdo = new \PDO('mysql:host=' . self::DB_IP . ':' . self::DB_PORT . ';dbname='
                                     . self::DB_NAME, self::DB_USER, self::DB_PASS);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $this->pdo->query("USE" . self::DB_NAME);
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

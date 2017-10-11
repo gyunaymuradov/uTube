@@ -61,6 +61,19 @@ class UserDao {
         return $statement->fetch(\PDO::FETCH_ASSOC);
     }
 
+    public function getUserById($id) {
+        $statement = $this->pdo->prepare("SELECT username, first_name, last_name, email FROM users WHERE id = ?");
+        $statement->execute(array($id));
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        $user = new User();
+        $user->setUsername($result['username']);
+        $user->setFirstName($result['first_name']);
+        $user->setLastName($result['last_name']);
+        $user->setEmail($result['email']);
+
+        return $user;
+    }
+
     /**
      * @param User $user
      * @return array

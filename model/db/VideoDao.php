@@ -55,8 +55,8 @@ class VideoDao {
         $statement = $this->pdo->prepare("SELECT title, description, date_added, uploader_id, video_url, hidden FROM videos WHERE id=?");
         $statement->execute(array($videoID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $video = new Video($result['title'], $result['description'], $result['date_added'], $result['uploader_id'], $result['video_url']);
-        $video->setId($videoID);
+        $video = new Video($videoID, $result['title'], $result['description'], $result['date_added'], $result['uploader_id'], $result['video_url']);
+//        $video->setId($videoID);
         $video->setHidden($result['hidden']);
         return $video;
     }

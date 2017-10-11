@@ -123,6 +123,4 @@ class User {
     {
         $this->userPhotoUrl = $userPhotoUrl;
     }
-
-    
 }

@@ -37,7 +37,7 @@ class UserDao {
         }
         return $result;
     }
-    
+
     /**
      * @param User $user
      * @return bool

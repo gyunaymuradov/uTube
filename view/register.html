@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Register</title>
+    </head>
+    <body>
+        <form action="../controller/register.php" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <td>First name: </td>
+                    <td><input type="text" name="firstName"></td>
+                </tr>
+                <tr>
+                    <td>Last name: </td>
+                    <td><input type="text" name="lastName"></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td><input type="email" name="email"></td>
+                </tr>
+                <tr>
+                    <td>Username: </td>
+                    <td><input type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td>Confirm password: </td>
+                    <td><input type="password" name="confirmPass"></td>
+                </tr>
+                <tr>
+                    <td>Profile photo: </td>
+                    <td><input type="file" name="photo"></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="register" value="Register"></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

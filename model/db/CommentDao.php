@@ -35,7 +35,7 @@ class CommentDao {
      * @return array of Comment objects
      */
     public function getCommentsByVideoId($id) {
-        $statement = $this->pdo->prepare("SELECT u.username, c.id c.text FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC");
+        $statement = $this->pdo->prepare("SELECT u.username, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC");
         $statement->execute(array($id));
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -47,6 +47,7 @@ class CommentDao {
                 $comment->setId($currentComment['id']);
                 $comment->setCreatorUsername($currentComment['username']);
                 $comment->setText($currentComment['text']);
+                $comment->setDateAdded($currentComment['date_added']);
                 $comments[] = $comment;
             }
             return $comments;

@@ -9,6 +9,7 @@ use \PDO;
 class TagDao {
     private static $instance;
     private $pdo;
+    const GET_TAGS_BY_ID = "SELECT name FROM tags WHERE id=?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -22,24 +23,12 @@ class TagDao {
     }
 
     /**
-     * Returns id of a tag by given name
-     * @param string $tagName
-     * @return mixed
-     */
-    function getTagIdByName($tagName) {
-        $statement = $this->pdo->prepare("SELECT id FROM tags WHERE name=?");
-        $statement->execute(array($tagName));
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        return $result['id'];
-    }
-
-    /**
      * Returns name of a tag by given id
      * @param int $tagID
      * @return mixed
      */
     function getTagNameById($tagID) {
-        $statement = $this->pdo->prepare("SELECT name FROM tags WHERE id=?");
+        $statement = $this->pdo->prepare(self::GET_TAGS_BY_ID);
         $statement->execute(array($tagID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $result['name'];

@@ -3,9 +3,7 @@
 use model\db\CommentDao;
 use model\db\UserDao;
 use model\db\VideoDao;
-use model\Video;
 use model\Comment;
-use model\User;
 
 function __autoload($className) {
        $className = '..\\' . $className;
@@ -26,14 +24,14 @@ function __autoload($className) {
     $dateAdded = $video->getDateAdded();
 
     $uploaderId = $video->getUploaderID();
-    $uploader = $userModel->getUserById($uploaderId);
+    $uploader = $userModel->getById($uploaderId);
     $uploaderUsername = $uploader->getUsername();
     $uploaderFirstName = $uploader->getFirstName();
     $uploaderLastName = $uploader->getLastName();
     $uploaderEmail = $uploader->getEmail();
 
     /* @var $comments Comment[] */
-    $comments = $commentModel->getCommentsByVideoId(5);
+    $comments = $commentModel->getByVideoId(5);
 
 ?>
 

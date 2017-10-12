@@ -27,7 +27,7 @@ if (isset($_POST['register'])) {
         $user->setUserPhotoUrl('/uploads/default_photo.png');
     }
 
-    $success = $userModel->insertUser($user);
+    $success = $userModel->insert($user);
     if ($success) {
         header('Location:../view/index.php');
     } else {

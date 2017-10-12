@@ -19,7 +19,7 @@ if (isset($_POST['login'])) {
     $user = new User();
     $user->setUsername($username);
     $user->setPassword($password);
-    $result = $userModel->loginUser($user);
+    $result = $userModel->login($user);
     if ($result === false) {
         echo "Invalid username or password.";
         require_once '../view/login.html';

@@ -10,6 +10,29 @@ use \PDOException;
 class VideoDao {
     private static $instance;
     private $pdo;
+    const INSERT_VIDEO = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, hidden) VALUES (?, ?, ?, ?, ?, ?)";
+    const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
+    const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
+    const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
+    const GET_BY_ID ="SELECT title, description, date_added, uploader_id, video_url, hidden FROM videos WHERE id=?";
+    const GET_N_RANDOM = "SELECT id, title, description, date_added, uploader_id, video_url FROM videos WHERE hidden=0 ORDER BY RAND() LIMIT ?";
+    const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url 
+                                    FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
+    const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url 
+                                          FROM videos WHERE uploader_id=? ORDER BY date_added DESC LIMIT ?";
+    const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE '%?%' LIMIT 5";
+    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url 
+                            FROM videos WHERE title LIKE '%?%' ORDER BY date_added DESC LIMIT ?";
+    const IS_LIKED_OR_DISLIKED = "SELECT likes FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const LIKE = "INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
+    const UNLIKE = "DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const DISLIKE = "INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 0)";
+    const UNDISLIKE = "DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const GET_LIKE_COUNT = "SELECT COUNT(*) as likes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 1";
+    const GET_DISLIKE_COUNT = "SELECT COUNT(*) as dislikes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 0";
+    const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
+    const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url 
+                            FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -27,14 +50,20 @@ class VideoDao {
      * @param Video $video
      * @param array $tagIDs
      */
-    public function insertVideo(Video $video, Array $tagIDs) {
+    public function insert(Video $video, Array $tagIDs) {
         try {
             $this->pdo->beginTransaction();
-            $statement = $this->pdo->prepare("INSERT INTO videos (title, description, date_added, uploader_id, video_url, hidden) VALUES (?, ?, ?, ?, ?, ?)");
-            $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getDateAdded(), $video->getUploaderID(), $video->getVideoURL(), $video->getHidden()));
+            $statement = $this->pdo->prepare(self::INSERT_VIDEO);
+            $statement->execute(array($video->getTitle(),
+                                        $video->getDescription(),
+                                        $video->getDateAdded(),
+                                        $video->getUploaderID(),
+                                        $video->getVideoURL(),
+                                        $video->getHidden()
+                                        ));
             $video->setId($this->pdo->lastInsertId());
             foreach ($tagIDs as $tagID) {
-                $statement = $this->pdo->prepare("INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)");
+                $statement = $this->pdo->prepare(self::INSERT_TAGS);
                 $statement->execute(array($tagID, $video->getId()));
             }
             $this->pdo->commit();
@@ -48,11 +77,51 @@ class VideoDao {
     }
 
     /**
+     * Converts PDO SQL Result Set to an Array of Video Objects
+     * or one Video Object depending on elements in sqlResultSet
+     * @param array $sqlResultSet
+     * @return array|Video
+     */
+    private function sqlResultToVideoArray(Array $sqlResultSet) {
+
+        if(isset($sqlResultSet[0])) {
+            $videosArray = array();
+            foreach ($sqlResultSet as $key => $value) {
+                $tags = $this->getTags($sqlResultSet[$key]['id']);
+                $videosArray[] = new Video(
+                    $sqlResultSet[$key]['id'],
+                    $sqlResultSet[$key]['title'],
+                    $sqlResultSet[$key]['description'],
+                    $sqlResultSet[$key]['date_added'],
+                    $sqlResultSet[$key]['uploader_id'],
+                    $sqlResultSet[$key]['video_url'],
+                    $tags
+                );
+            }
+            return $videosArray;
+        }
+        else {
+            $tags = $this->getTags($sqlResultSet['id']);
+            $video = new Video(
+                $sqlResultSet['id'],
+                $sqlResultSet['title'],
+                $sqlResultSet['description'],
+                $sqlResultSet['date_added'],
+                $sqlResultSet['uploader_id'],
+                $sqlResultSet['video_url'],
+                $tags
+            );
+            $video->setHidden($sqlResultSet['hidden']);
+            return $video;
+        }
+    }
+
+    /**
      * Delete video from DB by Video id
      * @param int $videoID
      */
-    public function deleteVideo($videoID) {
-        $statement = $this->pdo->prepare("UPDATE TABLE videos SET hidden=1 WHERE id = ?");
+    public function delete($videoID) {
+        $statement = $this->pdo->prepare(self::DELETE_VIDEO);
         $statement->execute(array($videoID));
     }
 
@@ -60,8 +129,8 @@ class VideoDao {
      * Edit video in DB
      * @param Video $video
      */
-    public function editVideo(Video $video) {
-        $statement = $this->pdo->prepare("UPDATE TABLE videos SET title=?, description=? WHERE id=?");
+    public function edit(Video $video) {
+        $statement = $this->pdo->prepare(self::EDIT_VIDEO);
         $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getId()));
     }
 
@@ -70,13 +139,11 @@ class VideoDao {
      * @param int $videoID
      * @return Video
      */
-    public function getOneVideo($videoID) {
-        $statement = $this->pdo->prepare("SELECT title, description, date_added, uploader_id, video_url, hidden FROM videos WHERE id=?");
+    public function getByID($videoID) {
+        $statement = $this->pdo->prepare(self::GET_BY_ID);
         $statement->execute(array($videoID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $video = new Video($videoID, $result['title'], $result['description'], $result['date_added'], $result['uploader_id'], $result['video_url']);
-        $video->setHidden($result['hidden']);
-        return $video;
+        return $this->sqlResultToVideoArray($result);
     }
 
     /**
@@ -84,15 +151,11 @@ class VideoDao {
      * @param int $numberOfVideos
      * @return array
      */
-    public function getNRandomVideos($numberOfVideos){
-        $statement = $this->pdo->prepare("SELECT id, title, description, date_added, uploader_id, video_url FROM videos WHERE hidden=0 ORDER BY RAND() LIMIT ?");
+    public function getNRandom($numberOfVideos){
+        $statement = $this->pdo->prepare(self::GET_N_RANDOM);
         $statement->execute(array($numberOfVideos));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $videosArray = array();
-        foreach ($result as $key=>$value) {
-            $videosArray[] = new Video($result[$key]['id'], $result[$key]['title'], $result[$key]['description'], $result[$key]['date_added'], $result[$key]['uploader_id'], $result[$key]['video_url']);
-        }
-        return $videosArray;
+        return $this->sqlResultToVideoArray($result);
     }
 
     /**
@@ -101,15 +164,11 @@ class VideoDao {
      * @param int $tagID
      * @return array
      */
-    public function getNRandomVideosByTagID($numberOfVideos, $tagID){
-        $statement = $this->pdo->prepare("SELECT id, title, description, date_added, uploader_id, video_url FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?");
+    public function getNRandomByTagID($numberOfVideos, $tagID){
+        $statement = $this->pdo->prepare(self::GET_N_RANDOM_BY_TAG_ID);
         $statement->execute(array($tagID, $numberOfVideos));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $videosArray = array();
-        foreach ($result as $key=>$value) {
-            $videosArray[] = new Video($result[$key]['id'], $result[$key]['title'], $result[$key]['description'], $result[$key]['date_added'], $result[$key]['uploader_id'], $result[$key]['video_url']);
-        }
-        return $videosArray;
+        return $this->sqlResultToVideoArray($result);
     }
 
     /**
@@ -118,15 +177,11 @@ class VideoDao {
      * @param int $uploaderID
      * @return array
      */
-    public function getNLatestVideosByUploaderID($numberOfVideos, $uploaderID){
-        $statement = $this->pdo->prepare("SELECT id, title, description, date_added, uploader_id, video_url FROM videos WHERE uploader_id=? ORDER BY date_added DESC LIMIT ?");
+    public function getNLatestByUploaderID($numberOfVideos, $uploaderID){
+        $statement = $this->pdo->prepare( self::GET_N_LATEST_BY_UPLOADER_ID);
         $statement->execute(array($uploaderID, $numberOfVideos));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $videosArray = array();
-        foreach ($result as $key=>$value) {
-            $videosArray[] = new Video($result[$key]['id'], $result[$key]['title'], $result[$key]['description'], $result[$key]['date_added'], $result[$key]['uploader_id'], $result[$key]['video_url']);
-        }
-        return $videosArray;
+        return $this->sqlResultToVideoArray($result);
     }
 
     /**
@@ -135,8 +190,8 @@ class VideoDao {
      * @param string $partOfVideoName
      * @return array
      */
-    public function getVideoNameSuggestionsForSearch($partOfVideoName) {
-    $statement = $this->pdo->prepare("SELECT title FROM videos WHERE title LIKE '%?%' LIMIT 5");
+    public function getNameSuggestions($partOfVideoName) {
+    $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
     $statement->execute(array($partOfVideoName));
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     $videosNamesArray = array();
@@ -152,15 +207,11 @@ class VideoDao {
      * @param int $numberOfVideos
      * @return array
      */
-    public function getNVideosByName($videoName, $numberOfVideos) {
-        $statement = $this->pdo->prepare("SELECT id, title, description, date_added, uploader_id, video_url FROM videos WHERE title LIKE '%?%' ORDER BY date_added DESC LIMIT ?");
+    public function getNByName($videoName, $numberOfVideos) {
+        $statement = $this->pdo->prepare(self::GET_N_BY_NAME);
         $statement->execute(array($videoName, $numberOfVideos));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $videosArray = array();
-        foreach ($result as $key=>$value) {
-            $videosArray[] = new Video($result[$key]['id'], $result[$key]['title'], $result[$key]['description'], $result[$key]['date_added'], $result[$key]['uploader_id'], $result[$key]['video_url']);
-        }
-        return $videosArray;
+        return $this->sqlResultToVideoArray($result);
     }
 
     /**
@@ -171,8 +222,8 @@ class VideoDao {
      * @param int $userID
      * @return bool|null
      */
-    public function isVideoLikedOrDislikedByUser($videoID, $userID) {
-        $statement = $this->pdo->prepare("SELECT likes FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?");
+    public function isLikedOrDislikedByUser($videoID, $userID) {
+        $statement = $this->pdo->prepare(self::IS_LIKED_OR_DISLIKED);
         $statement->execute(array($videoID, $userID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (isset($result['likes'])) {
@@ -196,17 +247,17 @@ class VideoDao {
      * @param int $videoID
      * @param int $userID
      */
-    public function likeVideo($videoID, $userID) {
-        $likes = $this->isVideoLikedOrDislikedByUser($videoID, $userID);
+    public function like($videoID, $userID) {
+        $likes = $this->isLikedOrDislikedByUser($videoID, $userID);
 
         //if video is not liked on pressing button 'like' like is added
         if ($likes == null) {
-            $statement = $this->pdo->prepare("INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)");
+            $statement = $this->pdo->prepare(self::LIKE);
             $statement->execute(array($videoID, $userID));
         }
         elseif ($likes == true) {
             //if already liked on pressing button 'like' again the like is removed
-            $statement = $this->pdo->prepare("DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?");
+            $statement = $this->pdo->prepare(self::UNLIKE);
             $statement->execute(array($videoID, $userID));
         }
     }
@@ -216,18 +267,18 @@ class VideoDao {
      * @param int $videoID
      * @param int $userID
      */
-    public function dislikeVideo($videoID, $userID) {
-        $likes = $this->isVideoLikedOrDislikedByUser($videoID, $userID);
+    public function dislike($videoID, $userID) {
+        $likes = $this->isLikedOrDislikedByUser($videoID, $userID);
 
         //if comment is not disliked on pressing button 'dislike' dislike is added
         if ($likes == null) {
-            $statement = $this->pdo->prepare("INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 0)");
+            $statement = $this->pdo->prepare(self::DISLIKE);
             $statement->execute(array($videoID, $userID));
 
         }
         elseif ($likes == false) {
             //if already disliked on pressing button 'dislike' again the dislike is removed
-            $statement = $this->pdo->prepare("DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?");
+            $statement = $this->pdo->prepare(self::UNDISLIKE);
             $statement->execute(array($videoID, $userID));
 
         }
@@ -238,8 +289,8 @@ class VideoDao {
      * @param $videoID
      * @return mixed
      */
-    public function getVideoLikesCountById($videoID) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as likes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 1");
+    public function getLikesCountById($videoID) {
+        $statement = $this->pdo->prepare(self::GET_LIKE_COUNT);
         $statement->execute(array($videoID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $result['likes_count'];
@@ -250,11 +301,35 @@ class VideoDao {
      * @param $videoID
      * @return mixed
      */
-    public function getVideoDislikesCountById($videoID) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as dislikes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 0");
+    public function getDislikesCountById($videoID) {
+        $statement = $this->pdo->prepare(self::GET_DISLIKE_COUNT);
         $statement->execute(array($videoID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $result['dislikes_count'];
     }
+
+    /**
+     * Return array of all tags for Video
+     * @param int $videoID
+     * @return array
+     */
+    public function getTags($videoID) {
+        $statement = $this->pdo->prepare(self::GET_TAGS);
+        $statement->execute(array($videoID));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $tags = array();
+        foreach ($result as $key=>$value) {
+            $tags[] = $result[$key]['tag_id'];
+        }
+        return $tags;
+    }
+
+    public function getByPlaylist($playlistID) {
+        $statement = $this->pdo->prepare(self::GET_BY_PLAYLIST);
+        $statement->execute(array($playlistID));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $this->sqlResultToVideoArray($result);
+    }
+
 
 }

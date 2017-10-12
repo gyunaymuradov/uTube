@@ -2,13 +2,27 @@
 
 namespace model\db;
 
-use model\db\DBManager;
 use model\User;
 use PDO;
 
 class UserDao {
+
     private static $instance;
     private $pdo;
+
+    const LOGIN = "SELECT id, username, email, first_name, last_name FROM users WHERE username = ? AND password = ?";
+    const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?)";
+    const EDIT = "UPDATE TABLE users SET (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?";
+    const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
+    const SEARCH_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE '%?%'";
+    const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url FROM users WHERE id = ?";
+    const GET_SUBSCRIBERS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
+    const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
+    const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
+    const GET_SUBSCRIPTIONS_COUNT = "SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
+    const FOLLOW = "INSERT INTO follows (follower_id, followed_id) VALUES (?, ?)";
+    const UNFOLLOW = "DELETE FROM follows WHERE follower_id = ? AND followed_id = ?";
+    const CHECK_IF_FOLLOWED = "SELECT COUNT(*) as number FROM follows WHERE followed_id = ? AND follower_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -25,14 +39,18 @@ class UserDao {
      * @param User $user
      * @return mixed|User
      */
-    public function loginUser(User $user) {
-        $statement = $this->pdo->prepare("SELECT id, username FROM users WHERE username = ? AND password = ?");
+    public function login(User $user) {
+        $statement = $this->pdo->prepare(self::LOGIN);
         $statement->execute(array($user->getUsername(), $user->getPassword()));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (!empty($result)) {
             $userFromDb = new User();
-            $userFromDb->setUsername($result['username']);
             $userFromDb->setId($result['id']);
+            $userFromDb->setUsername($result['username']);
+            $userFromDb->setEmail($result['email']);
+            $userFromDb->setFirstName($result['first_name']);
+            $userFromDb->setLastName($result['last_name']);
+            $userFromDb->setSubscriptions(self::getSubscribers($result['id']));
             return $userFromDb;
         }
         return $result;
@@ -42,9 +60,11 @@ class UserDao {
      * @param User $user
      * @return bool
      */
-    public function insertUser(User $user) {
-        $statement = $this->pdo->prepare("INSERT INTO users (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?)");
-        $result = $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl()));
+    public function insert(User $user) {
+        $statement = $this->pdo->prepare(self::INSERT);
+        $result = $statement->execute(array(
+            $user->getUsername(), $user->getPassword(), $user->getEmail(),
+            $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl()));
         return $result;
     }
 
@@ -52,19 +72,19 @@ class UserDao {
      * @param User $user
      * @return bool
      */
-    public function editUser(User $user) {
-        $statement = $this->pdo->prepare("UPDATE TABLE users SET (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?");
+    public function edit(User $user) {
+        $statement = $this->pdo->prepare(self::EDIT);
         $result = $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl(), $user->getId()));
         return $result;
     }
 
     /**
-     * @param User $user
+     * @param string $username
      * @return bool
      */
-    public function checkIfUserAlreadyExists(User $user) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as number FROM users WHERE username = ?");
-        $statement->execute(array($user->getUsername()));
+    public function checkIfExists($username) {
+        $statement = $this->pdo->prepare(self::CHECK_FOR_USERNAME);
+        $statement->execute(array($username));
         return $statement->fetch(PDO::FETCH_ASSOC)['number'] > 0;
     }
 
@@ -73,95 +93,101 @@ class UserDao {
      * @return array
      */
     // will be implemented to search with ajax on key up event later
-    public function searchUsersByUsername($username) {
-        $statement = $this->pdo->prepare("SELECT id, username FROM users WHERE username LIKE '%?%'");
+    public function searchByUsername($username) {
+        $statement = $this->pdo->prepare(self::SEARCH_BY_USERNAME);
         $statement->execute(array($username));
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getUserById($id) {
-        $statement = $this->pdo->prepare("SELECT username, first_name, last_name, email FROM users WHERE id = ?");
+    /**
+     * @param $id
+     * @return User
+     */
+    public function getById($id) {
+        $statement = $this->pdo->prepare(self::GET_BY_ID);
         $statement->execute(array($id));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $user = new User();
+        $user->setId($id);
         $user->setUsername($result['username']);
         $user->setFirstName($result['first_name']);
         $user->setLastName($result['last_name']);
         $user->setEmail($result['email']);
+        $user->setUserPhotoUrl($result['user_photo_url']);
 
         return $user;
     }
 
     /**
-     * @param User $user
+     * @param int $id
      * @return array
      */
-    public function getFollowersByFollowedId(User $user) {
-        $statement = $this->pdo->prepare("SELECT u.id, u.username FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?");
-        $statement->execute(array($user->getId()));
+    public function getSubscribers($id) {
+        $statement = $this->pdo->prepare(self::GET_SUBSCRIBERS);
+        $statement->execute(array($id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * @param User $user
-     * @return array
-     */
-    public function getFollowedUsersByFollowerId(User $user) {
-        $statement = $this->pdo->prepare("SELECT u.id, u.username FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?");
-        $statement->execute(array($user->getId()));
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @param User $user
+     * @param int $id
      * @return int
      */
-    public function getFollowedUsersCountByFollowerId(User $user) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?");
-        $statement->execute(array($user->getId()));
-        return $statement->fetch(PDO::FETCH_ASSOC)['followed_count'];
-    }
-
-    /**
-     * @param User $user
-     * @return int
-     */
-    public function getFollowersCountByFollowedId(User $user) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?");
-        $statement->execute(array($user->getId()));
+    public function getSubscribersCount($id) {
+        $statement = $this->pdo->prepare(self::GET_SUBSCRIBERS_COUNT);
+        $statement->execute(array($id));
         return $statement->fetch(PDO::FETCH_ASSOC)['follower_count'];
     }
 
     /**
-     * @param User $follower
-     * @param User $followed
+     * @param int $id
+     * @return array
+     */
+    public function getSubscriptions($id) {
+        $statement = $this->pdo->prepare(self::GET_SUBSCRIPTIONS);
+        $statement->execute(array($id));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     */
+    public function getSubscriptionsCount($id) {
+        $statement = $this->pdo->prepare(self::GET_SUBSCRIPTIONS_COUNT);
+        $statement->execute(array($id));
+        return $statement->fetch(PDO::FETCH_ASSOC)['followed_count'];
+    }
+
+    /**
+     * @param int $followerId
+     * @param int $followedId
      * @return bool
      */
-    public function followUser (User $follower, User $followed) {
-        $statement = $this->pdo->prepare("INSERT INTO follows (follower_id, followed_id) VALUES (?, ?)");
-        $result = $statement->execute(array($follower->getId(), $followed->getId()));
+    public function follow ($followerId, $followedId) {
+        $statement = $this->pdo->prepare(self::FOLLOW);
+        $result = $statement->execute(array($followerId, $followedId));
         return $result;
     }
 
     /**
-     * @param User $follower
-     * @param User $followed
+     * @param int $followerId
+     * @param int $followedId
      * @return bool
      */
-    public function unfollowUser (User $follower, User $followed) {
-        $statement = $this->pdo->prepare("DELETE FROM follows WHERE follower_id = ? AND followed_id = ?");
-        $result = $statement->execute(array($follower->getId(), $followed->getId()));
+    public function unfollow ($followerId, $followedId) {
+        $statement = $this->pdo->prepare(self::UNFOLLOW);
+        $result = $statement->execute(array($followerId, $followedId));
         return $result;
     }
 
     /**
-     * @param User $followed
-     * @param User $follower
+     * @param int $followedId
+     * @param int $followerId
      * @return bool
      */
-    public function checkIfUserIsFollowedByCurrentUser(User $followed, User $follower) {
-        $statement = $this->pdo->prepare("SELECT COUNT(*) as number FROM follows WHERE followed_id = ? AND follower_id = ?");
-        $statement->execute(array($followed->getId(), $follower->getId()));
+    public function checkIfUFollowed($followedId, $followerId) {
+        $statement = $this->pdo->prepare(self::CHECK_IF_FOLLOWED);
+        $statement->execute(array($followedId, $followerId));
         return $statement->fetch(PDO::FETCH_ASSOC)['number'] > 0;
     }
 }

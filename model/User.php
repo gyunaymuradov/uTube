@@ -11,6 +11,23 @@ class User {
     private $firstName;
     private $lastName;
     private $userPhotoUrl;
+    private $subscriptions;
+
+    /**
+     * @return mixed
+     */
+    public function getSubscriptions()
+    {
+        return $this->subscriptions;
+    }
+
+    /**
+     * @param mixed $subscriptions
+     */
+    public function setSubscriptions($subscriptions)
+    {
+        $this->subscriptions = $subscriptions;
+    }
 
     /**
      * @return mixed

@@ -10,12 +10,12 @@ class UserDao {
     private static $instance;
     private $pdo;
 
-    const LOGIN = "SELECT id, username, email, first_name, last_name FROM users WHERE username = ? AND password = ?";
-    const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?)";
+    const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ? AND password = ?";
+    const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const EDIT = "UPDATE TABLE users SET (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?";
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const SEARCH_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE '%?%'";
-    const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url FROM users WHERE id = ?";
+    const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
     const GET_SUBSCRIBERS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
@@ -50,7 +50,10 @@ class UserDao {
             $userFromDb->setEmail($result['email']);
             $userFromDb->setFirstName($result['first_name']);
             $userFromDb->setLastName($result['last_name']);
-            $userFromDb->setSubscriptions(self::getSubscribers($result['id']));
+            $userFromDb->setUserPhotoUrl($result['user_photo_url']);
+            $userFromDb->setDateJoined($result['date_joined']);
+            $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
+            $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
             return $userFromDb;
         }
         return $result;
@@ -64,7 +67,8 @@ class UserDao {
         $statement = $this->pdo->prepare(self::INSERT);
         $result = $statement->execute(array(
             $user->getUsername(), $user->getPassword(), $user->getEmail(),
-            $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl()));
+            $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl(),
+            $user->getDateJoined()));
         return $result;
     }
 
@@ -114,6 +118,7 @@ class UserDao {
         $user->setLastName($result['last_name']);
         $user->setEmail($result['email']);
         $user->setUserPhotoUrl($result['user_photo_url']);
+        $user->setDateJoined($result['date_joined']);
 
         return $user;
     }
@@ -185,7 +190,7 @@ class UserDao {
      * @param int $followerId
      * @return bool
      */
-    public function checkIfUFollowed($followedId, $followerId) {
+    public function checkIfFollowed($followedId, $followerId) {
         $statement = $this->pdo->prepare(self::CHECK_IF_FOLLOWED);
         $statement->execute(array($followedId, $followerId));
         return $statement->fetch(PDO::FETCH_ASSOC)['number'] > 0;

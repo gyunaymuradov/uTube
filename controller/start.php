@@ -11,6 +11,24 @@ function __autoload($className) {
     require_once $className . '.php';
 }
 
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $userModel = UserDao::getInstance();
+    $user = new User();
+    $user->setUsername($username);
+    $user->setPassword($password);
+    $result = $userModel->login($user);
+    if ($result === false) {
+        echo "Invalid username or password.";
+        require_once '../view/start.html';
+    } else {
+        $_SESSION['user'] = $result;
+        header("Location:../view/main.php");
+    }
+}
+
 if (isset($_POST['register'])) {
     $userModel = UserDao::getInstance();
     $user = new User();
@@ -19,6 +37,7 @@ if (isset($_POST['register'])) {
     $user->setEmail($_POST['email']);
     $user->setUsername($_POST['username']);
     $user->setPassword($_POST['password']);
+    $user->setDateJoined(date("Y-m-d"));
     if (isset($_FILES['photo'])) {
         $name = basename($_FILES["photo"]["name"]);
         move_uploaded_file($_FILES['photo']['tmp_name'], '../uploads/' . $name);
@@ -29,10 +48,11 @@ if (isset($_POST['register'])) {
 
     $success = $userModel->insert($user);
     if ($success) {
-        header('Location:../view/index.php');
+        $_SESSION['user'] = $user;
+        header('Location:../view/main.php');
     } else {
         echo "Registration was unsuccessful. Try again.";
-        require_once '../view/register.html';
+        require_once '../view/start.html';
     }
 
 }

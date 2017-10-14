@@ -11,7 +11,9 @@ class User {
     private $firstName;
     private $lastName;
     private $userPhotoUrl;
+    private $subscribers;
     private $subscriptions;
+    private $dateJoined;
 
     /**
      * @return mixed
@@ -27,6 +29,24 @@ class User {
     public function setSubscriptions($subscriptions)
     {
         $this->subscriptions = $subscriptions;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getSubscribers()
+    {
+        return $this->subscribers;
+    }
+
+    /**
+     * @param mixed $subscribers
+     */
+    public function setSubscribers($subscribers)
+    {
+        $this->subscribers = $subscribers;
     }
 
     /**
@@ -140,4 +160,22 @@ class User {
     {
         $this->userPhotoUrl = $userPhotoUrl;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDateJoined()
+    {
+        return $this->dateJoined;
+    }
+
+    /**
+     * @param mixed $dateJoined
+     */
+    public function setDateJoined($dateJoined)
+    {
+        $this->dateJoined = $dateJoined;
+    }
+
+
 }

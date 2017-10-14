@@ -1,7 +1,5 @@
 <?php
-
 namespace model;
-
 class Video {
     private $id;
     private $title;
@@ -9,8 +7,9 @@ class Video {
     private $dateAdded;
     private $uploaderID;
     private $videoURL;
+    private $thumbnailURL;
     private $hidden;
-
+    private $tags;
     /**
      * Video constructor.
      * @param $id
@@ -19,8 +18,9 @@ class Video {
      * @param $dateAdded
      * @param $uploaderID
      * @param $videoURL
+     * @param $tags
      */
-    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL)
+    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tags)
     {
         $this->id = $id;
         $this->title = $title;
@@ -28,10 +28,10 @@ class Video {
         $this->dateAdded = $dateAdded;
         $this->uploaderID = $uploaderID;
         $this->videoURL = $videoURL;
+        $this->thumbnailURL = $thumbnailURL;
         $this->hidden = 0;
+        $this->tags = $tags;
     }
-
-
     /**
      * @return mixed
      */
@@ -39,7 +39,6 @@ class Video {
     {
         return $this->id;
     }
-
     /**
      * @param mixed $id
      */
@@ -47,7 +46,6 @@ class Video {
     {
         $this->id = $id;
     }
-
     /**
      * @return mixed
      */
@@ -55,7 +53,6 @@ class Video {
     {
         return $this->title;
     }
-
     /**
      * @param mixed $title
      */
@@ -63,7 +60,6 @@ class Video {
     {
         $this->title = $title;
     }
-
     /**
      * @return mixed
      */
@@ -71,7 +67,6 @@ class Video {
     {
         return $this->description;
     }
-
     /**
      * @param mixed $description
      */
@@ -79,7 +74,6 @@ class Video {
     {
         $this->description = $description;
     }
-
     /**
      * @return mixed
      */
@@ -87,7 +81,6 @@ class Video {
     {
         return $this->dateAdded;
     }
-
     /**
      * @param mixed $dateAdded
      */
@@ -95,7 +88,6 @@ class Video {
     {
         $this->dateAdded = $dateAdded;
     }
-
     /**
      * @return mixed
      */
@@ -103,7 +95,6 @@ class Video {
     {
         return $this->uploaderID;
     }
-
     /**
      * @param mixed $uploaderID
      */
@@ -111,7 +102,6 @@ class Video {
     {
         $this->uploaderID = $uploaderID;
     }
-
     /**
      * @return mixed
      */
@@ -119,7 +109,6 @@ class Video {
     {
         return $this->videoURL;
     }
-
     /**
      * @param mixed $videoURL
      */
@@ -127,7 +116,6 @@ class Video {
     {
         $this->videoURL = $videoURL;
     }
-
     /**
      * @return mixed
      */
@@ -135,13 +123,42 @@ class Video {
     {
         return $this->hidden;
     }
-
     /**
      * @param mixed $hidden
      */
     public function setHidden($hidden)
     {
         $this->hidden = $hidden;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+    /**
+     * @param mixed $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getThumbnailURL()
+    {
+        return $this->thumbnailURL;
+    }
+
+    /**
+     * @param mixed $thumbnailURL
+     */
+    public function setThumbnailURL($thumbnailURL)
+    {
+        $this->thumbnailURL = $thumbnailURL;
     }
 
 

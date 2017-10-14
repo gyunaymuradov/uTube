@@ -10,6 +10,7 @@ CREATE TABLE users (
     	first_name VARCHAR(50) NOT NULL,
     	last_name VARCHAR(50) NOT NULL,
 	user_photo_url VARCHAR(255) NOT NULL,
+	date_joined DATE NOT NULL,
     	PRIMARY KEY (id)
 	);
 
@@ -27,7 +28,8 @@ CREATE TABLE videos (
     	description VARCHAR(200),
     	date_added DATETIME NOT NULL,
     	uploader_id INT UNSIGNED NOT NULL,
-	video_url VARCHAR(255),
+	video_url VARCHAR(255) NOT NULL,
+	thumbnail_url VARCHAR(255) NOT NULL,
 	hidden TINYINT NOT NULL,
     	PRIMARY KEY (id),
     	FOREIGN KEY (uploader_id) REFERENCES users(id)
@@ -71,6 +73,7 @@ CREATE TABLE playlists (
     	creator_ID INT UNSIGNED NOT NULL,
     	title VARCHAR(100) NOT NULL,
     	date_added DATETIME NOT NULL,
+	thumbnail_url VARCHAR(255) NOT NULL,
     	PRIMARY KEY (id),
     	FOREIGN KEY (creator_id) REFERENCES users(id)
 	);

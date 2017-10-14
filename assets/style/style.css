@@ -1,0 +1,31 @@
+body {
+    padding-top: 25px;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+.img-circle {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 75px
+}
+
+.margin-5 {
+    display: inline-block;
+    margin: 5px 0px;
+}
+
+.subImg {
+    width: 25px;
+    height: auto;
+}
+
+.margin-center {
+    display: inline-block;
+    margin: 0 auto;
+}
+.date_style {
+    font-style: italic;
+}

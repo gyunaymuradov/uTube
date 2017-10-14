@@ -8,6 +8,7 @@ class Playlist {
     private $dateAdded;
     private $creatorID;
     private $videosIDs;
+    private $thumbnailURL;
 
     /**
      * Playlist constructor.
@@ -15,13 +16,15 @@ class Playlist {
      * @param $dateAdded
      * @param $creatorID
      * @param $videoIDs
+     * @param $thumbnailURL
      */
-    public function __construct($title, $dateAdded, $creatorID, Array $videoIDs)
+    public function __construct($title, $dateAdded, $creatorID, Array $videoIDs, $thumbnailURL)
     {
         $this->title = $title;
         $this->dateAdded = $dateAdded;
         $this->creatorID = $creatorID;
-        $this->videosIDs[] = $videoIDs;
+        $this->videosIDs = $videoIDs;
+        $this->thumbnailURL = $thumbnailURL;
 
     }
 
@@ -105,6 +108,23 @@ class Playlist {
     {
         $this->videosIDs = $videosIDs;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThumbnailURL()
+    {
+        return $this->thumbnailURL;
+    }
+
+    /**
+     * @param mixed $thumbnailURL
+     */
+    public function setThumbnailURL($thumbnailURL)
+    {
+        $this->thumbnailURL = $thumbnailURL;
+    }
+
 
 
 }

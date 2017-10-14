@@ -136,6 +136,7 @@ class PlaylistDao {
      * @return array
      */
     public function getNLatestByCreatorID($numberOfPlaylists, $creatorID){
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_LATEST_BY_CREATOR);
         $statement->execute(array($creatorID, $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -148,6 +149,7 @@ class PlaylistDao {
      * @return array
      */
     public function getNByVideoID($numberOfPlaylists, $videoID) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_VIDEO_ID);
         $statement->execute(array($videoID, $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -160,6 +162,7 @@ class PlaylistDao {
      * @return array
      */
     public function getNByVideoName($numberOfPlaylists, $videoName) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_VIDEO_NAME);
         $statement->execute(array($videoName, $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -188,6 +191,7 @@ class PlaylistDao {
      * @return array
      */
     public function getNByName($playlistName, $numberOfPlaylists) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_NAME);
         $statement->execute(array($playlistName, $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);

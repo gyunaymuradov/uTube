@@ -38,7 +38,8 @@ if (isset($_POST['register'])) {
     $user->setUsername($_POST['username']);
     $user->setPassword($_POST['password']);
     $user->setDateJoined(date("Y-m-d"));
-    if (isset($_FILES['photo'])) {
+
+    if (!empty($_FILES['photo'])) {
         $name = basename($_FILES["photo"]["name"]);
         move_uploaded_file($_FILES['photo']['tmp_name'], '../uploads/' . $name);
         $user->setUserPhotoUrl('/uploads/' . $name);

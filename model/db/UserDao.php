@@ -12,7 +12,7 @@ class UserDao {
 
     const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ? AND password = ?";
     const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const EDIT = "UPDATE TABLE users SET (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?";
+    const EDIT = "UPDATE users SET (username, password, email, first_name, last_name, user_photo_url) VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?";
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const SEARCH_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE '%?%'";
     const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";

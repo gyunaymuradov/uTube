@@ -10,3 +10,10 @@ function getEditForm(userId) {
     };
     request.send();
 }
+
+function checkIfLogged() {
+    var logged = document.getElementById('logged').value;
+    if (logged == 'false') {
+        alert('Please sign in to gain full access!');
+    }
+}

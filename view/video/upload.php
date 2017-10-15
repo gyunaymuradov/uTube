@@ -1,12 +1,6 @@
-<?php
-require_once 'components/header.php';
-require_once 'components/nav.php';
-
-?>
-
 <div class="col-md-10 justify-content-center text-center">
-    <h1>Upload an video</h1>
-    <form enctype="multipart/form-data" method="post" action="../controller/uploadVideoController.php">
+    <h1>Upload a video</h1>
+    <form enctype="multipart/form-data" method="post" action="index.php?page=upload.php">
         <div class="form-group">
         <input type="file" name="videoFile" class="form-control margin-center">
         </div>
@@ -20,9 +14,4 @@ require_once 'components/nav.php';
         <input type="submit" name="Submit" value="Upload Video" class="btn btn-info btn-md col-lg-12">
         </div>
     </form>
-
 </div>
-
-<?php
-require_once 'components/footer.php';
-?>

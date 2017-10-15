@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Getting started</title>
-        <link rel="stylesheet" href="../assets/style/getting_started.css" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="../assets/js/getting_started_js.js"></script>
+        <link rel="stylesheet" href="assets/style/getting_started.css" type="text/css">
+        <link rel="stylesheet" href="assets/style/library/bootstrap.min.css">
+        <script src="assets/js/library/jquery.min.js"></script>
+        <script src="assets/js/library/bootstrap.min.js"></script>
+        <script src="assets/js/getting_started_js.js"></script>
 
     </head>
     <body>
@@ -17,7 +17,7 @@
                 <div class="jumbotron" id="jumbo">
                     <h3 class="text-center">Please sign in or sign up to get all the benefits from the website</h3>
                     <div class="text-center">
-                        <img src="../assets/images/logo.png" width="130" height="auto">
+                        <img src="assets/images/logo.png" width="130" height="auto">
                     </div>
                 </div>
                 <div class="panel panel-login">
@@ -35,7 +35,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <form id="login-form" action="../controller/start.php" method="post" role="form" style="display: block;">
+                                <form id="login-form" action="index.php?page=login" method="post" role="form" style="display: block;">
                                     <div class="form-group">
                                         <input type="text" name="username" tabindex="1" class="form-control" placeholder="Username">
                                     </div>
@@ -50,7 +50,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <form id="register-form" action="../controller/start.php" method="post" role="form" style="display: none;" enctype="multipart/form-data">
+                                <form id="register-form" action="index.php?page=register" method="post" role="form" style="display: none;" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <input type="text" name="username" tabindex="1" class="form-control" placeholder="Username" value="">
                                     </div>

@@ -2,12 +2,6 @@
 use \model\db\UserDao;
 use \model\User;
 
-function __autoload($className) {
-    $className = '..\\' . $className;
-    $className = str_replace("\\", "/", $className);
-    require_once $className . '.php';
-}
-
 $userId = isset($_GET['id']) ? $_GET['id'] : '';
 
 $userDao = UserDao::getInstance();

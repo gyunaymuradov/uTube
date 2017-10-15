@@ -21,16 +21,18 @@ class VideoDao {
     const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE ? LIMIT 5";
     const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                             FROM videos WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
-    const IS_LIKED_OR_DISLIKED = "SELECT likes FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
-    const LIKE = "INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
-    const UNLIKE = "DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
-    const DISLIKE = "INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 0)";
-    const UNDISLIKE = "DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
-    const GET_LIKE_COUNT = "SELECT COUNT(*) as likes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 1";
-    const GET_DISLIKE_COUNT = "SELECT COUNT(*) as dislikes_count FROM videos_likes_dislikes WHERE video_id = ? AND likes = 0";
+    const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const LIKE = "INSERT INTO video_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
+    const UNLIKE = "DELETE FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const UPDATE_LIKE_DISLIKE = "UPDATE video_likes_dislikes SET likes = ? WHERE video_id = ? AND user_id = ?";
+    const DISLIKE = "INSERT INTO video_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 0)";
+    const UNDISLIKE = "DELETE FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
+    const GET_LIKE_COUNT = "SELECT COUNT(*) as likes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 1";
+    const GET_DISLIKE_COUNT = "SELECT COUNT(*) as dislikes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 0";
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
     const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
+
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
     }
@@ -221,14 +223,11 @@ class VideoDao {
         $statement->execute(array($videoID, $userID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (isset($result['likes'])) {
-            if ($result['likes'] == 1) {
+            if ($result['likes'] == '1') {
                 return true;
             }
-            elseif ($result['likes'] == 0) {
+            elseif ($result['likes'] == '0') {
                 return false;
-            }
-            else {
-                return null;
             }
         }
         else {
@@ -243,7 +242,7 @@ class VideoDao {
     public function like($videoID, $userID) {
         $likes = $this->isLikedOrDislikedByUser($videoID, $userID);
         //if video is not liked on pressing button 'like' like is added
-        if ($likes == null) {
+        if (is_null($likes)) {
             $statement = $this->pdo->prepare(self::LIKE);
             $statement->execute(array($videoID, $userID));
         }
@@ -251,6 +250,9 @@ class VideoDao {
             //if already liked on pressing button 'like' again the like is removed
             $statement = $this->pdo->prepare(self::UNLIKE);
             $statement->execute(array($videoID, $userID));
+        } else {
+            $statement = $this->pdo->prepare(self::UPDATE_LIKE_DISLIKE);
+            $statement->execute(array('1', $videoID, $userID));
         }
     }
     /**
@@ -261,7 +263,7 @@ class VideoDao {
     public function dislike($videoID, $userID) {
         $likes = $this->isLikedOrDislikedByUser($videoID, $userID);
         //if comment is not disliked on pressing button 'dislike' dislike is added
-        if ($likes == null) {
+        if (is_null($likes)) {
             $statement = $this->pdo->prepare(self::DISLIKE);
             $statement->execute(array($videoID, $userID));
         }
@@ -269,6 +271,9 @@ class VideoDao {
             //if already disliked on pressing button 'dislike' again the dislike is removed
             $statement = $this->pdo->prepare(self::UNDISLIKE);
             $statement->execute(array($videoID, $userID));
+        } else {
+            $statement = $this->pdo->prepare(self::UPDATE_LIKE_DISLIKE);
+            $statement->execute(array('0', $videoID, $userID));
         }
     }
     /**

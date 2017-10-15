@@ -12,20 +12,21 @@ class Playlist {
 
     /**
      * Playlist constructor.
+     * @param $id
      * @param $title
      * @param $dateAdded
      * @param $creatorID
      * @param $videoIDs
      * @param $thumbnailURL
      */
-    public function __construct($title, $dateAdded, $creatorID, Array $videoIDs, $thumbnailURL)
+    public function __construct($id, $title, $dateAdded, $creatorID, $thumbnailURL, Array $videoIDs)
     {
+        $this->id = $id;
         $this->title = $title;
         $this->dateAdded = $dateAdded;
         $this->creatorID = $creatorID;
-        $this->videosIDs = $videoIDs;
         $this->thumbnailURL = $thumbnailURL;
-
+        $this->videosIDs = $videoIDs;
     }
 
 

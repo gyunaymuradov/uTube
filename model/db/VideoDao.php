@@ -12,15 +12,15 @@ class VideoDao {
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
     const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
-    const GET_BY_ID ="SELECT title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
+    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
     const GET_N_RANDOM = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url FROM videos WHERE hidden=0 ORDER BY RAND() LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                           FROM videos WHERE uploader_id=? ORDER BY date_added DESC LIMIT ?";
-    const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE '%?%' LIMIT 5";
+    const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE ? LIMIT 5";
     const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                            FROM videos WHERE title LIKE '%?%' ORDER BY date_added DESC LIMIT ?";
+                            FROM videos WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO videos_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
     const UNLIKE = "DELETE FROM videos_likes_dislikes WHERE video_id = ? AND user_id = ?";
@@ -95,7 +95,7 @@ class VideoDao {
             }
             return $videosArray;
         }
-        else {
+        elseif (isset($sqlResultSet['id'])) {
             $tags = $this->getTags($sqlResultSet['id']);
             $video = new Video(
                 $sqlResultSet['id'],
@@ -109,6 +109,9 @@ class VideoDao {
             );
             $video->setHidden($sqlResultSet['hidden']);
             return $video;
+        }
+        else {
+            return array();
         }
     }
     /**
@@ -184,7 +187,7 @@ class VideoDao {
      */
     public function getNameSuggestions($partOfVideoName) {
         $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
-        $statement->execute(array($partOfVideoName));
+        $statement->execute(array("%$partOfVideoName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         $videosNamesArray = array();
         foreach ($result as $key=>$value) {
@@ -201,7 +204,7 @@ class VideoDao {
     public function getNByName($videoName, $numberOfVideos) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_NAME);
-        $statement->execute(array($videoName, $numberOfVideos));
+        $statement->execute(array("%$videoName%", $numberOfVideos));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToVideoArray($result);
     }

@@ -13,15 +13,15 @@ class PlaylistDao {
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
     const UPDATE_TITLE = "UPDATE TABLE playlists SET title=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
-    const GET_BY_ID = "SELECT title, date_added, creator_id thumbnail_url FROM playlists WHERE id=?";
+    const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id=?";
     const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY date_added DESC LIMIT ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
                             FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos WHERE video_id=?) LIMIT ?";
     const GET_N_BY_VIDEO_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url
                                   FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos 
-                                  WHERE video_id IN (SELECT id FROM videos WHERE title LIKE '%?%')) LIMIT ?";
-    const GET_NAME_SUGGESTIONS = "SELECT title FROM playlists WHERE title LIKE '%?%' LIMIT 5";
-    const GET_N_BY_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE title LIKE '%?%' ORDER BY date_added DESC LIMIT ?";
+                                  WHERE video_id IN (SELECT id FROM videos WHERE title LIKE ?)) LIMIT ?";
+    const GET_NAME_SUGGESTIONS = "SELECT title FROM playlists WHERE title LIKE ? LIMIT 5";
+    const GET_N_BY_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
         $this->videoDao = VideoDao::getInstance();
@@ -38,6 +38,7 @@ class PlaylistDao {
      * @return array|Playlist
      */
     private function sqlResultToPlaylistArray(Array $sqlResultSet) {
+        var_dump($sqlResultSet);
         if(isset($sqlResultSet[0])) {
             $playlistsArray = array();
             foreach ($sqlResultSet as $key=>$value) {
@@ -47,23 +48,26 @@ class PlaylistDao {
                     $sqlResultSet[$key]['title'],
                     $sqlResultSet[$key]['date_added'],
                     $sqlResultSet[$key]['creator_id'],
-                    $sqlResultSet[$key]['thumbnail_id'],
+                    $sqlResultSet[$key]['thumbnail_url'],
                     $videosArray
                 );
             }
             return $playlistsArray;
         }
-        else {
+        elseif (isset($sqlResultSet['id'])) {
             $videosArray = $this->videoDao->getByPlaylist($sqlResultSet['id']);
             $playlist = new Playlist(
                 $sqlResultSet['id'],
                 $sqlResultSet['title'],
                 $sqlResultSet['date_added'],
                 $sqlResultSet['creator_id'],
-                $sqlResultSet['thumbnail_id'],
+                $sqlResultSet['thumbnail_url'],
                 $videosArray
             );
             return $playlist;
+        }
+        else {
+            return array();
         }
     }
     /**
@@ -164,7 +168,7 @@ class PlaylistDao {
     public function getNByVideoName($numberOfPlaylists, $videoName) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_VIDEO_NAME);
-        $statement->execute(array($videoName, $numberOfPlaylists));
+        $statement->execute(array("%$videoName%", $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }
@@ -176,7 +180,7 @@ class PlaylistDao {
      */
     public function getNameSuggestions($partOfPlaylistName) {
         $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
-        $statement->execute(array($partOfPlaylistName));
+        $statement->execute(array("%$partOfPlaylistName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         $playlistsNamesArray = array();
         foreach ($result as $key=>$value) {
@@ -193,7 +197,7 @@ class PlaylistDao {
     public function getNByName($playlistName, $numberOfPlaylists) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_BY_NAME);
-        $statement->execute(array($playlistName, $numberOfPlaylists));
+        $statement->execute(array("%$playlistName%", $numberOfPlaylists));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }

@@ -11,9 +11,9 @@
                         <div><label>Added On: </label><?= $params['dateAdded']; ?></div>
                         <div><label>Uploaded by: </label><?= $params['uploader']; ?></div>
                     </div>
-                    <div class="col-md-4 col-md-offset-4">
-                        <button class="btn btn-info btn-md col-lg-6"><span class="glyphicon glyphicon-thumbs-up"></span> Like</button>
-                        <button class="btn btn-info btn-md col-lg-6"><span class="glyphicon glyphicon-thumbs-down"></span> Dislike</button>
+                    <div class="col-md-5 col-md-offset-3">
+                        <button class="btn btn-default btn-md col-lg-6" onclick="like(<?= $params['userId']; ?>)"><span class="glyphicon glyphicon-thumbs-up"></span> Like <span class="badge" id="like">6</span></button>
+                        <button class="btn btn-default btn-md col-lg-6" onclick="<!-- TODO -->"><span class="glyphicon glyphicon-thumbs-down"></span> Dislike <span class="badge" id="dislike">12</span></button>
                     </div>
                 </div>
             </div>
@@ -21,7 +21,7 @@
 
                 <div class="well-sm row bg-info">
                     <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="../assets/images/thumbnail.jpg">
+                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
                     </div>
                     <div class="col-md-4 text-left no-padding suggestions-video-text">
                         <label>Video Title 1</label>
@@ -31,7 +31,7 @@
 
                 <div class="well-sm row bg-info">
                     <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="../assets/images/thumbnail.jpg">
+                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
                     </div>
                     <div class="col-md-4 text-left no-padding suggestions-video-text">
                         <label>Video Title 2</label>
@@ -41,7 +41,7 @@
 
                 <div class="well-sm row bg-info">
                     <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="../assets/images/thumbnail.jpg">
+                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
                     </div>
                     <div class="col-md-4 text-left no-padding suggestions-video-text">
                         <label>Video Title 3</label>
@@ -51,7 +51,7 @@
 
                 <div class="well-sm row bg-info">
                     <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="../assets/images/thumbnail.jpg">
+                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
                     </div>
                     <div class="col-md-4 text-left no-padding suggestions-video-text">
                         <label>Video Title 4</label>

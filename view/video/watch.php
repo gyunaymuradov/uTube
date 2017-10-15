@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="col-md-4 well pre-scrollable">
-
+                <h4>Suggestions:</h4>
                 <div class="well-sm row bg-info">
                     <div class="col-md-8">
                         <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
@@ -76,10 +76,12 @@
             <div class="row bg-info margin-5">
                 <div class="col-md-10">
                     <label>Username 1</label>
-                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                        Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                        purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                    <p class="date_style">dd-mm-yyyy</p>
+                    <div class="well-sm">
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
+                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
+                        <p class="date_style">dd-mm-yyyy</p>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>
@@ -90,13 +92,15 @@
             <div class="row bg-info margin-5">
                 <div class="col-md-10">
                     <label>Username 2</label>
-                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                        Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                        purus lectus malesuada libero, sit amet commodo magna eros quis urna.
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                        Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                        purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                    <p class="date_style">dd-mm-yyyy</p>
+                    <div class="well-sm">
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
+                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
+                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
+                        <p class="date_style">dd-mm-yyyy</p>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>
@@ -107,10 +111,12 @@
             <div class="row bg-info margin-5">
                 <div class="col-md-10">
                     <label>Username 3</label>
-                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                        Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                        purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                    <p class="date_style">dd-mm-yyyy</p>
+                    <div class="well-sm">
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
+                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
+                        <p class="date_style">dd-mm-yyyy</p>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>

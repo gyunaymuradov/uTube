@@ -18,13 +18,13 @@ function __autoload($className) {
         $controller = new controller\UserController();
         $controller->viewUserAction();
     }
+    else if($page === 'edit-profile') {
+        $controller = new controller\UserController();
+        $controller->editProfileAction();
+    }
     else if($page === 'subscribe') {
         $controller = new controller\UserController();
         $controller->subscribeAction();
-    }
-    else if($page === 'edit-form') {
-        $controller = new controller\UserController();
-        $controller->getEditFormAction();
     }
     else if($page === 'login-register') {
         $controller = new controller\UserController();

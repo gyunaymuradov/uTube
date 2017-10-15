@@ -146,35 +146,65 @@ class UserController extends BaseController {
     }
 
     public function editProfileAction() {
-        $userId = $_GET['id'];
-
         $userDao = UserDao::getInstance();
+        $user = new User();
 
-        /* @var $user User */
-        $user = $userDao->getById($userId);
-        $username = $user->getUsername();
-        $firstName = $user->getFirstName();
-        $lastName = $user->getLastName();
-        $email = $user->getEmail();
-    }
+        if (isset($_POST['edit'])) {
+            $userId = $_POST['userId'];
+            $username = $_POST['username'];
+            $firstName = $_POST['firstName'];
+            $lastName = $_POST['lastName'];
+            $email = $_POST['email'];
+            $newPass = $_POST['newPass'];
+            $confirmNewPass = $_POST['confirmNewPass'];
+            $oldPass = $_POST['oldPass'];
+            $image = $_FILES['photo'];
 
-    public function getEditFormAction() {
-        $userId = $_GET['id'];
+            $user->setId($userId);
+            $user->setUsername($username);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setEmail($email);
+            $user->setUserPhotoUrl($image);
+            $user->setPassword($newPass);
 
-        $userDao = UserDao::getInstance();
-        /* @var $user User */
-        $user = $userDao->getById($userId);
-        $username = $user->getUsername();
-        $firstName = $user->getFirstName();
-        $lastName = $user->getLastName();
-        $email = $user->getEmail();
+            $success = $userDao->edit($user);
 
-        $this->jsonEncodeParams([
-            'username' => $username,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'email' => $email,
-        ]);
+            if ($success) {
+                $user = $userDao->getById($userId);
+                $_SESSION['user'] = $user;
+                $userPhoto = $user->getUserPhotoUrl();
+                $firstName = $user->getFirstName();
+                $lastName = $user->getLastName();
+                $username = $user->getUsername();
+                $userId = $user->getId();
+                $email = $user->getEmail();
+                $dateJoined = $user->getDateJoined();
+
+                $videoDao = VideoDao::getInstance();
+                $videos = $videoDao->getNLatestByUploaderID(10, $userId);
+                $subscribersCount = $userDao->getSubscribersCount($userId);
+                $subscriptionsCount = $userDao->getSubscriptionsCount($userId);
+
+                header('Location:index.php?page=profile&id=' . $userId);
+            }
+        } else {
+            $userId = $_GET['id'];
+            /* @var $user User */
+            $user = $userDao->getById($userId);
+            $username = $user->getUsername();
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
+            $email = $user->getEmail();
+
+            $this->renderPartial('user/edit-profile' ,[
+                'userId' => $userId,
+                'username' => $username,
+                'firstName' => $firstName,
+                'lastName' => $lastName,
+                'email' => $email,
+            ]);
+        }
     }
 
     public function viewProfileAction() {

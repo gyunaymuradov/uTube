@@ -1,5 +1,13 @@
 function getEditForm(userId) {
-
+    var request = new XMLHttpRequest();
+    var formDiv = document.getElementById('menu2');
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            formDiv.innerHTML = this.responseText;
+        }
+    };
+    request.open('GET', 'http://localhost/uTube/root/index.php?page=edit-profile&id=' + userId);
+    request.send();
 }
 
 function subscribe(profileId) {

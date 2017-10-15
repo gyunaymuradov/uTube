@@ -38,7 +38,6 @@ class PlaylistDao {
      * @return array|Playlist
      */
     private function sqlResultToPlaylistArray(Array $sqlResultSet) {
-        var_dump($sqlResultSet);
         if(isset($sqlResultSet[0])) {
             $playlistsArray = array();
             foreach ($sqlResultSet as $key=>$value) {

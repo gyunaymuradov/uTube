@@ -1,43 +1,26 @@
-<?php
-use \model\db\UserDao;
-use \model\User;
-
-$userId = isset($_GET['id']) ? $_GET['id'] : '';
-
-$userDao = UserDao::getInstance();
-
-/* @var $user User */
-$user = $userDao->getById($userId);
-$username = $user->getUsername();
-$firstName = $user->getFirstName();
-$lastName = $user->getLastName();
-$email = $user->getEmail();
-
-?>
-
-<form method="post" enctype="multipart/form-data">
+<form method="post" action="#" enctype="multipart/form-data">
     <div class="form-group row margin-top">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="username" value="<?= $username; ?>">
+            <input type="text" class="form-control" id="username" value="<?= $params['username']; ?>">
         </div>
     </div>
     <div class="form-group row">
         <label for="firstName" class="col-sm-4 col-form-label  col-sm-offset-2">First name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="firstName" value="<?= $firstName; ?>">
+            <input type="text" class="form-control" id="firstName" value="<?= $params['firstName']; ?>">
         </div>
     </div>
     <div class="form-group row">
         <label for="lastName" class="col-sm-4 col-form-label  col-sm-offset-2">Last name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="lastName" value="<?= $lastName; ?>">
+            <input type="text" class="form-control" id="lastName" value="<?= $params['lastName']; ?>">
         </div>
     </div>
     <div class="form-group row">
         <label for="email" class="col-sm-4 col-form-label  col-sm-offset-2">Email</label>
         <div class="col-sm-4">
-            <input type="email" class="form-control" id="email" value="<?= $email; ?>">
+            <input type="email" class="form-control" id="email" value="<?= $params['email']; ?>">
         </div>
     </div>
     <div class="form-group row">

@@ -8,8 +8,6 @@
         </div>
         <div class="col-md-4 col-md-offset-2">
             <h3 class="text-muted"><?= $params['subscribersCount']; ?> <small> subscribers</small></h3>
-            <button class="btn btn-info" style="display: <?= $params['subscribeBtnVisibility'] ?>" onclick="checkIfLogged()" id="subscribe">Subscribe</button>
-            <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
         </div>
     </div>
     <div class="row margin-top">

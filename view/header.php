@@ -7,6 +7,7 @@
         <script src="assets/js/library/jquery.min.js"></script>
         <script src="assets/js/library/bootstrap.min.js"></script>
         <script src="assets/js/profile.js"></script>
+        <script src="assets/js/video.js"></script>
         <link rel="stylesheet" href="assets/style/style.css" type="text/css">
         <title>uTube</title>
     </head>

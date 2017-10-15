@@ -3,6 +3,7 @@
 namespace controller;
 
 use model\db\UserDao;
+use model\User;
 use model\db\VideoDao;
 
 class VideoController extends BaseController {
@@ -15,12 +16,13 @@ class VideoController extends BaseController {
     }
 
     public function upload() {
-        // TODO add the upload logic
     }
     
     public function watchAction() {
+
         $videoId = $_GET['id'];
         $videoDao = VideoDao::getInstance();
+
         $video = $videoDao->getByID($videoId);
         $videoUrl = $video->getVideoURL();
         $videoTitle = $video->getTitle();
@@ -30,13 +32,49 @@ class VideoController extends BaseController {
         $userDao = UserDao::getInstance();
         $uploader = $userDao->getById($uploaderId)->getUsername();
 
+        $likes = $videoDao->getLikesCountById($videoId);
+        $dislikes = $videoDao->getDislikesCountById($videoId);
+        $logged = 'false';
+        $loggedUserId = null;
+        if (isset($_SESSION['user'])) {
+            /* @var $loggedUser User */
+            $loggedUser = $_SESSION['user'];
+            $loggedUserId = $loggedUser->getId();
+            $logged = 'true';
+        }
+
         $this->render('video/watch', [
+            'videoId' => $videoId,
             'videoUrl' => $videoUrl,
             'videoTitle' => $videoTitle,
             'videoDescription' => $videoDescription,
             'dateAdded' => $dateAdded,
-            'uploader' => $uploader
+            'uploader' => $uploader,
+            'likes' => $likes,
+            'dislikes' => $dislikes,
+            'loggedUserId' => $loggedUserId,
+            'logged' => $logged,
         ]);
     }
 
+    public function likeDislikeAction() {
+        $videoId = $_GET['video-id'];
+        $userId = $_GET['user-id'];
+        $likeDislike = $_GET['like'];
+        $result = '';
+        $videoDao = VideoDao::getInstance();
+        if ($likeDislike == '1') {
+            $videoDao->like($videoId, $userId);
+        } else {
+            $videoDao->dislike($videoId, $userId);
+        }
+
+        $likes = $videoDao->getLikesCountById($videoId);
+        $dislikes = $videoDao->getDislikesCountById($videoId);
+
+        $this->jsonEncodeParams([
+            'likes' => $likes,
+            'dislikes' => $dislikes
+        ]);
+    }
 }

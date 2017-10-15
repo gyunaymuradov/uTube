@@ -12,8 +12,10 @@
                         <div><label>Uploaded by: </label><?= $params['uploader']; ?></div>
                     </div>
                     <div class="col-md-5 col-md-offset-3">
-                        <button class="btn btn-default btn-md col-lg-6" onclick="like(<?= $params['userId']; ?>)"><span class="glyphicon glyphicon-thumbs-up"></span> Like <span class="badge" id="like">6</span></button>
-                        <button class="btn btn-default btn-md col-lg-6" onclick="<!-- TODO -->"><span class="glyphicon glyphicon-thumbs-down"></span> Dislike <span class="badge" id="dislike">12</span></button>
+                        <button class="btn btn-default btn-md col-lg-6" onclick="likeDislike(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span> Like <span class="badge" id="like"><?= $params['likes']; ?></span></button>
+                        <button class="btn btn-default btn-md col-lg-6" onclick="likeDislike(<?= $params['videoId']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span> Dislike <span class="badge" id="dislike"><?= $params['dislikes']; ?></span></button>
+                        <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
+                        <input type="hidden" id="loggedUserId" value="<?= $params['loggedUserId']; ?>">
                     </div>
                 </div>
             </div>

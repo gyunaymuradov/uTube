@@ -46,6 +46,10 @@ function __autoload($className) {
         $controller = new controller\UserController();
         $controller->logoutAction();
     }
+    else if($page === 'like-video') {
+        $controller = new controller\VideoController();
+        $controller->likeDislikeAction();
+    }
     else if($page === 'watch') {
         $controller = new controller\VideoController();
         $controller->watchAction();

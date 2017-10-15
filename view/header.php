@@ -9,6 +9,7 @@
         <script src="assets/js/library/bootstrap.min.js"></script>
         <script src="assets/js/profile.js"></script>
         <script src="assets/js/nav.js"></script>
+        <script src="assets/js/video.js"></script>
         <link rel="stylesheet" href="assets/style/style.css" type="text/css">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />

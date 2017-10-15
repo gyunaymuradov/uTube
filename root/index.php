@@ -10,9 +10,21 @@ function __autoload($className) {
 
     $page = isset($_GET['page']) ? $_GET['page'] : null;
     
-    if($page === 'profile' && (!empty($_SESSION['user']) || !empty($_GET['id']))) {
+    if($page === 'profile') {
         $controller = new controller\UserController();
         $controller->viewProfileAction();
+    }
+    else if($page === 'user') {
+        $controller = new controller\UserController();
+        $controller->viewUserAction();
+    }
+    else if($page === 'subscribe') {
+        $controller = new controller\UserController();
+        $controller->subscribeAction();
+    }
+    else if($page === 'edit-form') {
+        $controller = new controller\UserController();
+        $controller->getEditFormAction();
     }
     else if($page === 'login-register') {
         $controller = new controller\UserController();

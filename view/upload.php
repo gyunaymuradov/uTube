@@ -3,7 +3,7 @@ require_once 'components/header.php';
 require_once 'components/nav.php';
 
 ?>
-
+<h1>TEST</h1>
 <div class="col-md-10 justify-content-center text-center">
     <h1>Upload an video</h1>
     <form enctype="multipart/form-data" method="post" action="../controller/uploadVideoController.php">

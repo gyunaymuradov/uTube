@@ -3,12 +3,11 @@
 namespace controller;
 
 use \model\User;
-use \model\db\UserDao;
 
 class BaseController {
 
     public function __construct() {
-        // add some logic here
+
     }
 
     public function render($file, $params = []) {
@@ -32,8 +31,12 @@ class BaseController {
         require_once '../view/footer.php';
     }
 
-    public function renderPartial($file, array $params = []) {
+    public function renderPartial($file, $params = []) {
         require_once '../view/' . $file . '.php';
+    }
+
+    public function jsonEncodeParams($params = []) {
+        echo json_encode($params);
     }
 
 }

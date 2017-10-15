@@ -3,26 +3,13 @@
 namespace controller;
 
 use model\db\UserDao;
+use model\db\VideoDao;
 use model\User;
 
 class UserController extends BaseController {
 
     public function __construct() {
 
-    }
-
-    public function logoutAction() {
-        session_start();
-        session_destroy();
-        header('Location:index.php');
-    }
-    
-    public function loginRegisterAction() {
-        $this->renderPartial('user/login-register');
-    }
-
-    public function registerSuccess() {
-        $this->renderPartial('user/register-success');
     }
 
     public function registerAction() {
@@ -55,6 +42,14 @@ class UserController extends BaseController {
         }
     }
 
+    public function registerSuccess() {
+        $this->renderPartial('user/register-success');
+    }
+
+    public function loginRegisterAction() {
+        $this->renderPartial('user/login-register');
+    }
+
     public function loginAction() {
         if (isset($_POST['login'])) {
             $username = $_POST['username'];
@@ -76,32 +71,117 @@ class UserController extends BaseController {
         }
     }
 
+    public function logoutAction() {
+        session_start();
+        session_destroy();
+        header('Location:index.php');
+    }
+
+    public function subscribeAction() {
+        $loggedUserId = $_GET['loggedId'];
+        $profileId = $_GET['profileId'];
+
+        /* @var $userDao UserDao */
+        $userDao = UserDao::getInstance();
+        $alreadyFollowed = $userDao->checkIfFollowed($profileId, $loggedUserId);
+
+        if (!$alreadyFollowed) {
+            $userDao->follow($loggedUserId, $profileId);
+        } else {
+            $userDao->unfollow($loggedUserId, $profileId);
+        }
+
+        $subscribersCount = $userDao->getSubscribersCount($profileId);
+
+        $this->jsonEncodeParams([
+            'subscribers' => $subscribersCount
+        ]);
+    }
+
+    public function viewUserAction() {
+        $profileId = $_GET['id'];
+
+        /* @var $userDao \model\db\UserDao */
+        $userDao = UserDao::getInstance();
+        $user = $userDao->getById($profileId);
+
+        $userPhoto = $user->getUserPhotoUrl();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $username = $user->getUsername();
+        $email = $user->getEmail();
+        $dateJoined = $user->getDateJoined();
+
+        $logged = 'false';
+        $loggedUserId = null;
+        if (isset($_SESSION['user'])) {
+            $logged = 'true';
+            /* @var $loggedUser User */
+            $loggedUser = $_SESSION['user'];
+            $loggedUserId = $loggedUser->getId();
+        }
+
+        /* @var $videoDao VideoDao */
+        $videoDao = VideoDao::getInstance();
+
+        $videos = $videoDao->getNLatestByUploaderID(10, $profileId);
+
+        $subscribersCount = $userDao->getSubscribersCount($profileId);
+        $subscriptionsCount = $userDao->getSubscriptionsCount($profileId);
+
+        $this->render('user/user', [
+            'userPhoto' => $userPhoto,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'username' => $username,
+            'profileId' => $profileId,
+            'email' => $email,
+            'dateJoined' => $dateJoined,
+            'subscribersCount' => $subscribersCount,
+            'subscriptionsCount' => $subscriptionsCount,
+            'logged' => $logged,
+            'videos' => $videos,
+            'loggedUserId' => $loggedUserId
+        ]);
+    }
+
     public function editProfileAction() {
-        
+        $userId = $_GET['id'];
+
+        $userDao = UserDao::getInstance();
+
+        /* @var $user User */
+        $user = $userDao->getById($userId);
+        $username = $user->getUsername();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $email = $user->getEmail();
+    }
+
+    public function getEditFormAction() {
+        $userId = $_GET['id'];
+
+        $userDao = UserDao::getInstance();
+        /* @var $user User */
+        $user = $userDao->getById($userId);
+        $username = $user->getUsername();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $email = $user->getEmail();
+
+        $this->jsonEncodeParams([
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+        ]);
     }
 
     public function viewProfileAction() {
-        /* @var $user \model\User */
-        $user = null;
-        /* @var $userDao \model\db\UserDao */
-        $userDao = \model\db\UserDao::getInstance();
-        $logged = 'false';
-        if (!isset($_SESSION['user'])) {
-            $user = $userDao->getById($_GET['id']);
-        } else {
-            /* @var $loggedUser \model\User */
-            $loggedUser = $_SESSION['user'];
-            $logged = 'true';
-            /* @var $watchedUser \model\User */
-            $watchedUser = $userDao->getById($_GET['id']);
-
-            if ($loggedUser->getId() != $watchedUser->getId()) {
-                $user = $watchedUser;
-            } else {
-                $user = $loggedUser;
-            }
-
-        }
+        /* @var $userDao UserDao */
+        $userDao = UserDao::getInstance();
+        /* @var $user User */
+        $user = $_SESSION['user'];
 
         $userPhoto = $user->getUserPhotoUrl();
         $firstName = $user->getFirstName();
@@ -111,24 +191,15 @@ class UserController extends BaseController {
         $email = $user->getEmail();
         $dateJoined = $user->getDateJoined();
 
-        /* @var $videoDao \model\db\VideoDao */
-        $videoDao = \model\db\VideoDao::getInstance();
+        /* @var $videoDao VideoDao */
+        $videoDao = VideoDao::getInstance();
 
         $videos = $videoDao->getNLatestByUploaderID(10, $userId);
 
         $subscribersCount = $userDao->getSubscribersCount($userId);
         $subscriptionsCount = $userDao->getSubscriptionsCount($userId);
 
-//        $visible = true;
-//        if ($_GET['id'] == $user->getId()) {
-//            $visible = false;
-//        } else {
-//            if (!isset($_SESSION['user'])) {
-//                $class = 'disabled';
-//            }
-//        }
-
-        $this->render('user/view-profile', [
+        $this->render('user/profile', [
             'userPhoto' => $userPhoto,
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -138,9 +209,7 @@ class UserController extends BaseController {
             'dateJoined' => $dateJoined,
             'subscribersCount' => $subscribersCount,
             'subscriptionsCount' => $subscriptionsCount,
-            'videos' => $videos,
-            'logged' => $logged,
-            'subscribeBtnVisibility' => $logged == 'true' && $_SESSION['user']->getId() == $userId ? 'none' : 'block'
+            'videos' => $videos
         ]);
     }
 

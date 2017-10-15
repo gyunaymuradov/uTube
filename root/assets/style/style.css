@@ -4,7 +4,7 @@ body {
 }
 
 .margin-top {
-    margin-top: 20px;
+    margin-top: 3%;
 }
 
 .img-circle {
@@ -46,14 +46,69 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
 
 .navbar {
     height: 100vh
 }
 .suggestions-video-text {}
 
+.sidenav-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    cursor: pointer;
+    display: none;
+}
+.hiding {}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+.logo-container {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.header-component{}
+.avatar{}
+.showing {
+    display: none;
+    padding-bottom: 10px;
+}
+
 @media (max-width: 992px) {
-    .navbar {display: none}
+    .navbar {
+        display: none;
+        position: fixed;
+        top: 50px;
+        left: 0;
+        z-index: 9;
+        width: 70px;
+    }
     .thumbnail-scrollbar {width: 50%}
     .suggestions-video-text{text-align: center}
+    .sidenav-btn {display: block}
+    .hiding {display: none}
+    .subImg {display: block}
+    .logo {width: 40px}
+    .logo-container {
+        margin-left: 2%;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+    .header-component{
+        width: 100%;
+        height: auto;
+    }
+    .avatar {width: 40px}
+    .showing{display: block}
+}
+
+.tags-select {
+    width: 200px;
 }

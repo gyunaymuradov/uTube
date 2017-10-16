@@ -12,7 +12,7 @@ class CommentDao {
     private $pdo;
 
     const ADD = "INSERT INTO video_comments (video_id, user_id, text, date_added) VALUES (?, ?, ?, ?)";
-    const GET_BY_VIDEO_ID = "SELECT u.username, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC";
+    const GET_BY_VIDEO_ID = "SELECT u.username, u.id as user_id, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC";
     const CHECK_IF_LIKED_OR_DISLIKED = "SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
     const ADD_LIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)";
     const REMOVE_LIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
@@ -46,20 +46,20 @@ class CommentDao {
      * @param int $id
      * @return array of Comment objects
      */
-    public function getByVideoId($id) {
+    public function getByVideoId($videoId) {
         $statement = $this->pdo->prepare(self::GET_BY_VIDEO_ID);
-        $statement->execute(array($id));
+        $statement->execute(array($videoId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         // check if there are any comments returned and if so add them to array of objects
         if (!empty($result)) {
             $comments = array();
             foreach ($result as $currentComment) {
-                $comment = new Comment();
-                $comment->setId($currentComment['id']);
-                $comment->setCreatorUsername($currentComment['username']);
-                $comment->setText($currentComment['text']);
-                $comment->setDateAdded($currentComment['date_added']);
+                $comment = new Comment($videoId, $currentComment['user_id'], $currentComment['text'], $currentComment['date_added'], $currentComment['username']);
+//                $comment->setId($currentComment['id']);
+//                $comment->setCreatorUsername($currentComment['username']);
+//                $comment->setText($currentComment['text']);
+//                $comment->setDateAdded($currentComment['date_added']);
                 $comments[] = $comment;
             }
             return $comments;

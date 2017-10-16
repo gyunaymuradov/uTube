@@ -1,4 +1,4 @@
-function likeDislike(videoId, likeDislike) {
+function likeDislikeVideo(videoId, likeDislike) {
     var request = new XMLHttpRequest();
     var loggedUserId = document.getElementById('loggedUserId').value;
     var logged = document.getElementById('logged').value;
@@ -7,14 +7,35 @@ function likeDislike(videoId, likeDislike) {
     } else {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                var likeHtml = document.getElementById('like');
-                var dislikeHtml = document.getElementById('dislike');
+                var likeHtml = document.getElementById('video-like');
+                var dislikeHtml = document.getElementById('video-dislike');
                 var response = JSON.parse(this.responseText);
                 likeHtml.innerHTML = response['likes'];
                 dislikeHtml.innerHTML = response['dislikes'];
             }
         };
         request.open('GET', 'http://localhost/uTube/root/index.php?page=like-video&like=' + likeDislike + '&video-id=' + videoId + '&user-id=' + loggedUserId);
+        request.send();
+    }
+}
+
+function likeDislikeComment(commentId, likeDislike) {
+    var request = new XMLHttpRequest();
+    var loggedUserId = document.getElementById('loggedUserId').value;
+    var logged = document.getElementById('logged').value;
+    if (logged === 'false') {
+        alert('Please sign in/up in order to be able like or dislike comments.');
+    } else {
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var likeHtml = document.getElementById('comment-like-' + commentId);
+                var dislikeHtml = document.getElementById('comment-dislike-'  + commentId);
+                var response = JSON.parse(this.responseText);
+                likeHtml.innerHTML = response['likes'];
+                dislikeHtml.innerHTML = response['dislikes'];
+            }
+        };
+        request.open('GET', 'http://localhost/uTube/root/index.php?page=like-comment&like=' + likeDislike + '&comment-id=' + commentId + '&user-id=' + loggedUserId);
         request.send();
     }
 }

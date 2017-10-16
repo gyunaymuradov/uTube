@@ -313,6 +313,7 @@ class VideoDao {
         }
         return $tags;
     }
+
     public function getByPlaylist($playlistID) {
         $statement = $this->pdo->prepare(self::GET_BY_PLAYLIST);
         $statement->execute(array($playlistID));

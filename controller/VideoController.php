@@ -71,11 +71,10 @@ class VideoController extends BaseController {
         ]);
     }
 
-    public function likeDislikeAction() {
+    public function likeDislikeVideoAction() {
         $videoId = $_GET['video-id'];
         $userId = $_GET['user-id'];
         $likeDislike = $_GET['like'];
-        $result = '';
         $videoDao = VideoDao::getInstance();
         if ($likeDislike == '1') {
             $videoDao->like($videoId, $userId);
@@ -85,6 +84,26 @@ class VideoController extends BaseController {
 
         $likes = $videoDao->getLikesCountById($videoId);
         $dislikes = $videoDao->getDislikesCountById($videoId);
+
+        $this->jsonEncodeParams([
+            'likes' => $likes,
+            'dislikes' => $dislikes
+        ]);
+    }
+
+    public function likeDislikeCommentAction() {
+        $commentId = $_GET['comment-id'];
+        $userId = $_GET['user-id'];
+        $likeDislike = $_GET['like'];
+        $commentDao = CommentDao::getInstance();
+        if ($likeDislike == '1') {
+            $commentDao->like($commentId, $userId);
+        } else {
+            $commentDao->dislike($commentId, $userId);
+        }
+
+        $likes = $commentDao->getLikesCount($commentId);
+        $dislikes = $commentDao->getDislikesCount($commentId);
 
         $this->jsonEncodeParams([
             'likes' => $likes,

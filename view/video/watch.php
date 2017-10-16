@@ -5,15 +5,15 @@
                     <source src="<?= $params['videoUrl']; ?>" type="video/mp4">
                 </video>
                 <div class="row">
-                    <div class="col-md-4 text-left">
+                    <div class="col-md-8 text-left">
                         <div><h2><?= $params['videoTitle']; ?></h2></div>
                         <div><h4><?= $params['videoDescription']; ?></h4></div>
                         <div><label>Added On: </label><?= $params['dateAdded']; ?></div>
                         <div><label>Uploaded by: </label><?= $params['uploader']; ?></div>
                     </div>
-                    <div class="col-md-5 col-md-offset-3">
-                        <button class="btn btn-default btn-md col-lg-6" onclick="likeDislike(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span> Like <span class="badge" id="like"><?= $params['likes']; ?></span></button>
-                        <button class="btn btn-default btn-md col-lg-6" onclick="likeDislike(<?= $params['videoId']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span> Dislike <span class="badge" id="dislike"><?= $params['dislikes']; ?></span></button>
+                    <div class="col-md-4 btn-toolbar margin-top">
+                        <button class="btn btn-success btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
+                        <button class="btn btn-danger btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;<span class="badge" id="video-dislike"><?= $params['dislikes']; ?></span></button>
                         <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
                         <input type="hidden" id="loggedUserId" value="<?= $params['loggedUserId']; ?>">
                     </div>
@@ -84,23 +84,27 @@
                         $username = $comment->getCreatorUsername();
                         $commentText = $comment->getText();
                         $dateAdded = $comment->getDateAdded();
+                        $likes = $comment->getLikes();
+                        $dislikes = $comment->getDislikes();
+                        $commentId = $comment->getId();
 
                         echo "<div class='row bg-info margin-5 width-100'>
-                                    <div class='col-md-10'>
+                                    <div class='col-md-9'>
                                         <label>$username</label>
                                         <div class='well-sm''>
                                            <p>$commentText</p>
                                            <p class='date_style'>$dateAdded</p>
                                         </div>
                                     </div>
-                                    <div class='col-md-2'>
-                                        <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-up'></span></button>
-                                        <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-down'></span></button>
+                                    <div class='col-md-3 btn-toolbar '>
+                                        <button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 1)'><span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-$commentId'>$likes</span></span></button>
+                                        <button class='btn btn-danger btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 0)'><span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-$commentId'>$dislikes</span></span></button>
                                     </div>
                                </div>";
                         }
                     }
 
             ?>
+
         </div>
     </div>

@@ -56,7 +56,11 @@ function __autoload($className) {
     }
     else if($page === 'like-video') {
         $controller = new controller\VideoController();
-        $controller->likeDislikeAction();
+        $controller->likeDislikeVideoAction();
+    }
+    else if($page === 'like-comment') {
+        $controller = new controller\VideoController();
+        $controller->likeDislikeCommentAction();
     }
     else if($page === 'watch') {
         $controller = new controller\VideoController();

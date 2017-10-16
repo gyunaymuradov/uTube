@@ -10,6 +10,9 @@ class Comment {
     private $text;
     private $dateAdded;
     private $creatorUsername;
+    private $likes;
+    private $dislikes;
+
 
     /**
      * Comment constructor.
@@ -22,6 +25,37 @@ class Comment {
         $this->creatorUsername = $creatorName;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @param mixed $likes
+     */
+    public function setLikes($likes)
+    {
+        $this->likes = $likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDislikes()
+    {
+        return $this->dislikes;
+    }
+
+    /**
+     * @param mixed $dislikes
+     */
+    public function setDislikes($dislikes)
+    {
+        $this->dislikes = $dislikes;
+    }
 
     /**
      * @return mixed

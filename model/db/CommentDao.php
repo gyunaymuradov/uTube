@@ -14,10 +14,11 @@ class CommentDao {
     const ADD = "INSERT INTO video_comments (video_id, user_id, text, date_added) VALUES (?, ?, ?, ?)";
     const GET_BY_VIDEO_ID = "SELECT u.username, u.id as user_id, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC";
     const CHECK_IF_LIKED_OR_DISLIKED = "SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
-    const ADD_LIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)";
-    const REMOVE_LIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
-    const ADD_DISLIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 0)";
-    const REMOVE_DISLIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
+    const LIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)";
+    const UNLIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
+    const DISLIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 0)";
+    const UNDISLIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
+    const UPDATE_LIKE_DISLIKE = "UPDATE comments_likes_dislikes SET likes = ? WHERE comment_id = ? AND user_id = ?";
     const GET_LIKES_COUNT = "SELECT COUNT(*) as likes_count FROM comments_likes_dislikes WHERE comment_id = ? AND likes = 1";
     const GET_DISLIKES_COUNT = "SELECT COUNT(*) as dislikes_count FROM comments_likes_dislikes WHERE comment_id = ? AND likes = 0";
 
@@ -56,10 +57,11 @@ class CommentDao {
             $comments = array();
             foreach ($result as $currentComment) {
                 $comment = new Comment($videoId, $currentComment['user_id'], $currentComment['text'], $currentComment['date_added'], $currentComment['username']);
-//                $comment->setId($currentComment['id']);
-//                $comment->setCreatorUsername($currentComment['username']);
-//                $comment->setText($currentComment['text']);
-//                $comment->setDateAdded($currentComment['date_added']);
+                $comment->setId($currentComment['id']);
+                $likes = $this->getLikesCount($currentComment['id']);
+                $dislikes = $this->getDislikesCount($currentComment['id']);
+                $comment->setLikes($likes);
+                $comment->setDislikes($dislikes);
                 $comments[] = $comment;
             }
             return $comments;
@@ -92,19 +94,20 @@ class CommentDao {
      * @param int $userId
      * @return bool
      */
-    public function likeComment($commentId, $userId) {
+    public function like($commentId, $userId) {
         $likes = $this->checkIfLikedOrDisliked($commentId, $userId);
 
         //if comment is not liked on pressing button 'like' like is added
-        if ($likes == null) {
-            $statement = $this->pdo->prepare(self::ADD_LIKE);
-            $result = $statement->execute(array($commentId, $userId));
-            return $result;
+        if (is_null($likes)) {
+            $statement = $this->pdo->prepare(self::LIKE);
+            $statement->execute(array($commentId, $userId));
         } else if ($likes == true) {
             //if already liked on pressing button 'like' again the like is removed
-            $statement = $this->pdo->prepare(self::REMOVE_LIKE);
-            $result = $statement->execute(array($commentId, $userId));
-            return $result;
+            $statement = $this->pdo->prepare(self::UNLIKE);
+            $statement->execute(array($commentId, $userId));
+        } else {
+            $statement = $this->pdo->prepare(self::UPDATE_LIKE_DISLIKE);
+            $statement->execute(array('1', $commentId, $userId));
         }
     }
 
@@ -113,19 +116,20 @@ class CommentDao {
      * @param int $userId
      * @return bool
      */
-    public function dislikeComment($commentId, $userId) {
+    public function dislike($commentId, $userId) {
         $likes = $this->checkIfLikedOrDisliked($commentId, $userId);
 
         //if comment is not disliked on pressing button 'dislike' dislike is added
-        if ($likes == null) {
-            $statement = $this->pdo->prepare(self::ADD_DISLIKE);
-            $result = $statement->execute(array($commentId, $userId));
-            return $result;
-        } else if ($likes == true) {
+        if (is_null($likes)) {
+            $statement = $this->pdo->prepare(self::DISLIKE);
+            $statement->execute(array($commentId, $userId));
+        } else if ($likes == false) {
             //if already disliked on pressing button 'dislike' again the dislike is removed
-            $statement = $this->pdo->prepare(self::REMOVE_DISLIKE);
-            $result = $statement->execute(array($commentId, $userId));
-            return $result;
+            $statement = $this->pdo->prepare(self::UNDISLIKE);
+            $statement->execute(array($commentId, $userId));
+        } else {
+            $statement = $this->pdo->prepare(self::UPDATE_LIKE_DISLIKE);
+            $statement->execute(array('0', $commentId, $userId));
         }
     }
 

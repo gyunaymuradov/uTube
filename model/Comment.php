@@ -14,8 +14,12 @@ class Comment {
     /**
      * Comment constructor.
      */
-    public function __construct() {
-
+    public function __construct($videoId, $userId, $text, $dateAdded, $creatorName = null) {
+        $this->videoId = $videoId;
+        $this->userId = $userId;
+        $this->text = $text;
+        $this->dateAdded = $dateAdded;
+        $this->creatorUsername = $creatorName;
     }
 
 

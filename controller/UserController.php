@@ -101,6 +101,19 @@ class UserController extends BaseController {
     public function viewUserAction() {
         $profileId = $_GET['id'];
 
+        $logged = 'false';
+        $loggedUserId = null;
+        if (isset($_SESSION['user'])) {
+            $logged = 'true';
+            /* @var $loggedUser User */
+            $loggedUser = $_SESSION['user'];
+            $loggedUserId = $loggedUser->getId();
+        }
+
+        if ($profileId == $loggedUserId) {
+            header('Location:index.php?page=profile&id=' . $loggedUserId);
+        }
+
         /* @var $userDao \model\db\UserDao */
         $userDao = UserDao::getInstance();
         $user = $userDao->getById($profileId);
@@ -112,14 +125,7 @@ class UserController extends BaseController {
         $email = $user->getEmail();
         $dateJoined = $user->getDateJoined();
 
-        $logged = 'false';
-        $loggedUserId = null;
-        if (isset($_SESSION['user'])) {
-            $logged = 'true';
-            /* @var $loggedUser User */
-            $loggedUser = $_SESSION['user'];
-            $loggedUserId = $loggedUser->getId();
-        }
+
 
         /* @var $videoDao VideoDao */
         $videoDao = VideoDao::getInstance();

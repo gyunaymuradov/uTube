@@ -62,6 +62,10 @@ function __autoload($className) {
         $controller = new controller\VideoController();
         $controller->upload();
     }
+    else if($page === 'comment') {
+        $controller = new controller\VideoController();
+        $controller->comment();
+    }
     else {
         $controller = new controller\IndexController();
         $controller->indexAction();

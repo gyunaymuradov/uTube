@@ -18,6 +18,7 @@ class Video {
      * @param $dateAdded
      * @param $uploaderID
      * @param $videoURL
+     * @param $thumbnailURL
      * @param $tags
      */
     public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tags)

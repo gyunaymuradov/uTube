@@ -8,7 +8,7 @@ use \PDOException;
 class VideoDao {
     private static $instance;
     private $pdo;
-    const INSERT_VIDEO = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, hidden) VALUES (?, ?, ?, ?, ?, ?)";
+    const INSERT_VIDEO = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, hidden) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
     const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
@@ -47,7 +47,7 @@ class VideoDao {
      * @param Video $video
      * @param array $tagIDs
      */
-    public function insert(Video $video, Array $tagIDs) {
+    public function insert(Video $video) {
         try {
             $this->pdo->beginTransaction();
             $statement = $this->pdo->prepare(self::INSERT_VIDEO);
@@ -60,7 +60,7 @@ class VideoDao {
                 $video->getHidden()
             ));
             $video->setId($this->pdo->lastInsertId());
-            foreach ($tagIDs as $tagID) {
+            foreach ($video->getTags() as $tagID) {
                 $statement = $this->pdo->prepare(self::INSERT_TAGS);
                 $statement->execute(array($tagID, $video->getId()));
             }

@@ -9,6 +9,14 @@ function __autoload($className) {
 }
 
     $page = isset($_GET['page']) ? $_GET['page'] : null;
+//when url is ....?controller=XXX&action=YYY
+//invoke XXXController.php and start YYY() in it
+//ex: localhost:8080/MyYoutube?controller=user&action=login
+//new UserController()->login();
+//$controller - "";
+//$action = "";
+//$className = "../controller/".ucfirst($controller).'Controller';
+//(new $className())->$action();
     
     if($page === 'profile') {
         $controller = new controller\UserController();
@@ -53,10 +61,6 @@ function __autoload($className) {
     else if($page === 'watch') {
         $controller = new controller\VideoController();
         $controller->watchAction();
-    }
-    else if($page === 'upload-form') {
-        $controller = new controller\VideoController();
-        $controller->uploadFormAction();
     }
     else if($page === 'upload') {
         $controller = new controller\VideoController();

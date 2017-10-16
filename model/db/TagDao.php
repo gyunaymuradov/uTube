@@ -7,7 +7,7 @@ class TagDao
     private static $instance;
     private $pdo;
     const GET_TAGS_BY_ID = "SELECT name FROM tags WHERE id=?";
-    const GET_ALL = "SELECT name FROM tags";
+    const GET_ALL = "SELECT id, name FROM tags";
 
     private function __construct()
     {

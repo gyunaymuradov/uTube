@@ -14,17 +14,13 @@ class VideoController extends BaseController {
     public function __construct() {
     }
 
-    public function uploadFormAction() {
-        $this->render('video/upload');
-    }
-
     public function upload() {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         if ($requestMethod == 'GET') {
             $tagDao = TagDao::getInstance();
             $tags = $tagDao->getAll();
 
-            $this->renderPartial('video/upload', [
+            $this->render('video/upload', [
                 'tags' => $tags
             ]);
         }
@@ -100,7 +96,7 @@ class VideoController extends BaseController {
         $commentText = $_POST['comment'];
         $videoId = $_POST['videoId'];
         $userId = $_POST['userId'];
-        $date = date('d-M-y');
+        $date = date('Y-m-d');
         $comment = new Comment($videoId, $userId, $commentText, $date);
 
         $commentDao = CommentDao::getInstance();

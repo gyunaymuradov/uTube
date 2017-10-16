@@ -13,10 +13,13 @@
         <div class="form-group">
             <label>Tags: </label>
             <select class="js-example-basic-multiple tags-select" name="tags" multiple="multiple">
-                <option value="tag1">Tag 1</option>
-                <option value="tag2">Tag 2</option>
-                <option value="tag3">Tag 3</option>
-                <option value="tag4">Tag 4</option>
+                <?php
+                foreach ($params['tags'] as $tag) {
+                    $tagName = $tag['name'];
+                    $tagId = $tag['id'];
+                    echo "<option value='$tagId'>$tagName</option>";
+                }
+                ?>
             </select>
         </div>
         <div class="form-group margin-center">

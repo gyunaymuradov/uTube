@@ -8,13 +8,15 @@ use model\db\TagDao;
 use model\db\UserDao;
 use model\User;
 use model\db\VideoDao;
+use model\Video;
 
 class VideoController extends BaseController {
 
     public function __construct() {
     }
 
-    public function upload() {
+    public function upload()
+    {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         if ($requestMethod == 'GET') {
             $tagDao = TagDao::getInstance();
@@ -23,6 +25,71 @@ class VideoController extends BaseController {
             $this->render('video/upload', [
                 'tags' => $tags
             ]);
+        } elseif ($requestMethod == 'POST') {
+            if (isset($_SESSION['user']) &&
+                isset($_POST["Title"]) &&
+                $_POST["Title"] != "" &&
+                isset($_POST["Description"]) &&
+                $_POST["Description"] != "" &&
+                isset($_POST["Tags"])) {
+
+                $videoDao = VideoDao::getInstance();
+
+                $resultMsg = "Your video was successfully uploaded!";
+                $userId = $_SESSION['user']->getId();
+
+                $tmpFileName = $_FILES['videoFile']['tmp_name'];
+                $realFileName = $_FILES['videoFile']['name'];
+                $fileType = $_FILES['videoFile']['type'];
+
+
+                if (is_uploaded_file($tmpFileName)) {
+                    if (strpos($fileType, "video") === false) {
+                        $resultMsg = "Error! File is not a video!";
+                    } else {
+                        if (!file_exists("../uploads/$userId")) {
+                            mkdir("../uploads/$userId", 0777);
+                        }
+                        $filePath = "../uploads/$userId/VID_" . time() . "." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                        move_uploaded_file($tmpFileName, "$filePath");
+                        if (file_exists($filePath)) {
+
+//                        for creation of video thumbnail
+//                        PROBLEM: how to include ffmpeg.php ???
+//                        Todo FIND FIX FOR THIS
+//                        $ffmpegVideo = new \ffmpeg_movie($filePath, false);
+//                        $thumbnail = $ffmpegVideo->getFrame(100)->toGDImage();
+//                        imagepng($thumbnail, "../uploads/$userId/thumbnail.png");
+
+                            $newVideo = new Video(null,
+                                $_POST['Title'],
+                                $_POST['Description'],
+                                date("Y-m-d"),
+                                $userId,
+                                $filePath,
+                                "thumbnailURL",
+                                $_POST["Tags"]
+                            );
+                            $newVideo->setHidden(0);
+                            try {
+                                $videoDao->insert($newVideo);
+                            } catch (\PDOException $e) {
+                                if (file_exists($filePath)) {
+                                    unlink($filePath);
+                                }
+                                $resultMsg = "An error occurred! Please try again later.";
+                            }
+                        }
+                    }
+                } else {
+                    $resultMsg = "Error uploading file!";
+                }
+
+                $this->render('video/uploadResult', array("Result" => $resultMsg));
+            }
+            else {
+                header("Location: index.php?page=upload");
+            }
         }
     }
     

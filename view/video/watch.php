@@ -67,7 +67,7 @@
         <h2>Comments</h2>
         <div class="form-group row">
             <div class="col-md-10">
-                <input type="text" id="commentText" placeholder="Write a comment" class="form-control" maxlength="200">
+                <input type="text" id="comment-field" placeholder="Write a comment" class="form-control" maxlength="200">
             </div>
             <div class="col-md-2">
                 <button class="btn btn-info btn-md form-control" onclick="comment(<?= $params['videoId']; ?>)">Comment</button>
@@ -75,82 +75,32 @@
         </div>
         <div class="well-sm text-left" id="comment-section">
 
-<!--            --><?php
-//
-//                $commentsArr = $params['comments'];
-//                /* @var $comment \model\Comment */
-//            foreach ($commentsArr as $comment) {
-//                $username = $comment->getCreatorUsername();
-//                $commentText = $comment->getText();
-//                $dateAdded = $comment->getDateAdded();
-//
-//                echo "<div class='row bg-info margin-5' id='top-comment'>
-//                            <div class='col-md-10'>
-//                                <label>$username</label>
-//                                <div class='well-sm''>
-//                                   <p>$commentText</p>
-//                                   <p class='date_style'>$dateAdded</p>
-//                                </div>
-//                            </div>
-//                            <div class='col-md-2'>
-//                                <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-up'></span></button>
-//                                <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-down'></span></button>
-//                            </div>
-//                       </div>";
-//            }
-//
-//            ?>
+            <?php
 
-            <div class="row bg-info margin-5">
-                <div class="col-md-10">
-                    <label>Username 1</label>
-                    <div class="well-sm">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                        <p class="date_style">dd-mm-yyyy</p>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-down"></span></button>
-                </div>
-            </div>
+                $commentsArr = $params['comments'];
+                /* @var $comment \model\Comment */
+                if (!empty($commentsArr)) {
+                    foreach ($commentsArr as $comment) {
+                        $username = $comment->getCreatorUsername();
+                        $commentText = $comment->getText();
+                        $dateAdded = $comment->getDateAdded();
 
-            <div class="row bg-info margin-5">
-                <div class="col-md-10">
-                    <label>Username 2</label>
-                    <div class="well-sm">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                            purus lectus malesuada libero, sit ametcommodo magna eros quis urna.
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                        <p class="date_style">dd-mm-yyyy</p>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-down"></span></button>
-                </div>
-            </div>
+                        echo "<div class='row bg-info margin-5 width-100'>
+                                    <div class='col-md-10'>
+                                        <label>$username</label>
+                                        <div class='well-sm''>
+                                           <p>$commentText</p>
+                                           <p class='date_style'>$dateAdded</p>
+                                        </div>
+                                    </div>
+                                    <div class='col-md-2'>
+                                        <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-up'></span></button>
+                                        <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-down'></span></button>
+                                    </div>
+                               </div>";
+                        }
+                    }
 
-            <div class="row bg-info margin-5">
-                <div class="col-md-10">
-                    <label>Username 3</label>
-                    <div class="well-sm">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                            Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies,
-                            purus lectus malesuada libero, sit amet commodo magna eros quis urna.</p>
-                        <p class="date_style">dd-mm-yyyy</p>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-                    <button class="btn btn-info btn-md col-lg-4 margin-comment-buttons"><span class="glyphicon glyphicon-thumbs-down"></span></button>
-                </div>
-            </div>
-
+            ?>
         </div>
     </div>

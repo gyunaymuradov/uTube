@@ -38,11 +38,11 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="col-md-2 col-xs-5 margin-top">
-                    <a href="index.php?page=upload" class="btn btn-info btn-md">Upload Video <span class="glyphicon glyphicon-facetime-video"></span></a>
+                <?php if($logged) {
+                    echo "<a href=\"index.php?page=upload\" class=\"btn btn-info btn-md\">Upload Video <span class=\"glyphicon glyphicon-facetime-video\"></span></a>";
+                } ?>
                 </div>
-
                 <div class="col-md-1 col-xs-4 margin-top">
                     <?php if ($logged) {
                         $userPhotoSrc = $params['userPhotoSrc'];

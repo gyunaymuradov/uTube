@@ -2,6 +2,9 @@
 
 namespace controller;
 
+use model\Comment;
+use model\db\CommentDao;
+use model\db\TagDao;
 use model\db\UserDao;
 use model\User;
 use model\db\VideoDao;
@@ -16,6 +19,15 @@ class VideoController extends BaseController {
     }
 
     public function upload() {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        if ($requestMethod == 'GET') {
+            $tagDao = TagDao::getInstance();
+            $tags = $tagDao->getAll();
+
+            $this->renderPartial('video/upload', [
+                'tags' => $tags
+            ]);
+        }
     }
     
     public function watchAction() {
@@ -34,8 +46,13 @@ class VideoController extends BaseController {
 
         $likes = $videoDao->getLikesCountById($videoId);
         $dislikes = $videoDao->getDislikesCountById($videoId);
+
+        $commentDao = CommentDao::getInstance();
+        $comments = $commentDao->getByVideoId($videoId);
+
         $logged = 'false';
         $loggedUserId = null;
+
         if (isset($_SESSION['user'])) {
             /* @var $loggedUser User */
             $loggedUser = $_SESSION['user'];
@@ -54,6 +71,7 @@ class VideoController extends BaseController {
             'dislikes' => $dislikes,
             'loggedUserId' => $loggedUserId,
             'logged' => $logged,
+            'comments' => $comments
         ]);
     }
 
@@ -75,6 +93,27 @@ class VideoController extends BaseController {
         $this->jsonEncodeParams([
             'likes' => $likes,
             'dislikes' => $dislikes
+        ]);
+    }
+
+    public function comment() {
+        $commentText = $_POST['comment'];
+        $videoId = $_POST['videoId'];
+        $userId = $_POST['userId'];
+        $date = date('d-M-y');
+        $comment = new Comment($videoId, $userId, $commentText, $date);
+
+        $commentDao = CommentDao::getInstance();
+        $commentDao->add($comment);
+
+        /* @var $user User */
+        $user = $_SESSION['user'];
+        $username = $user->getUsername();
+
+        $this->jsonEncodeParams([
+            'comment' => $commentText,
+            'date' => $date,
+            'username' => $username
         ]);
     }
 }

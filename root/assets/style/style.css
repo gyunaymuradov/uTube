@@ -89,6 +89,8 @@ body {
         left: 0;
         z-index: 9;
         width: 70px;
+        background-color: #cde4ee;
+        border: 1px solid #98abb4;
     }
     .thumbnail-scrollbar {width: 50%}
     .suggestions-video-text{text-align: center}
@@ -111,4 +113,8 @@ body {
 
 .tags-select {
     width: 200px;
+}
+.video-container {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

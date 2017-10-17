@@ -40,7 +40,8 @@ class CommentDao {
     public function add(Comment $comment) {
         $statement = $this->pdo->prepare(self::ADD);
         $result = $statement->execute(array($comment->getVideoId(), $comment->getUserId(), $comment->getText(), $comment->getDateAdded()));
-        return $result;
+        $lastInsertId = $this->pdo->lastInsertId();
+        return $lastInsertId;
     }
 
     /**

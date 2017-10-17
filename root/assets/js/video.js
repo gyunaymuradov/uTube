@@ -60,18 +60,25 @@ function comment(videoId) {
                 var comment = response['comment'];
                 var username = response['username'];
                 var dateAdded = response['date'];
+                var likes = response['likes'];
+                var dislikes = response['dislikes'];
+                var commentId = response['commentId'];
+                var userId = response['userId'];
+
 
                 var newCommentDiv = document.createElement('div');
                 newCommentDiv.className = "row bg-info margin-5 width-100";
 
-                var newComment = "<div class='col-md-10'>";
-                newComment += "<label>" + username + "</label>";
+                var newComment = "<div class='col-md-9'>";
+                newComment += "<label><a href='index.php?page=user&id=" + userId + "'>" + username + "</a></label>";
                 newComment += "<div class='well-sm''>";
                 newComment += "<p>" + comment + "</p>";
                 newComment += "<p class='date_style'>" + dateAdded + "</p></div></div>";
-                newComment += "<div class='col-md-2'>";
-                newComment += "<button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-up'></span></button>";
-                newComment += "<button class='btn btn-info btn-md col-lg-4 margin-comment-buttons'><span class='glyphicon glyphicon-thumbs-down'></span></button></div>";
+                newComment += "<div class='col-md-3 btn-toolbar'>";
+                newComment += "<button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment(" + commentId + ", 1)'>";
+                newComment += "<span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-" + commentId + "'>" + likes + "</span></span></button>";
+                newComment += "<button class='btn btn-danger btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment(" + commentId + ", 0)'>";
+                newComment += "<span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-" + commentId + "'>" + dislikes + "</span></span></button></div>";
 
                 newCommentDiv.innerHTML = newComment;
                 commentSection.insertBefore(newCommentDiv, topComment);

@@ -1,92 +1,45 @@
 <div class="col-md-10 justify-content-center text-center">
-    <div class="well-sm text-left bg-info  video-container">
-        <h3>Recommended</h3>
+    <div class="well-sm text-left bg-info video-container">
+        <h3>Most liked</h3>
         <div class="row">
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 1</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 2</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 3</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 4</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 5</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 6</label>
-            </div>
+
+            <?php
+
+            $mostLiked = $params['mostLiked'];
+            foreach ($mostLiked as $video) {
+                $id = $video['id'];
+                $title = $video['title'];
+                $thumbnailUrl = $video['thumbnail_url'];
+                echo "<a href='index.php?page=watch&id=$id'>
+                        <div class='col-md-3 text-center'>
+                            <img class='img-thumbnail' src='$thumbnailUrl'>
+                            <label>$title</label>
+                        </div>
+                      </a>";
+            }
+            ?>
         </div>
     </div>
 
-    <div class="well-sm text-left bg-info  video-container">
-        <h3>Subscription 1</h3>
+    <div class="well-sm text-left bg-info video-container">
+        <h3>Newest</h3>
         <div class="row">
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 1</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 2</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 3</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 4</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 5</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 6</label>
-            </div>
+
+            <?php
+
+            $newest = $params['newest'];
+            foreach ($newest as $video) {
+                $id = $video['id'];
+                $title = $video['title'];
+                $thumbnailUrl = $video['thumbnail_url'];
+                echo "<a href='index.php?page=watch&id=$id'>
+                        <div class='col-md-3 text-center'>
+                            <img class='img-thumbnail' src='$thumbnailUrl'>
+                            <label>$title</label>
+                        </div>
+                      </a>";
+            }
+            ?>
         </div>
     </div>
-
-    <div class="well-sm text-left bg-info  video-container">
-        <h3>Subscription 2</h3>
-        <div class="row">
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 1</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 2</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 3</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 4</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 5</label>
-            </div>
-            <div class="col-md-2 text-center">
-                <img class="img-thumbnail" src="assets/images/channelPic.png">
-                <label>Video Title 6</label>
-            </div>
-        </div>
-    </div>
-
 </div>

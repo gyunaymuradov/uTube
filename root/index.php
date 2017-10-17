@@ -74,6 +74,10 @@ function __autoload($className) {
         $controller = new controller\VideoController();
         $controller->comment();
     }
+    else if($page === 'search') {
+        $controller = new controller\IndexController();
+        $controller->searchAction();
+    }
     else {
         $controller = new controller\IndexController();
         $controller->indexAction();

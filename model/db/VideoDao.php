@@ -19,7 +19,8 @@ class VideoDao {
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                           FROM videos WHERE uploader_id=? ORDER BY date_added DESC LIMIT ?";
     const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE ? LIMIT 5";
-    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
+    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url FROM videos WHERE title LIKE ?";
+    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thu mbnail_url 
                             FROM videos WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO video_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
@@ -34,6 +35,12 @@ class VideoDao {
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
     const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, u.username as uploader_name, u.id as uploader_id FROM videos v 
                                 JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? LIMIT 10";
+    const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
+    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ?";
+    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
+                              GROUP BY (l.video_id) HAVING l.likes = 1 ORDER BY likes_count DESC LIMIT 4";
+    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url FROM videos LIMIT ?";
+    const GET_NEWEST = "SELECT id, title, thumbnail_url FROM videos ORDER BY date_added DESC LIMIT 4";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -44,6 +51,46 @@ class VideoDao {
         }
         return self::$instance;
     }
+
+    public function getNewest() {
+        $statement = $this->pdo->prepare(self::GET_NEWEST);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getNRandomToFillGaps($limit) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $statement = $this->pdo->prepare(self::GET_RANDOM_TO_FILL_GAPS);
+        $statement->execute(array($limit));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getMostLiked() {
+        $statement = $this->pdo->prepare(self::GET_MOST_LIKED);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getTagOfLastLiked($userId) {
+        $statement = $this->pdo->prepare(self::GET_TAG_OF_LAST_LIKED_VIDEO);
+        $statement->execute(array($userId));
+        $tagId = $statement->fetchAll(PDO::FETCH_ASSOC)['tag_id'];
+        return $tagId;
+    }
+
+    public function getVideosOfLastLikedTag($tagId) {
+        $statement = $this->pdo->prepare(self::GET_VIDEOS_OF_LAST_LIKED_TAG);
+        $statement->execute(array($tagId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) < 6) {
+            $difference = 6 - count($result);
+        }
+        return $result;
+    }
+
     /**
      * Insert Video in DB
      * @param Video $video
@@ -198,6 +245,13 @@ class VideoDao {
             $videosNamesArray[] = $result[$key]['title'];
         }
         return $videosNamesArray;
+    }
+
+    public function searchByName($name) {
+        $statement = $this->pdo->prepare(self::GET_VIDEO_SUGGESTIONS);
+        $statement->execute(array("%$name%"));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
     /**
      * Return array of N Videos by Video name

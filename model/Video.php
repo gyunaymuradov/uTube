@@ -9,7 +9,7 @@ class Video {
     private $videoURL;
     private $thumbnailURL;
     private $hidden;
-    private $tags;
+    private $tagId;
     /**
      * Video constructor.
      * @param $id
@@ -21,7 +21,7 @@ class Video {
      * @param $thumbnailURL
      * @param $tags
      */
-    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tags)
+    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tagId)
     {
         $this->id = $id;
         $this->title = $title;
@@ -31,7 +31,7 @@ class Video {
         $this->videoURL = $videoURL;
         $this->thumbnailURL = $thumbnailURL;
         $this->hidden = 0;
-        $this->tags = $tags;
+        $this->tagId = $tagId;
     }
     /**
      * @return mixed
@@ -134,16 +134,16 @@ class Video {
     /**
      * @return mixed
      */
-    public function getTags()
+    public function getTagId()
     {
-        return $this->tags;
+        return $this->tagId;
     }
     /**
-     * @param mixed $tags
+     * @param int $tagId
      */
-    public function setTags($tags)
+    public function setTagId($tagId)
     {
-        $this->tags = $tags;
+        $this->tagId = $tagId;
     }
 
     /**

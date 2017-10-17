@@ -8,8 +8,8 @@
                     <div class="col-md-8 text-left">
                         <div><h2><?= $params['videoTitle']; ?></h2></div>
                         <div><h4><?= $params['videoDescription']; ?></h4></div>
-                        <div><label>Added On: </label><?= $params['dateAdded']; ?></div>
-                        <div><label>Uploaded by: </label><?= $params['uploader']; ?></div>
+                        <div><label>Uploaded by:&nbsp;&nbsp;</label><a href="index.php?page=user&id=<?= $params['uploaderId']; ?>"><?= $params['uploader']; ?></a></div>
+                        <div><label>Added On:&nbsp;&nbsp;</label><?= $params['dateAdded']; ?></div>
                     </div>
                     <div class="col-md-4 btn-toolbar margin-top">
                         <button class="btn btn-success btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
@@ -21,45 +21,28 @@
             </div>
             <div class="col-md-4 well pre-scrollable">
                 <h4>Suggestions:</h4>
-                <div class="well-sm row bg-info">
-                    <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
-                    </div>
-                    <div class="col-md-4 text-left no-padding suggestions-video-text">
-                        <label>Video Title 1</label>
-                        <p>Uploader 1</p>
-                    </div>
-                </div>
 
-                <div class="well-sm row bg-info">
-                    <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
-                    </div>
-                    <div class="col-md-4 text-left no-padding suggestions-video-text">
-                        <label>Video Title 2</label>
-                        <p>Uploader 2</p>
-                    </div>
-                </div>
+                <?php
+                
+                $suggestedVideos = $params['suggestedVideos'];
+                foreach ($suggestedVideos as $suggestedVideo) {
+                    $title = $suggestedVideo['title'];
+                    $videoId = $suggestedVideo['video_id'];
+                    $uploader = $suggestedVideo['uploader_name'];
+                    $uploaderId = $suggestedVideo['uploader_id'];
 
-                <div class="well-sm row bg-info">
-                    <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
-                    </div>
-                    <div class="col-md-4 text-left no-padding suggestions-video-text">
-                        <label>Video Title 3</label>
-                        <p>Uploader 3</p>
-                    </div>
-                </div>
+                    echo "<div class='well-sm row bg-info'>
+                                <div class='col-md-8'>
+                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='assets/images/channelPic.png'></a>
+                                </div> 
+                                <div class='col-md-4 text-left no-padding suggestions-video-text'>
+                                    <a href='index.php?page=watch&id=$videoId'><p>$title</p></a>
+                                    <a href='index.php?page=user&id=$uploaderId'><p>$uploader</p></a>
+                                </div>
+                            </div>";
+                }   
 
-                <div class="well-sm row bg-info">
-                    <div class="col-md-8">
-                        <img class="thumbnail-scrollbar" src="assets/images/channelPic.png">
-                    </div>
-                    <div class="col-md-4 text-left no-padding suggestions-video-text">
-                        <label>Video Title 4</label>
-                        <p>Uploader 4</p>
-                    </div>
-                </div>
+            ?>
 
             </div>
         </div>
@@ -87,11 +70,12 @@
                         $likes = $comment->getLikes();
                         $dislikes = $comment->getDislikes();
                         $commentId = $comment->getId();
+                        $userId = $comment->getUserId();
 
                         echo "<div class='row bg-info margin-5 width-100'>
                                     <div class='col-md-9'>
-                                        <label>$username</label>
-                                        <div class='well-sm''>
+                                        <label><a href='index.php?page=user&id=$userId'>$username</a></label>
+                                        <div class='well-sm'>
                                            <p>$commentText</p>
                                            <p class='date_style'>$dateAdded</p>
                                         </div>

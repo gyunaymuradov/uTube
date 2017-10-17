@@ -104,6 +104,7 @@ class VideoController extends BaseController {
         $videoDescription = $video->getDescription();
         $dateAdded = $video->getDateAdded();
         $uploaderId = $video->getUploaderID();
+        $tagId = $video->getTagId();
         $userDao = UserDao::getInstance();
         $uploader = $userDao->getById($uploaderId)->getUsername();
 
@@ -112,6 +113,10 @@ class VideoController extends BaseController {
 
         $commentDao = CommentDao::getInstance();
         $comments = $commentDao->getByVideoId($videoId);
+
+
+        $similarVideos = array();
+        $similarVideos = $videoDao->getWithSameTags($tagId, $videoId);
 
         $logged = 'false';
         $loggedUserId = null;
@@ -124,6 +129,7 @@ class VideoController extends BaseController {
         }
 
         $this->render('video/watch', [
+            'uploaderId' => $uploaderId,
             'videoId' => $videoId,
             'videoUrl' => $videoUrl,
             'videoTitle' => $videoTitle,
@@ -134,7 +140,8 @@ class VideoController extends BaseController {
             'dislikes' => $dislikes,
             'loggedUserId' => $loggedUserId,
             'logged' => $logged,
-            'comments' => $comments
+            'comments' => $comments,
+            'suggestedVideos' => $similarVideos,
         ]);
     }
 
@@ -186,7 +193,7 @@ class VideoController extends BaseController {
         $comment = new Comment($videoId, $userId, $commentText, $date);
 
         $commentDao = CommentDao::getInstance();
-        $commentDao->add($comment);
+        $lastInsertId = $commentDao->add($comment);
 
         /* @var $user User */
         $user = $_SESSION['user'];
@@ -195,7 +202,11 @@ class VideoController extends BaseController {
         $this->jsonEncodeParams([
             'comment' => $commentText,
             'date' => $date,
-            'username' => $username
+            'username' => $username,
+            'userId' => $userId,
+            'commentId' => $lastInsertId,
+            'likes' => '0',
+            'dislikes' => '0'
         ]);
     }
 }

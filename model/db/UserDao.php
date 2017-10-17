@@ -23,6 +23,7 @@ class UserDao {
     const FOLLOW = "INSERT INTO follows (follower_id, followed_id) VALUES (?, ?)";
     const UNFOLLOW = "DELETE FROM follows WHERE follower_id = ? AND followed_id = ?";
     const CHECK_IF_FOLLOWED = "SELECT COUNT(*) as number FROM follows WHERE followed_id = ? AND follower_id = ?";
+    const GET_MOST_SUBSCRIBED = "SELECT u.username, u.id, u.user_photo_url FROM users u JOIN follows f ON  u.id = f.followed_id GROUP BY followed_id ORDER BY COUNT(f.follower_id) DESC LIMIT 10";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -150,7 +151,16 @@ class UserDao {
     public function getSubscriptions($id) {
         $statement = $this->pdo->prepare(self::GET_SUBSCRIPTIONS);
         $statement->execute(array($id));
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $usersArr = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $users = array();
+        foreach ($usersArr as $userArr) {
+            $user = new User();
+            $user->setId($userArr['id']);
+            $user->setUsername($userArr['username']);
+            $user->setUserPhotoUrl($userArr['user_photo_url']);
+            $users[] = $user;
+        }
+        return $users;
     }
 
     /**
@@ -161,6 +171,21 @@ class UserDao {
         $statement = $this->pdo->prepare(self::GET_SUBSCRIPTIONS_COUNT);
         $statement->execute(array($id));
         return $statement->fetch(PDO::FETCH_ASSOC)['followed_count'];
+    }
+
+    public function getMostSubscribed() {
+        $statement = $this->pdo->prepare(self::GET_MOST_SUBSCRIBED);
+        $statement->execute();
+        $usersArr = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $users = array();
+        foreach ($usersArr as $userArr) {
+            $user = new User();
+            $user->setId($userArr['id']);
+            $user->setUserPhotoUrl($userArr['user_photo_url']);
+            $user->setUsername($userArr['username']);
+            $users[] = $user;
+        }
+        return $users;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace controller;
 
+use model\db\UserDao;
+use model\db\VideoDao;
 use \model\User;
 
 class BaseController {
@@ -22,8 +24,19 @@ class BaseController {
             $logged = true;
         }
 
+        $navTitle = 'Subscriptions:';
+
+        $userDao = UserDao::getInstance();
+        $suggestions = $userDao->getSubscriptions($userId);
+        if (count($suggestions) == 0) {
+            $navTitle = 'Most subscribed users:';
+            $suggestions = $userDao->getMostSubscribed();
+
+        }
         $params['userPhotoSrc'] = $userPhotoSrc;
         $params['userId'] = $userId;
+        $params['navSuggestions'] = $suggestions;
+        $params['navTitle'] = $navTitle;
 
         require_once '../view/header.php';
         require_once '../view/nav.php';
@@ -38,5 +51,8 @@ class BaseController {
     public function jsonEncodeParams($params = []) {
         echo json_encode($params);
     }
+
+    // " SELECT u.username, u.id FROM users u JOIN follows f ON  u.id = f.followed_id GROUP BY followed_id ORDER BY COUNT(f.follower_id) DESC LIMIT 10
+    // SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?"
 
 }

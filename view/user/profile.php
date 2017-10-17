@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="row margin-top">
-        <div class="col-md-11 col-md-offset-1"">
+        <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
                 <li class="active"><a data-toggle="tab" href="#home">Videos</a></li>
                 <li><a data-toggle="tab" href="#menu1">Playlists</a></li>

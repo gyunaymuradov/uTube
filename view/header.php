@@ -16,6 +16,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
         <script src="assets/js/upload.js"></script>
+        <script src="assets/js/video_preview.js"></script>
         <title>uTube</title>
     </head>
 <body>

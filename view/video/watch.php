@@ -28,12 +28,13 @@
                 foreach ($suggestedVideos as $suggestedVideo) {
                     $title = $suggestedVideo['title'];
                     $videoId = $suggestedVideo['video_id'];
+                    $videoThumbnail = $suggestedVideo['thumbnail_url'];
                     $uploader = $suggestedVideo['uploader_name'];
                     $uploaderId = $suggestedVideo['uploader_id'];
 
                     echo "<div class='well-sm row bg-info'>
                                 <div class='col-md-8'>
-                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='assets/images/channelPic.png'></a>
+                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
                                 <div class='col-md-4 text-left no-padding suggestions-video-text'>
                                     <a href='index.php?page=watch&id=$videoId'><p>$title</p></a>

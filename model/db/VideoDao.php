@@ -13,7 +13,7 @@ class VideoDao {
     const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
     const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
     const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url FROM videos WHERE hidden=0 ORDER BY RAND() LIMIT ?";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
@@ -32,6 +32,8 @@ class VideoDao {
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
     const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, u.username as uploader_name, u.id as uploader_id FROM videos v 
+                                JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? LIMIT 10";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -148,12 +150,12 @@ class VideoDao {
      * @param int $numberOfVideos
      * @return array
      */
-    public function getNRandom($numberOfVideos){
+    public function getNRandom($numberOfVideos, $videoId){
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_RANDOM);
-        $statement->execute(array($numberOfVideos));
+        $statement->execute(array($numberOfVideos, $videoId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $this->sqlResultToVideoArray($result);
+        return $result;
     }
     /**
      * Return array of N random Videos by Tag id
@@ -319,5 +321,19 @@ class VideoDao {
         $statement->execute(array($playlistID));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToVideoArray($result);
+    }
+
+    public function getWithSameTags($tagId, $videoId) {
+        $statement = $this->pdo->prepare(self::GET_WITH_SAME_TAGS);
+        $statement->execute(array($tagId[0], $videoId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) < 10) {
+            $limit = 10 - count($result);
+            $moreVideos = $this->getNRandom($videoId, $limit);
+            foreach ($moreVideos as $video) {
+                $result[] = $video;
+            }
+        }
+        return $result;
     }
 }

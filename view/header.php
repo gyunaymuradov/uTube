@@ -18,7 +18,7 @@
         <script src="assets/js/upload.js"></script>
         <title>uTube</title>
     </head>
-<body>
+<body onload="clickListener()">
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">
@@ -34,7 +34,8 @@
                                 <button type="button" class="btn btn-primary" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
                                 <button type="button" class="btn btn-primary" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                             </div>
-                            <input type="text" name="value" id="search" class="form-control" onkeyup="" placeholder="Search">
+                            <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="Search" autocomplete="off">
+                            <div id="search-autocomplete"></div>
                             <input type="hidden" name="search-option" id="search-for" value="video">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" name="search"><span class="glyphicon glyphicon-search"></span> Search</button>
@@ -53,7 +54,7 @@
                         $userId = $params['userId'];
                         echo "<div class='dropdown'>
                         <img src='$userPhotoSrc' width='50px' height='auto' class='img-circle dropdown-toggle cursor-pointer avatar'
-                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true\' aria-expanded='false'>
+                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                         <ul class='dropdown-menu' aria-labelledby=\"dropdownMenu1\">
                             <li class='dropdown-item'><a href='index.php?page=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='#'>Channel</a></li>

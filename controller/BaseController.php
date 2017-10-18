@@ -51,8 +51,4 @@ class BaseController {
     public function jsonEncodeParams($params = []) {
         echo json_encode($params);
     }
-
-    // " SELECT u.username, u.id FROM users u JOIN follows f ON  u.id = f.followed_id GROUP BY followed_id ORDER BY COUNT(f.follower_id) DESC LIMIT 10
-    // SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?"
-
 }

@@ -9,7 +9,6 @@ class UserDao {
 
     private static $instance;
     private $pdo;
-    //SELECT CONCAT(first_name, ' ', last_name) as full_name FROM users WHERE username LIKE "%gy%"
 
     const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ? AND password = ?";
     const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -99,11 +98,11 @@ class UserDao {
      * @param string $username
      * @return array
      */
-    // will be implemented to search with ajax on key up event later
     public function getSuggestionsByUsername($username) {
         $statement = $this->pdo->prepare(self::GET_SUGGESTIONS_BY_USERNAME);
-        $statement->execute(array("%$username%"));
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $statement->execute(array("$username%"));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**

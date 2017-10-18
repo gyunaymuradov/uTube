@@ -122,3 +122,21 @@ body {
 .width-100 {
     width: 100%;
 }
+
+#search-autocomplete {
+    position: absolute;
+    top: 34px;
+    background: transparent;
+    width: 391px;
+    z-index: 100;
+}
+#search-autocomplete a {
+    background-color: white;
+    padding: 5px 10px;
+    display: block;
+}
+#search-autocomplete a:hover {
+    background-color: rgb(43, 167, 207);
+    color: white;
+    text-decoration: none;
+}

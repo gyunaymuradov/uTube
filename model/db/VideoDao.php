@@ -17,10 +17,10 @@ class VideoDao {
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                                          FROM videos WHERE uploader_id=? ORDER BY date_added DESC LIMIT ?";
-    const GET_NAME_SUGGESTIONS = "SELECT title FROM videos WHERE title LIKE ? LIMIT 5";
+                                          FROM videos WHERE uploader_id = ? ORDER BY date_added DESC LIMIT ?";
+    const GET_NAME_SUGGESTIONS = "SELECT id, title FROM videos WHERE title LIKE ?";
     const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url FROM videos WHERE title LIKE ?";
-    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thu mbnail_url 
+    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                             FROM videos WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO video_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
@@ -238,13 +238,9 @@ class VideoDao {
      */
     public function getNameSuggestions($partOfVideoName) {
         $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
-        $statement->execute(array("%$partOfVideoName%"));
+        $statement->execute(array("$partOfVideoName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $videosNamesArray = array();
-        foreach ($result as $key=>$value) {
-            $videosNamesArray[] = $result[$key]['title'];
-        }
-        return $videosNamesArray;
+        return $result;
     }
 
     public function searchByName($name) {

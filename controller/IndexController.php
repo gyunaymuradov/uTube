@@ -26,23 +26,37 @@ class IndexController extends BaseController {
 
     public function searchAction() {
 
+        $videoDao = VideoDao::getInstance();
+        $userDao = UserDao::getInstance();
+
         if (isset($_POST['search'])) {
             $searchOption = $_POST['search-option'];
             $value = $_POST['value'];
             $type = 'video';
             $result = array();
             if ($searchOption === 'video') {
-                $videoDao = VideoDao::getInstance();
                 $result = $videoDao->searchByName($value);
             } else {
                 $type = 'user';
-                $userDao = UserDao::getInstance();
                 $result = $userDao->search($value);
             }
 
             $this->render('index/search', [
                 'type' => $type,
                 'result' => $result
+            ]);
+        } else {
+            $searchOption = $_GET['search-option'];
+            $searchValue = $_GET['value'];
+
+            if ($searchOption == 'video') {
+                $suggestions = $videoDao->getNameSuggestions($searchValue);
+            } else {
+                $suggestions = $userDao->getSuggestionsByUsername($searchValue);
+            }
+
+            $this->jsonEncodeParams([
+                'suggestions' => $suggestions
             ]);
         }
     }

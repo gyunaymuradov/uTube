@@ -49,7 +49,7 @@ class VideoController extends BaseController {
                         if (!file_exists("../uploads/videos")) {
                             mkdir("../uploads/videos", 0777);
                         }
-                        $videoName = "VID_" . $userId . "_" . time() ;
+                        $videoName = "VID_" . $userId . "_" . time();
                         $videoPath = "../uploads/videos/$videoName." . pathinfo($realFileName, PATHINFO_EXTENSION);
                         $thumbPath = "../uploads/thumbnails/$videoName.png";
                         move_uploaded_file($tmpFileName, "$videoPath");

@@ -34,7 +34,7 @@
 
                     echo "<div class='well-sm row bg-info'>
                                 <div class='col-md-8'>
-                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
+                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnails-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
                                 <div class='col-md-4 text-left no-padding suggestions-video-text'>
                                     <a href='index.php?page=watch&id=$videoId'><p>$title</p></a>

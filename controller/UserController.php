@@ -23,12 +23,17 @@ class UserController extends BaseController {
             $user->setPassword($_POST['password']);
             $user->setDateJoined(date("Y-m-d"));
 
-            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] == 0) {
-                $name = basename($_FILES["photo"]["name"]);
-                move_uploaded_file($_FILES['photo']['tmp_name'], '../uploads/' . $name);
-                $user->setUserPhotoUrl('/uploads/' . $name);
+            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0) {
+                if (!file_exists("../uploads/user_photos")) {
+                    mkdir("../uploads/user_photos", 0777);
+                }
+                $realFileName = $_FILES['photo']['name'];
+                $imgName = 'IMG_' . time();
+                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
+                $user->setUserPhotoUrl($imgPath);
             } else {
-                $user->setUserPhotoUrl('uploads/default_photo.png');
+                $user->setUserPhotoUrl('../uploads/default_photo.png');
             }
 
             $success = $userModel->insert($user);
@@ -37,7 +42,7 @@ class UserController extends BaseController {
                 header('Location:index.php?page=register-success');
             } else {
 //                echo "Registration was unsuccessful. Try again.";
-//                require_once '../view/start.html';
+
             }
         }
     }
@@ -55,15 +60,14 @@ class UserController extends BaseController {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            $userModel = UserDao::getInstance();
+            $userDao = UserDao::getInstance();
             $user = new User();
             $user->setUsername($username);
             $user->setPassword($password);
-            $result = $userModel->login($user);
+            $result = $userDao->login($user);
             if ($result === false) {
                 // call loginRegisterAction with params to send it to render and to render it to view
 //                echo "Invalid username or password.";
-//                require_once '../view/start.html';
             } else {
                 $_SESSION['user'] = $result;
                 header("Location:index.php");

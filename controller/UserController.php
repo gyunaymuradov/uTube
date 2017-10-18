@@ -168,14 +168,23 @@ class UserController extends BaseController {
             $newPass = $_POST['newPass'];
             $confirmNewPass = $_POST['confirmNewPass'];
             $oldPass = $_POST['oldPass'];
-            $image = $_FILES['photo'];
+            $imgPath = $_SESSION['user']->getUserPhotoUrl();
+            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0) {
+                if (!file_exists("../uploads/user_photos")) {
+                    mkdir("../uploads/user_photos", 0777);
+                }
+                $realFileName = $_FILES['photo']['name'];
+                $imgName = 'IMG_' . time();
+                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
+            }
 
             $user->setId($userId);
             $user->setUsername($username);
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
             $user->setEmail($email);
-            $user->setUserPhotoUrl($image);
+            $user->setUserPhotoUrl($imgPath);
             $user->setPassword($newPass);
 
             $success = $userDao->edit($user);

@@ -12,7 +12,7 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center'>
-                            <img class='img-thumbnails' src='$thumbnailUrl'>
+                            <img class='img-thumbnail' src='$thumbnailUrl'>
                             <label>$title</label>
                         </div>
                       </a>";
@@ -34,7 +34,7 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center'>
-                            <img class='img-thumbnails' src='$thumbnailUrl'>
+                            <img class='img-thumbnail' src='$thumbnailUrl'>
                             <label>$title</label>
                         </div>
                       </a>";

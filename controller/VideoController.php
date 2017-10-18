@@ -42,40 +42,41 @@ class VideoController extends BaseController {
                 $realFileName = $_FILES['videoFile']['name'];
                 $fileType = $_FILES['videoFile']['type'];
 
-
                 if (is_uploaded_file($tmpFileName)) {
                     if (strpos($fileType, "video") === false) {
                         $resultMsg = "Error! File is not a video!";
                     } else {
-                        if (!file_exists("../uploads/$userId")) {
-                            mkdir("../uploads/$userId", 0777);
+                        if (!file_exists("../uploads/videos")) {
+                            mkdir("../uploads/videos", 0777);
                         }
-                        $filePath = "../uploads/$userId/VID_" . time() . "." . pathinfo($realFileName, PATHINFO_EXTENSION);
-                        move_uploaded_file($tmpFileName, "$filePath");
-                        if (file_exists($filePath)) {
+                        $videoName = "VID_" . $userId . "_" . time() ;
+                        $videoPath = "../uploads/videos/$videoName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                        $thumbPath = "../uploads/thumbnails/$videoName.png";
+                        move_uploaded_file($tmpFileName, "$videoPath");
+                        if (file_exists($videoPath)) {
 
-//                        for creation of video thumbnail
-//                        PROBLEM: how to include ffmpeg.php ???
-//                        Todo FIND FIX FOR THIS
-//                        $ffmpegVideo = new \ffmpeg_movie($filePath, false);
-//                        $thumbnail = $ffmpegVideo->getFrame(100)->toGDImage();
-//                        imagepng($thumbnail, "../uploads/$userId/thumbnail.png");
-
+                            if (!file_exists("../uploads/thumbnails")) {
+                                mkdir("../uploads/thumbnails", 0777);
+                            }
+                            file_put_contents($thumbPath, file_get_contents("data://".$_POST["Thumbnail"]));
                             $newVideo = new Video(null,
                                 $_POST['Title'],
                                 $_POST['Description'],
                                 date("Y-m-d"),
                                 $userId,
-                                $filePath,
-                                "thumbnailURL",
-                                $_POST["Tags"]
+                                $videoPath,
+                                $thumbPath,
+                                $_POST["Tags"][0]
                             );
                             $newVideo->setHidden(0);
                             try {
                                 $videoDao->insert($newVideo);
                             } catch (\PDOException $e) {
-                                if (file_exists($filePath)) {
-                                    unlink($filePath);
+                                if (file_exists($videoPath)) {
+                                    unlink($videoPath);
+                                }
+                                if (file_exists($thumbPath)) {
+                                    unlink($thumbPath);
                                 }
                                 $resultMsg = "An error occurred! Please try again later.";
                             }
@@ -84,7 +85,6 @@ class VideoController extends BaseController {
                 } else {
                     $resultMsg = "Error uploading file!";
                 }
-
                 $this->render('video/uploadResult', array("Result" => $resultMsg));
             }
             else {

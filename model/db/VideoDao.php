@@ -13,7 +13,7 @@ class VideoDao {
     const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
     const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
     const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? LIMIT ?";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
@@ -33,7 +33,7 @@ class VideoDao {
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
     const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
-    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, u.username as uploader_name, u.id as uploader_id FROM videos v 
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.thumbnail_url, u.username as uploader_name, u.id as uploader_id FROM videos v 
                                 JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? LIMIT 10";
     const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
     const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ?";
@@ -109,10 +109,16 @@ class VideoDao {
                 $video->getHidden()
             ));
             $video->setId($this->pdo->lastInsertId());
-            foreach ($video->getTags() as $tagID) {
-                $statement = $this->pdo->prepare(self::INSERT_TAGS);
-                $statement->execute(array($tagID, $video->getId()));
-            }
+
+            //for a single tag on a video
+            $statement = $this->pdo->prepare(self::INSERT_TAGS);
+            $statement->execute(array($video->getTagId(), $video->getId()));
+
+            //for multiple tags on a video
+//            foreach ($video->getTags() as $tagID) {
+//                $statement = $this->pdo->prepare(self::INSERT_TAGS);
+//                $statement->execute(array($tagID, $video->getId()));
+//            }
             $this->pdo->commit();
         }
         catch (PDOException $e) {

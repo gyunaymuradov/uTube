@@ -43,7 +43,7 @@ class PlaylistController extends BaseController
                 $thumbnailURL = $video->getThumbnailURL();
                 $playlist = new Playlist(null, $title, $date, $userID, $thumbnailURL, array($videoID));
                 $playlistDao->insert($playlist);
-                $result = array("Result" => "Success");
+                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
             }
             else {
                 $result = array("Result" => "Error! You cant leave empty fields!");
@@ -62,7 +62,7 @@ class PlaylistController extends BaseController
                 $playlistID = htmlspecialchars($_GET['playlistID']);
                 $videoID = htmlspecialchars($_GET['videoID']);
                 $playlistDao->insertVideo($playlistID, $videoID);
-                $result = array("Result" => "Success");
+                $result = array("Result" => "Video successfully added!");
             }
             else {
                 $result = array("Result" => "Error! You cant leave empty fields!");
@@ -70,6 +70,62 @@ class PlaylistController extends BaseController
         }
         catch (\PDOException $e) {
             $result = array("Result" => "Error! Please try again later!");
+        }
+        $this->jsonEncodeParams($result);
+    }
+
+    public function renamePlaylist() {
+        try {
+            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['newTitle']) && $_GET['newTitle'] != "") {
+                $playlistDao = PlaylistDao::getInstance();
+                $playlistID = htmlspecialchars($_GET['playlistID']);
+                $newTitle = htmlspecialchars($_GET['newTitle']);
+                $playlistDao->changeTitle($playlistID, $newTitle);
+                $result = array("Result" => "Playlist successfully renamed!");
+            }
+            else {
+                $result = array("Result" => "Error! You cant leave empty fields!");
+            }
+        }
+        catch (\PDOException $e) {
+            $result = array("Result" => "Error! Please try again later!");
+        }
+        $this->jsonEncodeParams($result);
+    }
+
+    public function getVideos() {
+        if (isset($_GET['playlistID']) && $_GET['playlistID'] != "") {
+            try {
+                $playlistDao = PlaylistDao::getInstance();
+                $result = $playlistDao->getVideoById($_GET['playlistID']);
+            } catch (\PDOException $e) {
+                $result = array("Result" => "Error");
+            }
+        }
+        else {
+            $result = array("Result" => "Error");
+        }
+        $this->jsonEncodeParams($result);
+    }
+
+    public function removeVideo() {
+        if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "") {
+            try {
+                $playlistDao = PlaylistDao::getInstance();
+                $isPlaylistDeleted = $playlistDao->deleteVideo($_GET['playlistID'], $_GET['videoID']);
+                if ($isPlaylistDeleted) {
+                    $result = array("Result" => "Playlist deleted!");
+                }
+                else {
+                    $result = array("Result" => "Successfully removed video from playlist!");
+                }
+
+            } catch (\PDOException $e) {
+                $result = array("Result" => "Error");
+            }
+        }
+        else {
+            $result = array("Result" => "Error");
         }
         $this->jsonEncodeParams($result);
     }

@@ -74,6 +74,10 @@ function __autoload($className) {
         $controller = new controller\VideoController();
         $controller->deleteAction();
     }
+    else if($page === 'edit-video') {
+        $controller = new controller\VideoController();
+        $controller->editAction();
+    }
     else if($page === 'upload') {
         $controller = new controller\VideoController();
         $controller->upload();
@@ -97,6 +101,18 @@ function __autoload($className) {
     else if($page === 'playlist-insert') {
         $controller = new controller\PlaylistController();
         $controller->insertVideo();
+    }
+    else if($page === 'playlist-rename') {
+        $controller = new controller\PlaylistController();
+        $controller->renamePlaylist();
+    }
+    else if($page === 'get-playlist-videos') {
+        $controller = new controller\PlaylistController();
+        $controller->getVideos();
+    }
+    else if($page === 'playlist-delete') {
+        $controller = new controller\PlaylistController();
+        $controller->removeVideo();
     }
     else {
         $controller = new controller\IndexController();

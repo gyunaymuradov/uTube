@@ -68,13 +68,13 @@ function getAboutPage(userId) {
     }
 }
 
-function showButtons(Id) {
+function showVideoButtons(Id) {
     document.getElementById("edit" + Id).style.display = "block";
     document.getElementById("delete" + Id).style.display = "block";
     document.getElementById("addToBtn" + Id).style.display = "block";
 }
 
-function hideButtons(Id) {
+function hideVideoButtons(Id) {
     document.getElementById("edit" + Id).style.display = "none";
     document.getElementById("delete" + Id).style.display = "none";
     document.getElementById("addToBtn" + Id).style.display = "none";
@@ -160,4 +160,87 @@ function insertVideo(btnId) {
     };
     request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-insert&playlistID=' + playlistId + '&videoID=' + videoId);
     request.send();
+}
+
+function showPlaylistButtons(Id) {
+    document.getElementById("rename" + Id).style.display = "block";
+    document.getElementById("removeVid" + Id).style.display = "block";
+}
+
+function hidePlaylistButtons(Id) {
+    document.getElementById("rename" + Id).style.display = "none";
+    document.getElementById("removeVid" + Id).style.display = "none";
+    document.getElementById("removeVid" + Id).disabled = false;
+    document.getElementById("removeField" + Id).style.display = "none";
+    document.getElementById("buttonContainer" + Id).innerHTML = "";
+}
+
+function renamePlaylist(buttonId) {
+    var playlistId = buttonId.replace('rename', '');
+    var oldPlaylistTitle = document.getElementById("title" + playlistId).innerHTML;
+    var newPlaylistTitle = prompt("Enter a new title for this playlist:", oldPlaylistTitle);
+    if (newPlaylistTitle == "") {
+        alert("You cant leave an empty field!");
+    }
+    else if(newPlaylistTitle != null){
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response['Result'] === "Playlist successfully renamed!") {
+                    document.getElementById("title" + playlistId).innerHTML = newPlaylistTitle;
+                }
+                else {
+                    alert(response['Result']);
+                }
+
+            }
+        };
+        request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-rename&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
+        request.send();
+    }
+}
+
+function showRemoveVid(buttonId) {
+    document.getElementById(buttonId).disabled = true;
+    var playlistId = buttonId.replace('removeVid', '');
+    var divId = buttonId.replace('removeVid', 'removeField');
+    var btnContId =  buttonId.replace('removeVid', 'buttonContainer');
+    var removeDiv = document.getElementById(divId);
+    var btnContainer = document.getElementById(btnContId);
+    removeDiv.style.display = "block";
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var response = JSON.parse(this.responseText);
+            var videoId;
+            for (var i in response) {
+                videoId = response[i]['id'];
+                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5' id='" + videoId + "|" + playlistId +"' onclick='removeVideo(this.id)'>" + response[i]['title'] + "</button>";
+            }
+        }
+    };
+    request.open('GET', 'http://localhost/uTube/root/index.php?page=get-playlist-videos&playlistID=' + playlistId);
+    request.send();
+}
+
+function removeVideo(buttonId) {
+    if (confirm("Are you sure you want to remove this video from the playlist?")) {
+        var arrOfIds = buttonId.split("|");
+        var videoId = arrOfIds[0];
+        var playlistId = arrOfIds[1];
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                alert(response['Result']);
+                if (response['Result'] === 'Playlist deleted!') {
+                    var playlist = document.getElementById(playlistId);
+                    playlist.parentNode.removeChild(playlist);
+                }
+            }
+        };
+        request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-delete&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.send();
+    }
 }

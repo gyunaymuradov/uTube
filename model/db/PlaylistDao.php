@@ -11,8 +11,9 @@ class PlaylistDao {
     private $videoDao;
     const INSERT_PLAYLIST = "INSERT INTO playlists (title, date_added, creator_id, thumbnail_url) VALUES (?, ?, ?, ?)";
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
-    const UPDATE_TITLE = "UPDATE TABLE playlists SET title=? WHERE id=?";
+    const UPDATE_TITLE = "UPDATE playlists SET title=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
+    const DELETE_PLAYLIST = "DELETE FROM playlists WHERE id = ?";
     const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
     const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY date_added DESC LIMIT ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
@@ -102,13 +103,12 @@ class PlaylistDao {
 
     /**
      * Changes title of existing Playlist
-     * @param Playlist $playlist
-     * Playlist id is of the renamed playlist
-     * Playlist title is the new title
+     * @param $playlistId
+     * @param $newTitle
      */
-    public function changeTitle(Playlist $playlist) {
+    public function changeTitle($playlistId, $newTitle) {
         $statement = $this->pdo->prepare(self::UPDATE_TITLE);
-        $statement->execute(array($playlist->getTitle(), $playlist->getId()));
+        $statement->execute(array($newTitle, $playlistId));
     }
     /**
      * Inserts video in playlist by IDs
@@ -122,12 +122,26 @@ class PlaylistDao {
 
     /**
      * Removes video from playlist by IDs
-     * @param int $playlistID
-     * @param int $videoID
+     * Returns true if whole playlist is deleted and false if it is not
+     * @param $playlistID
+     * @param $videoID
+     * @return bool
      */
     public function deleteVideo($playlistID, $videoID) {
         $statement = $this->pdo->prepare(self::DELETE_VIDEO);
         $statement->execute(array($playlistID, $videoID));
+
+        $statement = $this->pdo->prepare(self::GET_VIDEOS_BY_ID);
+        $statement->execute(array($playlistID));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($result)) {
+            $statement = $this->pdo->prepare(self::DELETE_PLAYLIST);
+            $statement->execute(array($playlistID));
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**

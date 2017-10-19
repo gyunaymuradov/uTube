@@ -31,7 +31,7 @@
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
-                            <button class='video-edit-btn btn btn-info' id='edit$videoId'>Edit</button>
+                            <a href='index.php?page=upload&id=$videoId'><button class='video-edit-btn btn btn-info' id='edit$videoId'>Edit</button></a>
                             <button class='video-delete-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
                             <button class='video-addTo-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
                             <div class='video-addTo-div well-sm' id='addToField$videoId'>

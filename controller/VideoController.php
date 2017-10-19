@@ -4,6 +4,7 @@ namespace controller;
 
 use model\Comment;
 use model\db\CommentDao;
+use model\db\PlaylistDao;
 use model\db\TagDao;
 use model\db\UserDao;
 use model\User;
@@ -127,28 +128,58 @@ class VideoController extends BaseController {
     
     public function watchAction() {
 
-        $videoId = $_GET['id'];
         $videoDao = VideoDao::getInstance();
-
-        $video = $videoDao->getByID($videoId);
-        $videoUrl = $video->getVideoURL();
-        $videoTitle = $video->getTitle();
-        $videoDescription = $video->getDescription();
-        $dateAdded = $video->getDateAdded();
-        $uploaderId = $video->getUploaderID();
-        $tagId = $video->getTagId();
+        $playlistDao = PlaylistDao::getInstance();
         $userDao = UserDao::getInstance();
-        $uploader = $userDao->getById($uploaderId)->getUsername();
 
-        $likes = $videoDao->getLikesCountById($videoId);
-        $dislikes = $videoDao->getDislikesCountById($videoId);
+        if (!isset($_GET['playlist-id'])) {
+            $videoId = $_GET['id'];
+            $video = $videoDao->getByID($videoId);
+            $videoUrl = $video->getVideoURL();
+            $videoTitle = $video->getTitle();
+            $videoDescription = $video->getDescription();
+            $dateAdded = $video->getDateAdded();
+            $uploaderId = $video->getUploaderID();
+            $tagId = $video->getTagId();
+            $uploader = $userDao->getById($uploaderId)->getUsername();
 
-        $commentDao = CommentDao::getInstance();
-        $comments = $commentDao->getByVideoId($videoId);
+            $likes = $videoDao->getLikesCountById($videoId);
+            $dislikes = $videoDao->getDislikesCountById($videoId);
+
+            $commentDao = CommentDao::getInstance();
+            $comments = $commentDao->getByVideoId($videoId);
 
 
-        $similarVideos = array();
-        $similarVideos = $videoDao->getWithSameTags($tagId, $videoId);
+            $similarVideos = array();
+            $similarVideos = $videoDao->getWithSameTags($tagId, $videoId);
+            $sideBarTitle = 'Suggestions';
+            $playlistId = null;
+
+        } else {
+            $playlistId = $_GET['playlist-id'];
+            $playlistContent = $playlistDao->getVideoById($playlistId);
+            $videoId = $playlistContent[0]['id'];
+            $sideBarTitle = 'Playlist ' . $playlistDao->getByID($playlistId)->getTitle();
+            if (isset($_GET['vid-id'])) {
+                $videoId = $_GET['vid-id'];
+            }
+            $video = $videoDao->getByID($videoId);
+            $videoUrl = $video->getVideoURL();
+            $videoTitle = $video->getTitle();
+            $videoDescription = $video->getDescription();
+            $dateAdded = $video->getDateAdded();
+            $uploaderId = $video->getUploaderID();
+            $tagId = $video->getTagId();
+            $uploader = $userDao->getById($uploaderId)->getUsername();
+
+            $likes = $videoDao->getLikesCountById($videoId);
+            $dislikes = $videoDao->getDislikesCountById($videoId);
+
+            $commentDao = CommentDao::getInstance();
+            $comments = $commentDao->getByVideoId($videoId);
+
+            $similarVideos = $playlistContent;
+        }
 
         $logged = 'false';
         $loggedUserId = null;
@@ -174,6 +205,8 @@ class VideoController extends BaseController {
             'logged' => $logged,
             'comments' => $comments,
             'suggestedVideos' => $similarVideos,
+            'sidebarTitle' => $sideBarTitle,
+            'playlistId' => $playlistId
         ]);
     }
 

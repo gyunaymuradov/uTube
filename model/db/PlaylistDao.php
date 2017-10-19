@@ -13,7 +13,7 @@ class PlaylistDao {
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
     const UPDATE_TITLE = "UPDATE TABLE playlists SET title=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
-    const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id=?";
+    const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
     const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY date_added DESC LIMIT ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
                             FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos WHERE video_id=?) LIMIT ?";
@@ -23,6 +23,8 @@ class PlaylistDao {
     const GET_NAME_SUGGESTIONS = "SELECT id, title FROM playlists WHERE title LIKE ?";
     const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count FROM playlists p 
                             JOIN users u ON p.creator_id = u.id JOIN playlists_videos pv ON p.id = pv.playlist_id WHERE p.title LIKE ? GROUP BY pv.playlist_id";
+    const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username FROM videos v JOIN users u ON u.id = v.uploader_id 
+                              JOIN playlists_videos pv ON pv.video_id = v.id JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -206,6 +208,13 @@ class PlaylistDao {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::SEARCH_BY_NAME);
         $statement->execute(array("%$playlistName%"));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getVideoById($playlistId) {
+        $statement = $this->pdo->prepare(self::GET_VIDEOS_BY_ID);
+        $statement->execute(array($playlistId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }

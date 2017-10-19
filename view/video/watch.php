@@ -20,19 +20,39 @@
                 </div>
             </div>
             <div class="col-md-4 well pre-scrollable watch-height">
-                <h4>Suggestions:</h4>
+                <h4><?= $params['sidebarTitle']; ?></h4>
 
                 <?php
-                
-                $suggestedVideos = $params['suggestedVideos'];
-                foreach ($suggestedVideos as $suggestedVideo) {
-                    $title = $suggestedVideo['title'];
-                    $videoId = $suggestedVideo['video_id'];
-                    $videoThumbnail = $suggestedVideo['thumbnail_url'];
-                    $uploader = $suggestedVideo['uploader_name'];
-                    $uploaderId = $suggestedVideo['uploader_id'];
 
-                    echo "<div class='well-sm row bg-info'>
+                $suggestedVideos = $params['suggestedVideos'];
+                if ($params['sidebarTitle'] != 'Suggestions') {
+                    $playlistId = $params['playlistId'];
+                    foreach ($suggestedVideos as $suggestedVideo) {
+                        $title = $suggestedVideo['title'];
+                        $videoId = trim($suggestedVideo['id']);
+                        $videoThumbnail = $suggestedVideo['thumbnail_url'];
+                        $uploader = $suggestedVideo['username'];
+                        $uploaderId = $suggestedVideo['uploader_id'];
+
+                        echo "<div class='well-sm row bg-info'>
+                                <div class='col-md-7'>
+                                    <a href='index.php?page=watch&playlist-id=$playlistId&vid-id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
+                                </div> 
+                                <div class='col-md-5 text-left no-padding suggestions-video-text'>
+                                    <a href='index.php?page=watch&playlist-id=$playlistId&vid-id=$videoId'><small>$title</small></a><br>
+                                    <a href='index.php?page=user&id=$uploaderId'><p><strong>By $uploader</strong></p></a>
+                                </div>
+                            </div>";
+                    }
+                } else {
+                    foreach ($suggestedVideos as $suggestedVideo) {
+                        $title = $suggestedVideo['title'];
+                        $videoId = $suggestedVideo['video_id'];
+                        $videoThumbnail = $suggestedVideo['thumbnail_url'];
+                        $uploader = $suggestedVideo['uploader_name'];
+                        $uploaderId = $suggestedVideo['uploader_id'];
+
+                        echo "<div class='well-sm row bg-info'>
                                 <div class='col-md-7'>
                                     <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
@@ -41,7 +61,8 @@
                                     <a href='index.php?page=user&id=$uploaderId'><p><strong>By $uploader</strong></p></a>
                                 </div>
                             </div>";
-                }   
+                    }
+                }
 
             ?>
 

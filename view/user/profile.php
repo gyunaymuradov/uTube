@@ -52,7 +52,7 @@
                         $playlistId = $playlist->getId();
                         echo "
                         <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
-                            <a href='index.php?page=watch&id=$videoId'>
+                            <a href='index.php?page=watch&playlist-id=$playlistId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>

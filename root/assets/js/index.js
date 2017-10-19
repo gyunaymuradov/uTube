@@ -63,7 +63,7 @@ function getSuggestions() {
                                 a.className = 'autocomplete-item';
                                 a.style.display = 'block';
                                 a.innerHTML = title;
-                                a.href = 'index.php?page=watch&id=' + id;
+                                a.href = 'index.php?page=watch&playlist-id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
                         }

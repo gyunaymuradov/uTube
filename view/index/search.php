@@ -61,10 +61,10 @@
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
                         <div class='col-md-3'>
-                            <a href='index.php?page=watch&id=$playlistId'><img src='$playlistThumbnail' width='200' height='auto'></a>
+                            <a href='index.php?page=watch&playlist-id=$playlistId'><img src='$playlistThumbnail' width='200' height='auto'></a>
                         </div>
                         <div class='col-md-9'>
-                            <a href='index.php?page=watch&id=$playlistId'><h4 class='text-left'>$playlistTitle</h4></a>
+                            <a href='index.php?page=watch&playlist-id=$playlistId'><h4 class='text-left'>$playlistTitle</h4></a>
                             <h4>Date created: $dateCreated</h4>
                             <h4>Videos count: $videoCount</h4>
                             <h4>Author: <a href='index.php?page=user&id=$authorId'><img src='$authorPhotoUrl' class='img-rounded' width='30' height='auto'>&nbsp;$authorName</a></h4>

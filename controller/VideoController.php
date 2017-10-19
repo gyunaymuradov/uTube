@@ -177,6 +177,20 @@ class VideoController extends BaseController {
         ]);
     }
 
+    public function deleteAction () {
+        if (isset($_GET['videoId'])) {
+            try {
+                $videoDao = VideoDao::getInstance();
+                $videoDao->delete($_GET['videoId']);
+                $result = "Success";
+            }
+            catch (\PDOException $e) {
+                $result = "An error occurred! Please Try Again Later!";
+            }
+            $this->jsonEncodeParams(["Result" => $result]);
+        }
+    }
+
     public function likeDislikeVideoAction() {
         $videoId = $_GET['video-id'];
         $userId = $_GET['user-id'];

@@ -13,12 +13,12 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a data-toggle="tab" href="#home"><h4>Videos</h4></a></li>
-                <li onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="profile-tab-middle" data-toggle="tab" href="#menu1"><h4>Playlists</h4></a></li>
-                <li><a class="profile-tab-end" data-toggle="tab" href="#menu2"><h4>About</h4></a></li>
+                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
+                <li onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="profile-tab-middle" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
+                <li><a class="profile-tab-end" data-toggle="tab" href="#about"><h4>About</h4></a></li>
             </ul>
             <div class="tab-content container-fluid bg-info">
-                <div id="home" class="tab-pane fade in active">
+                <div id="videos" class="tab-pane fade in active">
                     <?php
                     /* @var $video \model\Video */
                     foreach ($params['videos'] as $video) {
@@ -35,21 +35,32 @@
                             <button class='video-delete-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
                             <button class='video-addTo-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
                             <div class='video-addTo-div well-sm' id='addToField$videoId'>
-                                <button class='btn btn-info' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                <p>Playlist 1</p>
-                                <p>Playlist 2</p>
-                                <p>Playlist 1</p>
-                                <p>Playlist 2</p>
+                                <p>Choose Playlist:</p>
+                                <button class='btn btn-info margin-bottom-5' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
+                                <div id='buttonContainer$videoId'></div>
                             </div>
                         </div>";
                     }
                     ?>
                 </div>
-                <div id="menu1" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>Some content in menu 1.</p>
+                <div id="playlists" class="tab-pane fade">
+                    <?php
+                    /* @var $playlist \model\Playlist */
+                    foreach ($params['playlists'] as $playlist) {
+                        $title = $playlist->getTitle();
+                        $thumbnail = $playlist->getThumbnailURL();
+                        $playlistId = $playlist->getId();
+                        echo "
+                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
+                            <a href='index.php?page=watch&id=$videoId'>
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
+                                <h4 class='text-center text-muted'>$title</h4>
+                            </a>
+                        </div>";
+                    }
+                    ?>
                 </div>
-                <div id="menu2" class="tab-pane fade">
+                <div id="about" class="tab-pane fade">
                     <div class="col-md-3 col-md-offset-2">
                         <h3 class="text-muted">Name: </h3>
                     </div>

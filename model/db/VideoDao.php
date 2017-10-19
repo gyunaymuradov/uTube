@@ -10,18 +10,18 @@ class VideoDao {
     private $pdo;
     const INSERT_VIDEO = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, hidden) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
-    const DELETE_VIDEO = "UPDATE TABLE videos SET hidden=1 WHERE id = ?";
-    const EDIT_VIDEO = "UPDATE TABLE videos SET title=?, description=? WHERE id=?";
+    const DELETE_VIDEO = "UPDATE videos SET hidden=1 WHERE id = ?";
+    const EDIT_VIDEO = "UPDATE videos SET title=?, description=? WHERE id=?";
     const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? LIMIT ?";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                                    FROM videos WHERE id IN (SELECT video_id FROM tags_videos WHERE tag_id = ?) ORDER BY RAND() LIMIT ?";
-    const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                                          FROM videos WHERE uploader_id = ? ORDER BY date_added DESC LIMIT ?";
-    const GET_NAME_SUGGESTIONS = "SELECT id, title FROM videos WHERE title LIKE ?";
-    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url FROM videos WHERE title LIKE ?";
-    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                            FROM videos WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
+                                    FROM videos WHERE id IN (SELECT video_id, hidden FROM tags_videos WHERE tag_id = ? AND hidden = 0) ORDER BY RAND() LIMIT ?";
+    const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
+                                          FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
+    const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
+    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
+    const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
+                            FROM videos WHERE title LIKE ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO video_likes_dislikes (video_id, user_id, likes) VALUES (?, ?, 1)";
     const UNLIKE = "DELETE FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
@@ -31,16 +31,17 @@ class VideoDao {
     const GET_LIKE_COUNT = "SELECT COUNT(*) as likes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 1";
     const GET_DISLIKE_COUNT = "SELECT COUNT(*) as dislikes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 0";
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
-    const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url
+    const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
-    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.thumbnail_url, u.username as uploader_name, u.id as uploader_id FROM videos v 
-                                JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? LIMIT 10";
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v 
+                                JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
     const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
-    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ?";
-    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
-                              GROUP BY (l.video_id) HAVING l.likes = 1 ORDER BY likes_count DESC LIMIT 4";
-    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url FROM videos LIMIT ?";
-    const GET_NEWEST = "SELECT id, title, thumbnail_url FROM videos ORDER BY id DESC LIMIT 4";
+    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ? AND v.hidden = 0";
+    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
+                              GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT 4";
+    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 LIMIT ?";
+    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT 4";
+
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();

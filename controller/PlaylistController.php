@@ -46,30 +46,30 @@ class PlaylistController extends BaseController
                 $result = array("Result" => "Success");
             }
             else {
-                $result = array("Result" => "Error not set vars");
+                $result = array("Result" => "Error! You cant leave empty fields!");
             }
         }
         catch (\PDOException $e) {
-            $result = array("Result" => "Error pdo");
+            $result = array("Result" => "Error! Please try again later!");
         }
         $this->jsonEncodeParams($result);
     }
 
     public function insertVideo() {
         try {
-            if (isset($_POST['playlistID']) && $_POST['playlistID'] != "" && isset($_POST['videoID']) && $_POST['videoID'] != "") {
+            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "") {
                 $playlistDao = PlaylistDao::getInstance();
-                $playlistID = htmlspecialchars($_POST['playlistID']);
-                $videoID = htmlspecialchars($_POST['videoID']);
+                $playlistID = htmlspecialchars($_GET['playlistID']);
+                $videoID = htmlspecialchars($_GET['videoID']);
                 $playlistDao->insertVideo($playlistID, $videoID);
                 $result = array("Result" => "Success");
             }
             else {
-                $result = array("Result" => "Error");
+                $result = array("Result" => "Error! You cant leave empty fields!");
             }
         }
         catch (\PDOException $e) {
-            $result = array("Result" => "Error");
+            $result = array("Result" => "Error! Please try again later!");
         }
         $this->jsonEncodeParams($result);
     }

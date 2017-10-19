@@ -4,7 +4,9 @@ namespace controller;
 
 use model\db\UserDao;
 use model\db\VideoDao;
+use model\db\PlaylistDao;
 use model\User;
+
 
 class UserController extends BaseController {
 
@@ -140,6 +142,11 @@ class UserController extends BaseController {
 
         $videos = $videoDao->getNLatestByUploaderID(10, $profileId);
 
+        /* @var $playlistDao PlaylistDao */
+        $playlistDao = PlaylistDao::getInstance();
+
+        $playlists = $playlistDao->getNLatestByCreatorID(10, $profileId);
+
         $subscribersCount = $userDao->getSubscribersCount($profileId);
         $subscriptionsCount = $userDao->getSubscriptionsCount($profileId);
 
@@ -155,6 +162,7 @@ class UserController extends BaseController {
             'subscriptionsCount' => $subscriptionsCount,
             'logged' => $logged,
             'videos' => $videos,
+            'playlists' => $playlists,
             'loggedUserId' => $loggedUserId,
             'subscribeButton' => $subscribeButtonText
         ]);
@@ -251,6 +259,11 @@ class UserController extends BaseController {
 
         $videos = $videoDao->getNLatestByUploaderID(10, $userId);
 
+        /* @var $playlistDao PlaylistDao */
+        $playlistDao = PlaylistDao::getInstance();
+
+        $playlists = $playlistDao->getNLatestByCreatorID(10, $userId);
+
         $subscribersCount = $userDao->getSubscribersCount($userId);
         $subscriptionsCount = $userDao->getSubscriptionsCount($userId);
 
@@ -264,7 +277,8 @@ class UserController extends BaseController {
             'dateJoined' => $dateJoined,
             'subscribersCount' => $subscribersCount,
             'subscriptionsCount' => $subscriptionsCount,
-            'videos' => $videos
+            'videos' => $videos,
+            'playlists' => $playlists
         ]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 namespace model;
-class Video {
+class Video implements \JsonSerializable {
     private $id;
     private $title;
     private $description;
@@ -32,6 +32,13 @@ class Video {
         $this->thumbnailURL = $thumbnailURL;
         $this->hidden = 0;
         $this->tagId = $tagId;
+    }
+
+    public function jsonSerialize()
+    {
+        $vars = get_object_vars($this);
+
+        return $vars;
     }
     /**
      * @return mixed

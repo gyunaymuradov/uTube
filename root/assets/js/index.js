@@ -56,15 +56,14 @@ function getSuggestions() {
                                 autocompleteDiv.appendChild(a);
                             });
                         } else {
-                            // TODO PLAYLISTS GENERATION WITH AJAX IN AUTOCOMPLETE
                             response.suggestions.forEach(function (suggestion) {
                                 var id = suggestion.id;
-                                var username = suggestion.username;
+                                var title = suggestion.title;
                                 var a = document.createElement('a');
                                 a.className = 'autocomplete-item';
                                 a.style.display = 'block';
-                                a.innerHTML = username;
-                                a.href = 'index.php?page=user&id=' + id;
+                                a.innerHTML = title;
+                                a.href = 'index.php?page=watch&id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
                         }

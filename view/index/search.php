@@ -23,7 +23,7 @@
                         <div class='col-md-3'>
                             <a href='index.php?page=watch&id=$id'><img src='$thumbnail' width='200' height='auto'></a>
                         </div>
-                        <div class='col-md-8'>
+                        <div class='col-md-9'>
                                 <a href='index.php?page=watch&id=$id'><h3 class='text-left'>$title</h3></a>
                                 <h4>$description</h4>
                         </div>
@@ -49,8 +49,28 @@
             }
         } else {
             $playlists = $params['result'];
+            foreach ($playlists as $playlist) {
+                $playlistId = $playlist['playlist_id'];
+                $playlistTitle = $playlist['title'];
+                $playlistThumbnail = $playlist['thumbnail_url'];
+                $dateCreated = $playlist['date_added'];
+                $authorId = $playlist['creator_id'];
+                $authorName = $playlist['username'];
+                $authorPhotoUrl = $playlist['user_photo_url'];
+                $videoCount = $playlist['video_count'];
 
-            //TODO foreach the playlists and display in divs
+                echo "<div class='row margin-5 width-100 well-sm bg-info'>
+                        <div class='col-md-3'>
+                            <a href='index.php?page=watch&id=$playlistId'><img src='$playlistThumbnail' width='200' height='auto'></a>
+                        </div>
+                        <div class='col-md-9'>
+                            <a href='index.php?page=watch&id=$playlistId'><h4 class='text-left'>$playlistTitle</h4></a>
+                            <h4>Date created: $dateCreated</h4>
+                            <h4>Videos count: $videoCount</h4>
+                            <h4>Author: <a href='index.php?page=user&id=$authorId'><img src='$authorPhotoUrl' class='img-rounded' width='30' height='auto'>&nbsp;$authorName</a></h4>
+                        </div>
+                    </div>";
+            }
         }
     }
 

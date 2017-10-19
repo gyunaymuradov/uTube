@@ -20,18 +20,22 @@ class PlaylistDao {
     const GET_N_BY_VIDEO_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url
                                   FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos 
                                   WHERE video_id IN (SELECT id FROM videos WHERE title LIKE ?)) LIMIT ?";
-    const GET_NAME_SUGGESTIONS = "SELECT title FROM playlists WHERE title LIKE ? LIMIT 5";
-    const GET_N_BY_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE title LIKE ? ORDER BY date_added DESC LIMIT ?";
+    const GET_NAME_SUGGESTIONS = "SELECT id, title FROM playlists WHERE title LIKE ?";
+    const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count FROM playlists p 
+                            JOIN users u ON p.creator_id = u.id JOIN playlists_videos pv ON p.id = pv.playlist_id WHERE p.title LIKE ? GROUP BY pv.playlist_id";
+
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
         $this->videoDao = VideoDao::getInstance();
     }
+
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new PlaylistDao();
         }
         return self::$instance;
     }
+
     /** Converts PDO SQL Result Set to an Array of Playlist Objects
      * or one Playlist Object depending on elements in sqlResultSet
      * @param array $sqlResultSet
@@ -69,6 +73,7 @@ class PlaylistDao {
             return array();
         }
     }
+
     /**
      * Inserts a new Playlist in DB
      * @param Playlist $playlist
@@ -92,6 +97,7 @@ class PlaylistDao {
             throw $e;
         }
     }
+
     /**
      * Changes title of existing Playlist
      * @param Playlist $playlist
@@ -111,6 +117,7 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::INSERT_VIDEO);
         $statement->execute(array($playlistID, $videoID));
     }
+
     /**
      * Removes video from playlist by IDs
      * @param int $playlistID
@@ -120,6 +127,7 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::DELETE_VIDEO);
         $statement->execute(array($playlistID, $videoID));
     }
+
     /**
      * Return playlist from DB by ID
      * @param int $playlistID
@@ -132,6 +140,7 @@ class PlaylistDao {
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }
+
     /**
      * Return an array of N Playlists from DB by Creator id
      * @param int $numberOfPlaylists
@@ -145,6 +154,7 @@ class PlaylistDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }
+
     /**
      * Return array of N Playlists by Video id
      * @param int $numberOfPlaylists
@@ -158,6 +168,7 @@ class PlaylistDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }
+
     /**
      * Return array of N Playlists by Video name
      * @param int $numberOfPlaylists
@@ -171,6 +182,7 @@ class PlaylistDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }
+
     /**
      * Return array of 5 Playlists by title
      * For search box suggestions
@@ -179,25 +191,22 @@ class PlaylistDao {
      */
     public function getNameSuggestions($partOfPlaylistName) {
         $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
-        $statement->execute(array("%$partOfPlaylistName%"));
+        $statement->execute(array("$partOfPlaylistName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $playlistsNamesArray = array();
-        foreach ($result as $key=>$value) {
-            $playlistsNamesArray[] = $result[$key]['title'];
-        }
-        return $playlistsNamesArray;
+        return $result;
     }
+
     /**
      * Return array of N Playlists by Playlist name
      * @param string $playlistName
      * @param int $numberOfPlaylists
      * @return array
      */
-    public function getNByName($playlistName, $numberOfPlaylists) {
+    public function searchByName($playlistName) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $statement = $this->pdo->prepare(self::GET_N_BY_NAME);
-        $statement->execute(array("%$playlistName%", $numberOfPlaylists));
+        $statement = $this->pdo->prepare(self::SEARCH_BY_NAME);
+        $statement->execute(array("%$playlistName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $this->sqlResultToPlaylistArray($result);
+        return $result;
     }
 }

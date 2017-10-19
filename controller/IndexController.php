@@ -39,9 +39,12 @@ class IndexController extends BaseController {
             if (strlen(trim($value)) != 0) {
                 if ($searchOption === 'video') {
                     $result = $videoDao->searchByName($value);
-                } else {
+                } else if ($searchOption === 'user') {
                     $type = 'user';
                     $result = $userDao->search($value);
+                } else {
+                    $type = 'playlist';
+                    $result = $playlistDao->searchByName($value);
                 }
             }
             $this->render('index/search', [
@@ -58,7 +61,6 @@ class IndexController extends BaseController {
                 $suggestions = $userDao->getSuggestionsByUsername($searchValue);
             } else {
                 $suggestions = $playlistDao->getNameSuggestions($searchValue);
-                // TODO GET THE PLAYLISTS AND DISPLAY THEM IN THE SEARCH PAGE
             }
 
             $this->jsonEncodeParams([

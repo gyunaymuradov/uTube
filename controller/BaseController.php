@@ -49,6 +49,6 @@ class BaseController {
     }
 
     public function jsonEncodeParams($params = []) {
-        echo json_encode($params);
+        echo json_encode($params, JSON_UNESCAPED_SLASHES);
     }
 }

@@ -64,16 +64,18 @@ function comment(videoId) {
                 var dislikes = response['dislikes'];
                 var commentId = response['commentId'];
                 var userId = response['userId'];
+                var userPhoto = response['userPhoto'];
 
 
                 var newCommentDiv = document.createElement('div');
                 newCommentDiv.className = "row bg-info margin-5 width-100";
 
                 var newComment = "<div class='col-md-9'>";
-                newComment += "<label><a href='index.php?page=user&id=" + userId + "'>" + username + "</a></label>";
+                newComment += "<img src='" + userPhoto + "' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'>";
+                newComment += "<a href='index.php?page=user&id=" + userId + "'>" + username + "</a></label>";
                 newComment += "<div class='well-sm''>";
-                newComment += "<p>" + comment + "</p>";
-                newComment += "<p class='date_style'>" + dateAdded + "</p></div></div>";
+                newComment += "<p><strong>" + comment + "</strong></p>";
+                newComment += "<small class='date_style'>" + dateAdded + "</small></div></div>";
                 newComment += "<div class='col-md-3 btn-toolbar'>";
                 newComment += "<button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment(" + commentId + ", 1)'>";
                 newComment += "<span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-" + commentId + "'>" + likes + "</span></span></button>";

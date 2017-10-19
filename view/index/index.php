@@ -11,7 +11,7 @@
                 $title = $video['title'];
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
-                        <div class='col-md-3 text-center'>
+                        <div class='col-md-3 text-center margin-5'>
                             <img class='img-thumbnail' src='$thumbnailUrl'>
                             <label>$title</label>
                         </div>
@@ -33,7 +33,7 @@
                 $title = $video['title'];
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
-                        <div class='col-md-3 text-center'>
+                        <div class='col-md-3 text-center margin-5'>
                             <img class='img-thumbnail' src='$thumbnailUrl'>
                             <label>$title</label>
                         </div>

@@ -1,5 +1,5 @@
 <form method="post" action="index.php?page=edit-profile" enctype="multipart/form-data">
-    <div class="form-group row margin-top">
+    <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
             <input type="text" class="form-control" name="username" value="<?= $params['username']; ?>">

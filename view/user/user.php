@@ -1,14 +1,14 @@
 <div class="col-md-10">
     <div class="row">
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-md-2 col-md-offset-1 margin-top">
             <img src="<?= $params['userPhoto']; ?>" alt="" width="250" class="img-rounded" height="auto">
         </div>
-        <div class="col-md-4 col-md-offset-2">
+        <div class="col-md-4 col-md-offset-2 margin-top">
             <h3 class="text-muted"><?= $params['username']; ?></h3>
         </div>
         <div class="col-md-4 col-md-offset-2">
             <h3 class="text-muted""><span id="subscribers"><?= $params['subscribersCount']; ?></span> <small> subscribers</small></h3>
-            <button class="btn btn-info" onclick="subscribe(<?= $params['profileId']; ?>)" id="subscribe">Subscribe</button>
+            <button class="btn btn-info" onclick="subscribe(<?= $params['profileId']; ?>)" id="subscribe"><?= $params['subscribeButton']; ?></button>
             <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
             <input type="hidden" id="loggedUserId" value="<?= $params['loggedUserId']; ?>">
         </div>
@@ -29,10 +29,10 @@
                     $thumbnail = $video->getThumbnailURL();
                     $videoId = $video->getId();
                     echo "
-                        <div class=\"col-md-3 margin-top\">
+                        <div class='col-md-3 margin-top'>
                             <a href='index.php?page=watch&id=$videoId'>
-                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
-                                <h4 class='text-center text-muted'>$title</h4>
+                                <img src='$thumbnail' class='img-rounded' width='200' height='auto'>
+                                <h4 class='text-left text-muted'>$title</h4>
                             </a>
                         </div>";
                 }

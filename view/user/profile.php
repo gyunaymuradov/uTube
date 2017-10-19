@@ -13,19 +13,19 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active profile-tab-end"><a data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
-                <li><a class="profile-tab-middle" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
+                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
+                <li onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="profile-tab-middle" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
                 <li><a class="profile-tab-end" data-toggle="tab" href="#about"><h4>About</h4></a></li>
             </ul>
             <div class="tab-content container-fluid bg-info">
                 <div id="videos" class="tab-pane fade in active">
                     <?php
                     /* @var $video \model\Video */
-                        foreach ($params['videos'] as $video) {
-                            $title = $video->getTitle();
-                            $thumbnail = $video->getThumbnailURL();
-                            $videoId = $video->getId();
-                            echo "
+                    foreach ($params['videos'] as $video) {
+                        $title = $video->getTitle();
+                        $thumbnail = $video->getThumbnailURL();
+                        $videoId = $video->getId();
+                        echo "
                         <div class=\"col-md-3 margin-top\" id='$videoId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
                             <a href='index.php?page=watch&id=$videoId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
@@ -40,7 +40,7 @@
                                 <div id='buttonContainer$videoId'></div>
                             </div>
                         </div>";
-                        }
+                    }
                     ?>
                 </div>
                 <div id="playlists" class="tab-pane fade">
@@ -95,3 +95,4 @@
     <br>
 </div>
 
+<!-- onclick="getAboutPage(<?= $params['userId'] ?>)"

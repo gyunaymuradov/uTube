@@ -34,13 +34,14 @@ class IndexController extends BaseController {
             $value = $_POST['value'];
             $type = 'video';
             $result = array();
-            if ($searchOption === 'video') {
-                $result = $videoDao->searchByName($value);
-            } else {
-                $type = 'user';
-                $result = $userDao->search($value);
+            if (strlen(trim($value)) != 0) {
+                if ($searchOption === 'video') {
+                    $result = $videoDao->searchByName($value);
+                } else {
+                    $type = 'user';
+                    $result = $userDao->search($value);
+                }
             }
-
             $this->render('index/search', [
                 'type' => $type,
                 'result' => $result

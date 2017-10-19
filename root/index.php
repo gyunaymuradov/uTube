@@ -42,6 +42,10 @@ function __autoload($className) {
         $controller = new controller\UserController();
         $controller->loginAction();
     }
+    else if($page === 'about') {
+        $controller = new controller\UserController();
+        $controller->getAboutPage();
+    }
     else if($page === 'register') {
         $controller = new controller\UserController();
         $controller->registerAction();

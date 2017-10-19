@@ -40,7 +40,8 @@ class VideoDao {
     const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
                               GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT 4";
     const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 LIMIT ?";
-    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY date_added DESC LIMIT 4";
+    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT 4";
+
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();

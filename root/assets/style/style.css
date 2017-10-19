@@ -15,7 +15,7 @@ body {
 
 .margin-5 {
     display: inline-block;
-    margin: 5px 0px;
+    margin: 5px 0;
 }
 
 .subImg {
@@ -29,6 +29,7 @@ body {
 }
 .date_style {
     font-style: italic;
+    font-size: 12px;
 }
 
 .thumbnail-scrollbar {
@@ -139,6 +140,12 @@ body {
     background-color: rgb(43, 167, 207);
     color: white;
     text-decoration: none;
+}
+
+.watch-height {
+    max-height: 640px;
+    min-height: 640px;
+
 }
 
 .video-edit-btn {

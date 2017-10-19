@@ -10,19 +10,28 @@ class Comment {
     private $text;
     private $dateAdded;
     private $creatorUsername;
+    private $creatorPhoto;
     private $likes;
     private $dislikes;
-
 
     /**
      * Comment constructor.
      */
-    public function __construct($videoId, $userId, $text, $dateAdded, $creatorName = null) {
+    public function __construct($videoId, $userId, $text, $dateAdded, $creatorName = null, $creatorPhoto = null) {
         $this->videoId = $videoId;
         $this->userId = $userId;
+        $this->creatorPhoto = $creatorPhoto;
         $this->text = $text;
         $this->dateAdded = $dateAdded;
         $this->creatorUsername = $creatorName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatorPhoto()
+    {
+        return $this->creatorPhoto;
     }
 
     /**

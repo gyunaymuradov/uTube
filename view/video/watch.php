@@ -1,21 +1,27 @@
-    <div class="col-md-10 justify-content-center text-center">
+    <div class="col-md-10 justify-content-center text-left">
         <div class="row">
             <div class="col-md-8 thumbnail watch-height">
                 <video width="600" height="400" controls class="video-style">
                     <source src="<?= $params['videoUrl']; ?>" type="video/mp4">
                 </video>
-                <div class="row">
-                    <div class="col-md-8 text-left">
-                        <div><h2><?= $params['videoTitle']; ?></h2></div>
+                <div class="row margin-left">
+                    <div class="col-md-8">
+                        <h3><?= $params['videoTitle']; ?></h3>
+                    </div>
+                    <div class="col-md-4 margin-top">
+                        <div class="btn-toolbar">
+                            <button class="btn btn-success btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
+                            <button class="btn btn-danger btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;<span class="badge" id="video-dislike"><?= $params['dislikes']; ?></span></button>
+                            <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
+                            <input type="hidden" id="loggedUserId" value="<?= $params['loggedUserId']; ?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-left">
+                    <div class="col-md-12">
                         <div><h4><?= $params['videoDescription']; ?></h4></div>
                         <div><label>Uploaded by:&nbsp;&nbsp;</label><a href="index.php?page=user&id=<?= $params['uploaderId']; ?>"><?= $params['uploader']; ?></a></div>
                         <div><label>Added On:&nbsp;&nbsp;</label><?= $params['dateAdded']; ?></div>
-                    </div>
-                    <div class="col-md-4 btn-toolbar margin-top">
-                        <button class="btn btn-success btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
-                        <button class="btn btn-danger btn-lg" onclick="likeDislikeVideo(<?= $params['videoId']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;<span class="badge" id="video-dislike"><?= $params['dislikes']; ?></span></button>
-                        <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
-                        <input type="hidden" id="loggedUserId" value="<?= $params['loggedUserId']; ?>">
                     </div>
                 </div>
             </div>

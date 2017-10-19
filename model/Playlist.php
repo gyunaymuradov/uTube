@@ -2,7 +2,7 @@
 
 namespace model;
 
-class Playlist {
+class Playlist implements \JsonSerializable {
     private $id;
     private $title;
     private $dateAdded;
@@ -29,6 +29,12 @@ class Playlist {
         $this->videosIDs = $videoIDs;
     }
 
+    public function jsonSerialize()
+    {
+        $vars = get_object_vars($this);
+
+        return $vars;
+    }
 
     /**
      * @return mixed

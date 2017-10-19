@@ -9,7 +9,7 @@ class PlaylistDao {
     private static $instance;
     private $pdo;
     private $videoDao;
-    const INSERT_PLAYLIST = "INSERT INTO playlists (title, date_added, creator_id, thumbnail_url) VALUES (?, ?, ?)";
+    const INSERT_PLAYLIST = "INSERT INTO playlists (title, date_added, creator_id, thumbnail_url) VALUES (?, ?, ?, ?)";
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
     const UPDATE_TITLE = "UPDATE TABLE playlists SET title=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";

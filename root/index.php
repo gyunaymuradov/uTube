@@ -78,6 +78,18 @@ function __autoload($className) {
         $controller = new controller\IndexController();
         $controller->searchAction();
     }
+    else if($page === 'get-playlist-names') {
+        $controller = new controller\PlaylistController();
+        $controller->getNames();
+    }
+    else if($page === 'playlist-create') {
+        $controller = new controller\PlaylistController();
+        $controller->createPlaylist();
+    }
+    else if($page === 'playlist-insert') {
+        $controller = new controller\PlaylistController();
+        $controller->insertVideo();
+    }
     else {
         $controller = new controller\IndexController();
         $controller->indexAction();

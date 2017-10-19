@@ -12,7 +12,7 @@ class CommentDao {
     private $pdo;
 
     const ADD = "INSERT INTO video_comments (video_id, user_id, text, date_added) VALUES (?, ?, ?, ?)";
-    const GET_BY_VIDEO_ID = "SELECT u.username, u.id as user_id, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC";
+    const GET_BY_VIDEO_ID = "SELECT u.username, u.id as user_id, u.user_photo_url, c.id, c.text, c.date_added FROM users u JOIN video_comments c ON u.id = c.user_id WHERE c.video_id = ? ORDER BY c.date_added DESC";
     const CHECK_IF_LIKED_OR_DISLIKED = "SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)";
     const UNLIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
@@ -57,7 +57,7 @@ class CommentDao {
         if (!empty($result)) {
             $comments = array();
             foreach ($result as $currentComment) {
-                $comment = new Comment($videoId, $currentComment['user_id'], $currentComment['text'], $currentComment['date_added'], $currentComment['username']);
+                $comment = new Comment($videoId, $currentComment['user_id'], $currentComment['text'], $currentComment['date_added'], $currentComment['username'], $currentComment['user_photo_url']);
                 $comment->setId($currentComment['id']);
                 $likes = $this->getLikesCount($currentComment['id']);
                 $dislikes = $this->getDislikesCount($currentComment['id']);

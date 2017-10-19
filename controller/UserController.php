@@ -121,6 +121,11 @@ class UserController extends BaseController {
         /* @var $userDao \model\db\UserDao */
         $userDao = UserDao::getInstance();
         $user = $userDao->getById($profileId);
+        $subscribeButtonText = 'Subscribe';
+        $alreadySubscribed = $userDao->checkIfFollowed($profileId, $loggedUserId);
+        if ($alreadySubscribed) {
+            $subscribeButtonText = 'Unsubscribe';
+        }
 
         $userPhoto = $user->getUserPhotoUrl();
         $firstName = $user->getFirstName();
@@ -151,7 +156,8 @@ class UserController extends BaseController {
             'subscriptionsCount' => $subscriptionsCount,
             'logged' => $logged,
             'videos' => $videos,
-            'loggedUserId' => $loggedUserId
+            'loggedUserId' => $loggedUserId,
+            'subscribeButton' => $subscribeButtonText
         ]);
     }
 
@@ -260,6 +266,19 @@ class UserController extends BaseController {
             'subscriptionsCount' => $subscriptionsCount,
             'videos' => $videos
         ]);
+    }
+
+    public function getAboutPage() {
+        $userId = $_GET['id'];
+        $userDao = UserDao::getInstance();
+        $userObj = $userDao->getById($userId);
+        $userArr = array();
+        $userArr['first_name'] = $userObj->getFirstName();
+        $userArr['last_name'] = $userObj->getLastName();
+        $userArr['email'] = $userObj->getEmail();
+        $userArr['date_joined'] = $userObj->getDateJoined();
+        $userArr['subscriptions'] = $userDao->getSubscriptionsCount($userId);
+        $this->jsonEncodeParams($userArr);
     }
 
 }

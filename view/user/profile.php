@@ -1,9 +1,9 @@
 <div class="col-md-10">
     <div class="row">
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-md-2 col-md-offset-1 margin-top">
             <img src="<?= $params['userPhoto']; ?>" alt="" width="250" class="img-rounded" height="auto">
         </div>
-        <div class="col-md-4 col-md-offset-2">
+        <div class="col-md-4 col-md-offset-2 margin-top">
             <h3 class="text-muted"><?= $params['username']; ?></h3>
         </div>
         <div class="col-md-4 col-md-offset-2">
@@ -13,12 +13,13 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a data-toggle="tab" href="#home">Videos</a></li>
-                <li><a data-toggle="tab" href="#menu1">Playlists</a></li>
+                <li class="active"><a data-toggle="tab" href="#home" onclick="getAboutPage(<?= $params['userId'] ?>)">Videos</a></li>
+                <li><a data-toggle="tab" href="#menu1" onclick="getAboutPage(<?= $params['userId'] ?>)">Playlists</a></li>
                 <li><a data-toggle="tab" href="#menu2">About</a></li>
             </ul>
             <div class="tab-content container-fluid">
                 <div id="home" class="tab-pane fade in active">
+
                     <?php
                     /* @var $video \model\Video */
                         foreach ($params['videos'] as $video) {
@@ -26,14 +27,15 @@
                             $thumbnail = $video->getThumbnailURL();
                             $videoId = $video->getId();
                             echo "
-                        <div class=\"col-md-3 margin-top\">
-                            <a href='index.php?page=watch&id=$videoId'>
-                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
-                                <h4 class='text-center text-muted'>$title</h4>
-                            </a>
-                        </div>";
+                                <div class='col-md-3 margin-top'>
+                                    <a href='index.php?page=watch&id=$videoId'>
+                                        <img src='$thumbnail' class='img-rounded' width='200' height='auto'>
+                                        <h4 class='text-left text-muted'>$title</h4>
+                                    </a>
+                                </div>";
                         }
                     ?>
+
                 </div>
                 <div id="menu1" class="tab-pane fade">
                     <h3>Menu 1</h3>

@@ -1,6 +1,6 @@
     <div class="col-md-10 justify-content-center text-center">
         <div class="row">
-            <div class="col-md-8 thumbnail">
+            <div class="col-md-8 thumbnail watch-height">
                 <video width="600" height="400" controls class="video-style">
                     <source src="<?= $params['videoUrl']; ?>" type="video/mp4">
                 </video>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 well pre-scrollable">
+            <div class="col-md-4 well pre-scrollable watch-height">
                 <h4>Suggestions:</h4>
 
                 <?php
@@ -33,12 +33,12 @@
                     $uploaderId = $suggestedVideo['uploader_id'];
 
                     echo "<div class='well-sm row bg-info'>
-                                <div class='col-md-8'>
-                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnails-scrollbar' src='$videoThumbnail'></a>
+                                <div class='col-md-7'>
+                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
-                                <div class='col-md-4 text-left no-padding suggestions-video-text'>
-                                    <a href='index.php?page=watch&id=$videoId'><p>$title</p></a>
-                                    <a href='index.php?page=user&id=$uploaderId'><p>$uploader</p></a>
+                                <div class='col-md-5 text-left no-padding suggestions-video-text'>
+                                    <a href='index.php?page=watch&id=$videoId'><small>$title</small></a><br>
+                                    <a href='index.php?page=user&id=$uploaderId'><p><strong>By $uploader</strong></p></a>
                                 </div>
                             </div>";
                 }   
@@ -72,13 +72,14 @@
                         $dislikes = $comment->getDislikes();
                         $commentId = $comment->getId();
                         $userId = $comment->getUserId();
+                        $userPhoto = $comment->getCreatorPhoto();
 
                         echo "<div class='row bg-info margin-5 width-100'>
                                     <div class='col-md-9'>
-                                        <label><a href='index.php?page=user&id=$userId'>$username</a></label>
+                                        <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&id=$userId'>$username</a></label>
                                         <div class='well-sm'>
-                                           <p>$commentText</p>
-                                           <p class='date_style'>$dateAdded</p>
+                                           <p><strong>$commentText</strong></p>
+                                           <small class='date_style'>$dateAdded</small>
                                         </div>
                                     </div>
                                     <div class='col-md-3 btn-toolbar '>

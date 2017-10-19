@@ -198,12 +198,14 @@ class VideoController extends BaseController {
         /* @var $user User */
         $user = $_SESSION['user'];
         $username = $user->getUsername();
+        $userPhotoUrl = $user->getUserPhotoUrl();
 
         $this->jsonEncodeParams([
             'comment' => $commentText,
             'date' => $date,
             'username' => $username,
             'userId' => $userId,
+            'userPhoto' => $userPhotoUrl,
             'commentId' => $lastInsertId,
             'likes' => '0',
             'dislikes' => '0'

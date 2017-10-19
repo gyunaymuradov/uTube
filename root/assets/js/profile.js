@@ -1,6 +1,6 @@
 function getEditForm(userId) {
     var request = new XMLHttpRequest();
-    var formDiv = document.getElementById('menu2');
+    var formDiv = document.getElementById('about');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             formDiv.innerHTML = this.responseText;
@@ -41,7 +41,7 @@ function getAboutPage(userId) {
     if (aboutPage) {
         var url = 'http://localhost/uTube/root/index.php?page=about&id=' + userId;
         var request = new XMLHttpRequest();
-        var aboutHtml = document.getElementById('menu2');
+        var aboutHtml = document.getElementById('about');
 
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {

@@ -1,9 +1,15 @@
 function searchOption(option) {
     var hiddenField = document.getElementById('search-for');
+    var searchInput = document.getElementById('search');
     if (option === 'video') {
         hiddenField.value = 'video';
-    } else {
+        searchInput.placeholder = 'Search video';
+    } else if (option === 'user') {
         hiddenField.value = 'user';
+        searchInput.placeholder = 'Search user';
+    } else {
+        hiddenField.value = 'playlist';
+        searchInput.placeholder = 'Search playlist';
     }
 }
 
@@ -38,7 +44,19 @@ function getSuggestions() {
                                 a.href = 'index.php?page=watch&id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
+                        } else if (searchOption === 'user') {
+                            response.suggestions.forEach(function (suggestion) {
+                                var id = suggestion.id;
+                                var username = suggestion.username;
+                                var a = document.createElement('a');
+                                a.className = 'autocomplete-item';
+                                a.style.display = 'block';
+                                a.innerHTML = username;
+                                a.href = 'index.php?page=user&id=' + id;
+                                autocompleteDiv.appendChild(a);
+                            });
                         } else {
+                            // TODO PLAYLISTS GENERATION WITH AJAX IN AUTOCOMPLETE
                             response.suggestions.forEach(function (suggestion) {
                                 var id = suggestion.id;
                                 var username = suggestion.username;

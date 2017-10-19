@@ -37,6 +37,7 @@ class BaseController {
         $params['userId'] = $userId;
         $params['navSuggestions'] = $suggestions;
         $params['navTitle'] = $navTitle;
+        $params['searchPlaceholder'] = 'Search video';
 
         require_once '../view/header.php';
         require_once '../view/nav.php';

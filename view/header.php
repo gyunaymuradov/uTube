@@ -15,7 +15,6 @@
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
-        <script src="assets/js/upload.js"></script>
         <script src="assets/js/video_preview.js"></script>
         <title>uTube</title>
     </head>
@@ -32,10 +31,11 @@
                     <form action="index.php?page=search" method="post">
                         <div class="input-group ">
                             <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
                                 <button type="button" class="btn btn-primary" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
                                 <button type="button" class="btn btn-primary" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                             </div>
-                            <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="Search" autocomplete="off">
+                            <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['searchPlaceholder']; ?>" autocomplete="off">
                             <div id="search-autocomplete"></div>
                             <input type="hidden" name="search-option" id="search-for" value="video">
                             <span class="input-group-btn">

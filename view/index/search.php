@@ -29,7 +29,7 @@
                         </div>
                     </div>";
             }
-        } else {
+        } elseif ($params['type'] == 'user') {
             $users = $params['result'];
             foreach ($users as $user) {
                 $id = $user['id'];
@@ -47,6 +47,10 @@
                     </div>
                   </div>";
             }
+        } else {
+            $playlists = $params['result'];
+
+            //TODO foreach the playlists and display in divs
         }
     }
 

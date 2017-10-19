@@ -2,6 +2,7 @@
 
 namespace controller;
 
+use model\db\PlaylistDao;
 use model\db\VideoDao;
 use model\db\UserDao;
 use model\User;
@@ -28,6 +29,7 @@ class IndexController extends BaseController {
 
         $videoDao = VideoDao::getInstance();
         $userDao = UserDao::getInstance();
+        $playlistDao = PlaylistDao::getInstance();
 
         if (isset($_POST['search'])) {
             $searchOption = $_POST['search-option'];
@@ -52,8 +54,11 @@ class IndexController extends BaseController {
 
             if ($searchOption == 'video') {
                 $suggestions = $videoDao->getNameSuggestions($searchValue);
-            } else {
+            } else if ($searchOption == 'user') {
                 $suggestions = $userDao->getSuggestionsByUsername($searchValue);
+            } else {
+                $suggestions = $playlistDao->getNameSuggestions($searchValue);
+                // TODO GET THE PLAYLISTS AND DISPLAY THEM IN THE SEARCH PAGE
             }
 
             $this->jsonEncodeParams([

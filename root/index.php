@@ -66,6 +66,10 @@ function __autoload($className) {
         $controller = new controller\VideoController();
         $controller->watchAction();
     }
+    else if($page === 'delete-video') {
+        $controller = new controller\VideoController();
+        $controller->deleteAction();
+    }
     else if($page === 'upload') {
         $controller = new controller\VideoController();
         $controller->upload();

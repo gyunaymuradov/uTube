@@ -17,13 +17,47 @@ class VideoController extends BaseController {
 
     public function upload()
     {
+        $videoDao = VideoDao::getInstance();
         $requestMethod = $_SERVER['REQUEST_METHOD'];
+
         if ($requestMethod == 'GET') {
             $tagDao = TagDao::getInstance();
             $tags = $tagDao->getAll();
+            $videoId = isset($_GET['id']) ? $_GET['id'] : null;
+            $thumbnailUrl = null;
+            $title = null;
+            $description = null;
+            $videoUrl = null;
+            $pageTitle = 'Upload video';
+            $btnText = 'Upload';
+            $previewDivDisplay = 'none';
+            $fileInputFieldDisplay = 'block';
+            $required = 'required';
+            if (!is_null($videoId)) {
+                $video = $videoDao->getByID($videoId);
+                $thumbnailUrl = $video->getThumbnailURL();
+                $title = $video->getTitle();
+                $description = $video->getDescription();
+                $videoUrl = $video->getVideoURL();
+                $pageTitle = 'Edit video';
+                $btnText = 'Edit';
+                $previewDivDisplay = 'block';
+                $fileInputFieldDisplay = 'none';
+                $required = '';
+            }
 
             $this->render('video/upload', [
-                'tags' => $tags
+            'tags' => $tags,
+            'thumbnailUrl' => $thumbnailUrl,
+            'title' => $title,
+            'description' => $description,
+            'videoUrl' => $videoUrl,
+            'pageTitle' => $pageTitle,
+            'btnText' => $btnText,
+            'previewDivDisplay' => $previewDivDisplay,
+            'fileInputDisplay' => $fileInputFieldDisplay,
+            'required' => $required
+
             ]);
         } elseif ($requestMethod == 'POST') {
             if (isset($_SESSION['user']) &&
@@ -31,9 +65,7 @@ class VideoController extends BaseController {
                 $_POST["Title"] != "" &&
                 isset($_POST["Description"]) &&
                 $_POST["Description"] != "" &&
-                isset($_POST["Tags"])) {
-
-                $videoDao = VideoDao::getInstance();
+                isset($_POST["tags"])) {
 
                 $resultMsg = "Your video was successfully uploaded!";
                 $userId = $_SESSION['user']->getId();
@@ -66,7 +98,7 @@ class VideoController extends BaseController {
                                 $userId,
                                 $videoPath,
                                 $thumbPath,
-                                $_POST["Tags"][0]
+                                $_POST["tags"]
                             );
                             $newVideo->setHidden(0);
                             try {

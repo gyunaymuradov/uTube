@@ -38,7 +38,6 @@ class UserController extends BaseController {
 
             $success = $userModel->insert($user);
             if ($success) {
-                $_SESSION['user'] = $user;
                 header('Location:index.php?page=register-success');
             } else {
 //                echo "Registration was unsuccessful. Try again.";
@@ -179,6 +178,7 @@ class UserController extends BaseController {
                 if (!file_exists("../uploads/user_photos")) {
                     mkdir("../uploads/user_photos", 0777);
                 }
+                unlink($imgPath);
                 $realFileName = $_FILES['photo']['name'];
                 $imgName = 'IMG_' . time();
                 $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);

@@ -1,6 +1,7 @@
 var canvas, context, w, h, video;
 w = 600;
 h = 400;
+
 function  previewVideo(element) {
     var preview = document.getElementById('preview');
     video = document.getElementById('videoPreview');

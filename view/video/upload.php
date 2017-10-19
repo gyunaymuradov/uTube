@@ -15,8 +15,10 @@
 
     </div>
 
-    <form enctype="multipart/form-data" method="post" action="index.php?page=upload">
+    <form enctype="multipart/form-data" method="post" action="<?= $params['formAction'] ?>">
         <input type="hidden" name="Thumbnail" id="thumbnailSRC">
+        <input type="hidden" name="videoId" value="<?= $params['videoId'] ?>">
+        <input type="hidden" name="OldThumbnailUrl" value="<?= $params['thumbnailUrl'] ?>">
         <div class="form-group">
             <input type="file" name="videoFile" class="form-control margin-center" accept="video/*" onchange="previewVideo(this)" <?= $params['required']; ?> style="display:<?= $params['fileInputDisplay']; ?>">
         </div>

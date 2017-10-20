@@ -1,4 +1,4 @@
-    <div class="col-md-10 justify-content-center text-left">
+    <div class="col-md-10 text-left">
         <div class="row">
             <div class="col-md-8 thumbnail watch-height">
                 <video width="600" height="400" controls class="video-style">

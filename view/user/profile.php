@@ -13,9 +13,9 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
-                <li onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="profile-tab-middle" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
-                <li><a class="profile-tab-end" data-toggle="tab" href="#about"><h4>About</h4></a></li>
+                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="black" data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
+                <li class="profile-tab-middle" onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
+                <li class="profile-tab-end"><a class="black" data-toggle="tab" href="#about"><h4>About</h4></a></li>
             </ul>
             <div class="tab-content container-fluid bg-info">
                 <div id="videos" class="tab-pane fade in active">
@@ -26,7 +26,7 @@
                         $thumbnail = $video->getThumbnailURL();
                         $videoId = $video->getId();
                         echo "
-                        <div class=\"col-md-3 margin-top\" id='$videoId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
+                        <div class=\"col-md-3 margin-top\" id='$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
                             <a href='index.php?page=watch&id=$videoId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
@@ -51,11 +51,18 @@
                         $thumbnail = $playlist->getThumbnailURL();
                         $playlistId = $playlist->getId();
                         echo "
-                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
+                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
-                                <h4 class='text-center text-muted'>$title</h4>
+                                <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                             </a>
+                            <button class='video-delete-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>
+                            <button class='video-addTo-btn btn btn-info' id='removeVid$playlistId' onclick='showRemoveVid(this.id)'>Remove Video</button>
+                            <div class='video-addTo-div well-sm' id='removeField$playlistId'>
+                                <p>Choose Video:</p>
+                                <div id='buttonContainer$playlistId'></div>
+                            </div>
+                            
                         </div>";
                     }
                     ?>

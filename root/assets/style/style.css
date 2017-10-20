@@ -184,10 +184,11 @@ body {
 }
 .profile-tab-end {
     background-color: #cde4ee;
-    color: black;
 }
 .profile-tab-middle {
     background-color: #c6dde7;
+}
+.black {
     color: black;
 }
 .margin-bottom-5 {

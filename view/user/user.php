@@ -16,12 +16,12 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1"">
         <ul class="nav nav-tabs nav-justified">
-            <li class="active"><a data-toggle="tab" href="#home">Videos</a></li>
-            <li><a data-toggle="tab" href="#menu1">Playlists</a></li>
-            <li><a data-toggle="tab" href="#menu2">About</a></li>
+            <li class="active profile-tab-end"><a class="black" data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
+            <li class="profile-tab-middle"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
+            <li class="profile-tab-end"><a class="black" data-toggle="tab" href="#about"><h4>About</h4></a></li>
         </ul>
-        <div class="tab-content container-fluid">
-            <div id="home" class="tab-pane fade in active">
+        <div class="tab-content container-fluid bg-info">
+            <div id="videos" class="tab-pane fade in active">
                 <?php
                 /* @var $video \model\Video */
                 foreach ($params['videos'] as $video) {
@@ -38,11 +38,24 @@
                 }
                 ?>
             </div>
-            <div id="menu1" class="tab-pane fade">
-                <h3>Menu 1</h3>
-                <p>Some content in menu 1.</p>
+            <div id="playlists" class="tab-pane fade">
+                <?php
+                /* @var $playlist \model\Playlist */
+                foreach ($params['playlists'] as $playlist) {
+                    $title = $playlist->getTitle();
+                    $thumbnail = $playlist->getThumbnailURL();
+                    $playlistId = $playlist->getId();
+                    echo "
+                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
+                            <a href='index.php?page=watch&playlist-id=$playlistId'>
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
+                                <h4 class='text-center text-muted'>$title</h4>
+                            </a>
+                        </div>";
+                }
+                ?>
             </div>
-            <div id="menu2" class="tab-pane fade">
+            <div id="about" class="tab-pane fade">
                 <div class="col-md-3 col-md-offset-2">
                     <h3 class="text-muted">Name: </h3>
                 </div>

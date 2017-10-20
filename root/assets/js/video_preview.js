@@ -26,6 +26,13 @@ function  previewVideo(element) {
 }
 
 function createThumbnail() {
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var w = 600;
+    var h = 400;
+    canvas.width = w;
+    canvas.height = h
+    var video = document.getElementById('videoPreview');
     context.fillRect(0, 0, w, h);
     context.drawImage(video, 0, 0, w, h);
     document.getElementById('thumbnailIMG').src = canvas.toDataURL();

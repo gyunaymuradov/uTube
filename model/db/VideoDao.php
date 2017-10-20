@@ -12,6 +12,7 @@ class VideoDao {
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE_VIDEO = "UPDATE videos SET hidden=1 WHERE id = ?";
     const EDIT_VIDEO = "UPDATE videos SET title=?, description=? WHERE id=?";
+    const EDIT_TAGS = "UPDATE tags_videos SET tag_id = ? WHERE video_id = ?";
     const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
     const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
@@ -185,8 +186,21 @@ class VideoDao {
      * @param Video $video
      */
     public function edit(Video $video) {
-        $statement = $this->pdo->prepare(self::EDIT_VIDEO);
-        $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getId()));
+        try {
+            $this->pdo->beginTransaction();
+            $statement = $this->pdo->prepare(self::EDIT_VIDEO);
+            $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getId()));
+
+            $statement = $this->pdo->prepare(self::EDIT_TAGS);
+            $statement->execute(array($video->getTagId(), $video->getId()));
+            $this->pdo->commit();
+        }
+        catch (PDOException $e){
+            if($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            throw $e;
+        }
     }
     /**
      * Return one Video by Video id

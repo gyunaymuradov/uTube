@@ -16,18 +16,28 @@ function subscribe(profileId) {
         alert('Please sign in to gain full access!');
     } else {
         var loggedUserId = document.getElementById('loggedUserId').value;
+        var navbar = document.getElementById('navbar');
         var request = new XMLHttpRequest();
         var subscribeBtn = document.getElementById('subscribe');
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                var subscribersCount = JSON.parse(this.responseText);
+                var response = JSON.parse(this.responseText);
+                var userPhoto = response['user-photo'];
+                var username = response['username'];
                 var subscribersHtml = document.getElementById('subscribers');
                 subscribersHtml.innerHTML = '';
-                subscribersHtml.innerHTML = subscribersCount['subscribers'];
+                subscribersHtml.innerHTML = response['subscribers'];
                 if (subscribeBtn.innerHTML === 'Subscribe') {
                     subscribeBtn.innerHTML = 'Unsubscribe';
+                    var a = document.createElement('a');
+                    a.href = "index.php?page=user&id=" + profileId;
+                    a.id = profileId;
+                    a.innerHTML = "<div class='margin-5 width-100 text-left'><img src='" + userPhoto + "' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;" + username + "</label></div></a>";
+                    navbar.appendChild(a);
                 } else {
                     subscribeBtn.innerHTML = 'Subscribe';
+                    var navbarElement = document.getElementById(profileId);
+                    navbar.removeChild(navbarElement)
                 }
             }
         };

@@ -89,9 +89,12 @@ class UserController extends BaseController {
         /* @var $userDao UserDao */
         $userDao = UserDao::getInstance();
         $alreadyFollowed = $userDao->checkIfFollowed($profileId, $loggedUserId);
-
+        $userPhoto = '';
+        $username = '';
         if (!$alreadyFollowed) {
             $userDao->follow($loggedUserId, $profileId);
+            $userPhoto = $userDao->getById($profileId)->getUserPhotoUrl();
+            $username = $userDao->getById($profileId)->getUsername();
         } else {
             $userDao->unfollow($loggedUserId, $profileId);
         }
@@ -99,7 +102,9 @@ class UserController extends BaseController {
         $subscribersCount = $userDao->getSubscribersCount($profileId);
 
         $this->jsonEncodeParams([
-            'subscribers' => $subscribersCount
+            'subscribers' => $subscribersCount,
+            'user-photo' => $userPhoto,
+            'username' => $username
         ]);
     }
 

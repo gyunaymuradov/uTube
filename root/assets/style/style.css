@@ -42,6 +42,7 @@ body {
 .video-style {
     width: 100%;
     height: auto;
+    max-height: 400px;
 }
 .margin-comment-buttons {
     margin-top: 10px;
@@ -52,7 +53,8 @@ body {
 }
 
 .navbar {
-    height: 100vh
+    height: 100vh;
+    margin-top: 5px;
 }
 .suggestions-video-text {}
 

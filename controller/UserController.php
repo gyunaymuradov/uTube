@@ -102,8 +102,9 @@ class UserController extends BaseController {
             }
             if (empty($errors)) {
                 $user = new User();
-                // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
                 $user->setUsername($username);
+//                This encrypts the pass. Uncomment and delete bottom line when profile edit is done
+//                $user->setPassword(password_hash($pass, PASSWORD_DEFAULT));
                 $user->setPassword($pass);
                 $user->setEmail($email);
                 $user->setFirstName($firstName);
@@ -163,16 +164,29 @@ class UserController extends BaseController {
             $user->setUsername($username);
             $user->setPassword($password);
             $result = $userDao->login($user);
-                if ($result === false) {
-                    $errors = 'Invalid username or password.';
-                    $this->renderPartial('user/login', [
-                        'errors' => $errors,
-                        'username' => $username,
-                    ]);
-                } else {
-                    $_SESSION['user'] = $result;
-                    header("Location:index.php");
-                }
+
+//            This checks the encrypted password. Uncomment when done with profile edit.
+//                if ($result !== false && password_verify($password, $result->getPassword())) {
+//                    $_SESSION['user'] = $result;
+//                    header("Location:index.php");
+//
+//                } else {
+//                    $errors = 'Invalid username or password.';
+//                    $this->renderPartial('user/login', [
+//                        'errors' => $errors,
+//                        'username' => $username,
+//                    ]);
+//                }
+            if ($result === false) {
+                $errors = 'Invalid username or password.';
+                $this->renderPartial('user/login', [
+                    'errors' => $errors,
+                    'username' => $username,
+                ]);
+            } else {
+                $_SESSION['user'] = $result;
+                header("Location:index.php");
+            }
             }
     }
 

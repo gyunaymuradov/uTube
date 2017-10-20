@@ -1,5 +1,5 @@
 <div class="col-md-10">
-    <div class="row">
+    <div class="row margin-top">
         <div class="col-md-2 col-md-offset-1">
             <img src="<?= $params['userPhoto']; ?>" alt="" width="250" class="img-rounded" height="auto">
         </div>
@@ -28,7 +28,7 @@
                         echo "
                         <div class=\"col-md-3 margin-top\" id='$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
                             <a href='index.php?page=watch&id=$videoId'>
-                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
                             <a href='index.php?page=upload&id=$videoId'><button class='video-edit-btn btn btn-info' id='edit$videoId'>Edit</button></a>
@@ -53,7 +53,7 @@
                         echo "
                         <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
-                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                             </a>
                             <button class='video-delete-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>

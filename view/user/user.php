@@ -1,9 +1,9 @@
 <div class="col-md-10">
-    <div class="row">
-        <div class="col-md-2 col-md-offset-1 margin-top">
+    <div class="row margin-top">
+        <div class="col-md-2 col-md-offset-1">
             <img src="<?= $params['userPhoto']; ?>" alt="" width="250" class="img-rounded" height="auto">
         </div>
-        <div class="col-md-4 col-md-offset-2 margin-top">
+        <div class="col-md-4 col-md-offset-2">
             <h3 class="text-muted"><?= $params['username']; ?></h3>
         </div>
         <div class="col-md-4 col-md-offset-2">
@@ -31,7 +31,7 @@
                     echo "
                         <div class='col-md-3 margin-top'>
                             <a href='index.php?page=watch&id=$videoId'>
-                                <img src='$thumbnail' class='img-rounded' width='200' height='auto'>
+                                <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
                                 <h4 class='text-left text-muted'>$title</h4>
                             </a>
                         </div>";
@@ -48,7 +48,7 @@
                     echo "
                         <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
-                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"200\" height=\"auto\">
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
                         </div>";

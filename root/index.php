@@ -8,6 +8,8 @@ function __autoload($className) {
     require_once $className . '.php';
 }
 
+require_once '../Validator.php';
+
     $page = isset($_GET['page']) ? $_GET['page'] : null;
 //when url is ....?controller=XXX&action=YYY
 //invoke XXXController.php and start YYY() in it
@@ -33,10 +35,6 @@ function __autoload($className) {
     else if($page === 'subscribe') {
         $controller = new controller\UserController();
         $controller->subscribeAction();
-    }
-    else if($page === 'login-register') {
-        $controller = new controller\UserController();
-        $controller->loginRegisterAction();
     }
     else if($page === 'login') {
         $controller = new controller\UserController();

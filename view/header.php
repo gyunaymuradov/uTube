@@ -62,7 +62,7 @@
                         </ul>
                     </div>";
                     } else {
-                        echo "<a href='index.php?page=login-register' class='btn btn-default'>Sign in</a>";
+                        echo "<a href='index.php?page=login' class='btn btn-default'>Sign in</a>";
                     } ?>
                 </div>
         </div>

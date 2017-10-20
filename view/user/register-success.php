@@ -16,7 +16,7 @@
                 <div class="jumbotron text-center">
                     <h3 class="text-default">You have registered successfully!</h3><br>
                     <a href="index.php" class="btn btn-primary btn-lg btn-block" role="button">Home page</a>
-                    <a href="index.php?page=login-register" class="btn btn-primary btn-lg btn-block">Sign in</a>
+                    <a href="index.php?page=login" class="btn btn-primary btn-lg btn-block">Sign in</a>
                 </div>
             </div>
         </div>

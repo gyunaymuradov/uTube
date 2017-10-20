@@ -15,36 +15,126 @@ class UserController extends BaseController {
     }
 
     public function registerAction() {
-        if (isset($_POST['register'])) {
-            $userModel = UserDao::getInstance();
-            $user = new User();
-            $user->setFirstName($_POST['firstName']);
-            $user->setLastName($_POST['lastName']);
-            $user->setEmail($_POST['email']);
-            $user->setUsername($_POST['username']);
-            $user->setPassword($_POST['password']);
-            $user->setDateJoined(date("Y-m-d"));
 
-            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0) {
-                if (!file_exists("../uploads/user_photos")) {
-                    mkdir("../uploads/user_photos", 0777);
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+        if ($requestMethod == 'GET') {
+            $username = '';
+            $firstName = '';
+            $lastName = '';
+            $email = '';
+            $errors = '';
+            $this->renderPartial('user/register', [
+                'errors' => $errors,
+                'username' => $username,
+                'first-name' => $firstName,
+                'last-name' => $lastName,
+                'email' => $email
+            ]);
+        } else if ($requestMethod == 'POST'
+                    && isset($_POST['username'])
+                    && isset($_POST['first-name'])
+                    && isset($_POST['last-name'])
+                    && isset($_POST['email'])
+                    && isset($_POST['password'])
+                    && isset($_POST['confirm-pass'])
+                    && isset($_POST['register'])) {
+            $username = $_POST['username'];
+            $firstName = $_POST['first-name'];
+            $lastName = $_POST['last-name'];
+            $email = $_POST['email'];
+            $pass = $_POST['password'];
+            $confirmPass = $_POST['confirm-pass'];
+
+            $validator = Validator::getInstance();
+            $validUsername = $validator->validateUsername($username);
+            $validFirstName = $validator->validateFirstName($firstName);
+            $validLastName = $validator->validateLastName($lastName);
+            $validEmail = $validator->validateEmail($email);
+            $validPassword = $validator->validatePassword($pass, $confirmPass);
+
+
+            $errors = array();
+            if (is_array($validUsername)) {
+                foreach ($validUsername as $error) {
+                    $errors['username'][] = $error;
                 }
-                $realFileName = $_FILES['photo']['name'];
-                $imgName = 'IMG_' . time();
-                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
-                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
-                $user->setUserPhotoUrl($imgPath);
-            } else {
-                $user->setUserPhotoUrl('../uploads/default_photo.png');
+            }
+            if (is_array($validEmail)) {
+                foreach ($validEmail as $error) {
+                    $errors['email'][] = $error;
+                }
+            }
+            if (is_array($validFirstName)) {
+                foreach ($validFirstName as $error) {
+                    $errors['first_name'][] = $error;
+                }
+            }
+            if (is_array($validLastName)) {
+                foreach ($validLastName as $error) {
+                    $errors['last_name'][] = $error;
+                }
+            }
+            if (is_array($validPassword)) {
+                foreach ($validPassword as $error) {
+                    $errors['password'][] = $error;
+                }
             }
 
-            $success = $userModel->insert($user);
-            if ($success) {
-                header('Location:index.php?page=register-success');
-            } else {
-//                echo "Registration was unsuccessful. Try again.";
+            $hasUploadedImg = !empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0;
+            if ($hasUploadedImg) {
+                $fileRealName = $_FILES['photo']['name'];
+                $fileTempName= $_FILES['photo']['tmp_name'];
+                $extensions = ['jpeg', 'jpg', 'png'];
+                $validImg = $validator->validateUploadedFile($fileRealName, $fileTempName, 5000000,  'image', $extensions);
+                if (is_array($validImg)) {
+                    foreach ($validImg as $error) {
+                        $errors['img'][] = $error;
+                    }
+                }
+            }
+
+            $userDao = UserDao::getInstance();
+            $usernameTaken = $userDao->checkIfExists($username);
+
+            if ($usernameTaken) {
+                $errors['username'][] = 'Username is already taken.';
+            }
+            if (empty($errors)) {
+                $user = new User();
+                // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
+                $user->setUsername($username);
+                $user->setPassword($pass);
+                $user->setEmail($email);
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+                $user->setDateJoined(date('Y-m-d'));
+                if ($hasUploadedImg) {
+                    if (!file_exists('../uploads/user_photos')) {
+                        mkdir('../uploads/user_photos', 0777);
+                    }
+                    $realFileName = $_FILES['photo']['name'];
+                    $imgName = 'IMG_' . time();
+                    $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                    move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
+                    $user->setUserPhotoUrl($imgPath);
+                } else {
+                    $user->setUserPhotoUrl('../uploads/default_photo.png');
+                }
+                $success = $userDao->insert($user);
+                if ($success) {
+                    header('Location:index.php?page=register-success');
+                }
 
             }
+            $this->renderPartial('user/register', [
+                'errors' => $errors,
+                'username' => $username,
+                'first-name' => $firstName,
+                'last-name' => $lastName,
+                'email' => $email
+            ]);
+
         }
     }
 
@@ -52,12 +142,19 @@ class UserController extends BaseController {
         $this->renderPartial('user/register-success');
     }
 
-    public function loginRegisterAction() {
-        $this->renderPartial('user/login-register');
-    }
-
     public function loginAction() {
-        if (isset($_POST['login'])) {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        if ($requestMethod == 'GET') {
+            $errors = '';
+            $username = '';
+            $this->renderPartial('user/login', [
+                'errors' => $errors,
+                'username' => $username,
+            ]);
+        } else if ($requestMethod == 'POST'
+            && isset($_POST['username'])
+            && isset($_POST['password'])) {
+
             $username = $_POST['username'];
             $password = $_POST['password'];
 
@@ -66,14 +163,17 @@ class UserController extends BaseController {
             $user->setUsername($username);
             $user->setPassword($password);
             $result = $userDao->login($user);
-            if ($result === false) {
-                // call loginRegisterAction with params to send it to render and to render it to view
-//                echo "Invalid username or password.";
-            } else {
-                $_SESSION['user'] = $result;
-                header("Location:index.php");
+                if ($result === false) {
+                    $errors = 'Invalid username or password.';
+                    $this->renderPartial('user/login', [
+                        'errors' => $errors,
+                        'username' => $username,
+                    ]);
+                } else {
+                    $_SESSION['user'] = $result;
+                    header("Location:index.php");
+                }
             }
-        }
     }
 
     public function logoutAction() {

@@ -14,59 +14,72 @@ class IndexController extends BaseController {
     }
 
     public function indexAction() {
+        try {
+            $videoDao = VideoDao::getInstance();
+            $mostLikedVideos = $videoDao->getMostLiked();
+            $newestVideos = $videoDao->getNewest();
 
-        $videoDao = VideoDao::getInstance();
-        $mostLikedVideos = $videoDao->getMostLiked();
-        $newestVideos = $videoDao->getNewest();
-
-        $this->render('index/index', [
-            'mostLiked' => $mostLikedVideos,
-            'newest' => $newestVideos
-        ]);
+            $this->render('index/index', [
+                'mostLiked' => $mostLikedVideos,
+                'newest' => $newestVideos
+            ]);
+        }
+        catch (\PDOException $e) {
+            $this->render('index/error');
+        }
     }
 
     public function searchAction() {
 
-        $videoDao = VideoDao::getInstance();
-        $userDao = UserDao::getInstance();
-        $playlistDao = PlaylistDao::getInstance();
+        try {
+            $videoDao = VideoDao::getInstance();
+            $userDao = UserDao::getInstance();
+            $playlistDao = PlaylistDao::getInstance();
 
-        if (isset($_POST['search'])) {
-            $searchOption = $_POST['search-option'];
-            $value = $_POST['value'];
-            $type = 'video';
-            $result = array();
-            if (strlen(trim($value)) != 0) {
-                if ($searchOption === 'video') {
-                    $result = $videoDao->searchByName($value);
-                } else if ($searchOption === 'user') {
-                    $type = 'user';
-                    $result = $userDao->search($value);
-                } else {
-                    $type = 'playlist';
-                    $result = $playlistDao->searchByName($value);
+            if (isset($_POST['search'])) {
+                $searchOption = $_POST['search-option'];
+                $value = $_POST['value'];
+                $type = 'video';
+                $result = array();
+                if (strlen(trim($value)) != 0) {
+                    if ($searchOption === 'video') {
+                        $result = $videoDao->searchByName($value);
+                    } else if ($searchOption === 'user') {
+                        $type = 'user';
+                        $result = $userDao->search($value);
+                    } else {
+                        $type = 'playlist';
+                        $result = $playlistDao->searchByName($value);
+                    }
                 }
-            }
-            $this->render('index/search', [
-                'type' => $type,
-                'result' => $result
-            ]);
-        } else {
-            $searchOption = $_GET['search-option'];
-            $searchValue = $_GET['value'];
-
-            if ($searchOption == 'video') {
-                $suggestions = $videoDao->getNameSuggestions($searchValue);
-            } else if ($searchOption == 'user') {
-                $suggestions = $userDao->getSuggestionsByUsername($searchValue);
+                $this->render('index/search', [
+                    'type' => $type,
+                    'result' => $result
+                ]);
             } else {
-                $suggestions = $playlistDao->getNameSuggestions($searchValue);
-            }
+                $searchOption = $_GET['search-option'];
+                $searchValue = $_GET['value'];
 
-            $this->jsonEncodeParams([
-                'suggestions' => $suggestions
-            ]);
+                if ($searchOption == 'video') {
+                    $suggestions = $videoDao->getNameSuggestions($searchValue);
+                } else if ($searchOption == 'user') {
+                    $suggestions = $userDao->getSuggestionsByUsername($searchValue);
+                } else {
+                    $suggestions = $playlistDao->getNameSuggestions($searchValue);
+                }
+
+                $this->jsonEncodeParams([
+                    'suggestions' => $suggestions
+                ]);
+            }
         }
+        catch (\PDOException $e) {
+            $this->render('index/error');
+        }
+    }
+
+    public function showError() {
+        $this->render('index/error');
     }
 }
 

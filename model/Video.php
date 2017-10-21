@@ -10,6 +10,7 @@ class Video implements \JsonSerializable {
     private $thumbnailURL;
     private $hidden;
     private $tagId;
+
     /**
      * Video constructor.
      * @param $id
@@ -19,9 +20,10 @@ class Video implements \JsonSerializable {
      * @param $uploaderID
      * @param $videoURL
      * @param $thumbnailURL
-     * @param $tags
+     * @param $tagId
+     * @param $hidden
      */
-    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tagId)
+    public function __construct($id, $title, $description, $dateAdded, $uploaderID, $videoURL, $thumbnailURL, $tagId, $hidden)
     {
         $this->id = $id;
         $this->title = $title;
@@ -30,8 +32,8 @@ class Video implements \JsonSerializable {
         $this->uploaderID = $uploaderID;
         $this->videoURL = $videoURL;
         $this->thumbnailURL = $thumbnailURL;
-        $this->hidden = 0;
         $this->tagId = $tagId;
+        $this->hidden = 0;
     }
 
     public function jsonSerialize()

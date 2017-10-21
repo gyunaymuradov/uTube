@@ -8,16 +8,16 @@ use \PDOException;
 class VideoDao {
     private static $instance;
     private $pdo;
-    const INSERT_VIDEO = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, hidden) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const INSERT = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
-    const DELETE_VIDEO = "UPDATE videos SET hidden=1 WHERE id = ?";
-    const EDIT_VIDEO = "UPDATE videos SET title=?, description=? WHERE id=?";
+    const DELETE = "UPDATE videos SET hidden=1 WHERE id = ?";
+    const EDIT = "UPDATE videos SET title=?, description=?, tag_id = ? WHERE id=?";
     const EDIT_TAGS = "UPDATE tags_videos SET tag_id = ? WHERE video_id = ?";
-    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
+    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden FROM videos WHERE id=?";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, v.tag_id, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id, hidden FROM tags_videos WHERE tag_id = ? AND hidden = 0) ORDER BY RAND() LIMIT ?";
-    const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
+    const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
                                           FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
     const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
     const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
@@ -32,15 +32,15 @@ class VideoDao {
     const GET_LIKE_COUNT = "SELECT COUNT(*) as likes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 1";
     const GET_DISLIKE_COUNT = "SELECT COUNT(*) as dislikes_count FROM video_likes_dislikes WHERE video_id = ? AND likes = 0";
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
-    const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden
+    const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden, tag_id
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
-    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v 
-                                JOIN tags_videos t ON v.id = t.video_id JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.tag_id, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v 
+                               JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
     const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
     const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ? AND v.hidden = 0";
     const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
                               GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT 4";
-    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 LIMIT ?";
+    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
     const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT 4";
 
 
@@ -99,37 +99,17 @@ class VideoDao {
      * @param array $tagIDs
      */
     public function insert(Video $video) {
-        try {
-            $this->pdo->beginTransaction();
-            $statement = $this->pdo->prepare(self::INSERT_VIDEO);
+            $statement = $this->pdo->prepare(self::INSERT);
             $statement->execute(array($video->getTitle(),
                 $video->getDescription(),
                 $video->getDateAdded(),
                 $video->getUploaderID(),
                 $video->getVideoURL(),
                 $video->getThumbnailURL(),
+                $video->getTagId(),
                 $video->getHidden()
             ));
-            $video->setId($this->pdo->lastInsertId());
-
-            //for a single tag on a video
-            $statement = $this->pdo->prepare(self::INSERT_TAGS);
-            $statement->execute(array($video->getTagId(), $video->getId()));
-
-            //for multiple tags on a video
-//            foreach ($video->getTags() as $tagID) {
-//                $statement = $this->pdo->prepare(self::INSERT_TAGS);
-//                $statement->execute(array($tagID, $video->getId()));
-//            }
-            $this->pdo->commit();
-            return $video->getId();
-        }
-        catch (PDOException $e) {
-            if($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-            throw $e;
-        }
+            return $this->pdo->lastInsertId();
     }
     /**
      * Converts PDO SQL Result Set to an Array of Video Objects
@@ -141,7 +121,6 @@ class VideoDao {
         if(isset($sqlResultSet[0])) {
             $videosArray = array();
             foreach ($sqlResultSet as $key => $value) {
-                $tags = $this->getTags($sqlResultSet[$key]['id']);
                 $videosArray[] = new Video(
                     $sqlResultSet[$key]['id'],
                     $sqlResultSet[$key]['title'],
@@ -150,13 +129,14 @@ class VideoDao {
                     $sqlResultSet[$key]['uploader_id'],
                     $sqlResultSet[$key]['video_url'],
                     $sqlResultSet[$key]['thumbnail_url'],
-                    $tags
+                    $sqlResultSet[$key]['tag_id'],
+                    0
                 );
             }
             return $videosArray;
         }
         elseif (isset($sqlResultSet['id'])) {
-            $tags = $this->getTags($sqlResultSet['id']);
+//            $tags = $this->getTags($sqlResultSet['id']);
             $video = new Video(
                 $sqlResultSet['id'],
                 $sqlResultSet['title'],
@@ -165,7 +145,8 @@ class VideoDao {
                 $sqlResultSet['uploader_id'],
                 $sqlResultSet['video_url'],
                 $sqlResultSet['thumbnail_url'],
-                $tags
+                $sqlResultSet['tag_id'],
+                0
             );
             $video->setHidden($sqlResultSet['hidden']);
             return $video;
@@ -179,29 +160,20 @@ class VideoDao {
      * @param int $videoID
      */
     public function delete($videoID) {
-        $statement = $this->pdo->prepare(self::DELETE_VIDEO);
+        $statement = $this->pdo->prepare(self::DELETE);
         $statement->execute(array($videoID));
     }
     /**
      * Edit video in DB
      * @param Video $video
+     * @return int
      */
     public function edit(Video $video) {
-        try {
-            $this->pdo->beginTransaction();
-            $statement = $this->pdo->prepare(self::EDIT_VIDEO);
-            $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getId()));
+        $statement = $this->pdo->prepare(self::EDIT);
+        $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getTagId(), $video->getId()));
+        $rowsAffected = $statement->rowCount();
+        return $rowsAffected;
 
-            $statement = $this->pdo->prepare(self::EDIT_TAGS);
-            $statement->execute(array($video->getTagId(), $video->getId()));
-            $this->pdo->commit();
-        }
-        catch (PDOException $e){
-            if($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-            throw $e;
-        }
     }
     /**
      * Return one Video by Video id

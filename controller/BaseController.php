@@ -33,11 +33,11 @@ class BaseController {
             $suggestions = $userDao->getMostSubscribed();
 
         }
-        $params['userPhotoSrc'] = $userPhotoSrc;
-        $params['userId'] = $userId;
-        $params['navSuggestions'] = $suggestions;
-        $params['navTitle'] = $navTitle;
-        $params['searchPlaceholder'] = 'Search video';
+        $params['user_photo_src'] = $userPhotoSrc;
+        $params['user_id'] = $userId;
+        $params['nav_suggestions'] = $suggestions;
+        $params['nav_title'] = $navTitle;
+        $params['search_placeholder'] = 'Search video';
 
         require_once '../view/header.php';
         require_once '../view/nav.php';

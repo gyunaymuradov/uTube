@@ -36,7 +36,7 @@
                                     <button type="button" class="btn btn-primary" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
                                     <button type="button" class="btn btn-primary" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                                 </div>
-                                <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['searchPlaceholder']; ?>" autocomplete="off">
+                                <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['search_placeholder']; ?>" autocomplete="off">
                                 <div id="search-autocomplete"></div>
                                 <input type="hidden" name="search-option" id="search-for" value="video">
                                 <span class="input-group-btn">
@@ -53,12 +53,12 @@
                 </div>
                 <div class="col-md-1 col-xs-4 margin-top">
                     <?php if ($logged) {
-                        $userPhotoSrc = $params['userPhotoSrc'];
-                        $userId = $params['userId'];
+                        $userPhotoSrc = $params['user_photo_src'];
+                        $userId = $params['user_id'];
                         echo "<div class='dropdown'>
                         <img src='$userPhotoSrc' width='50px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
                                 id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                        <ul class='dropdown-menu' aria-labelledby=\"dropdownMenu1\">
+                        <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                             <li class='dropdown-item'><a href='index.php?page=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='index.php?page=logout'>Logout</a></li>
                         </ul>
@@ -68,21 +68,3 @@
                     } ?>
                 </div>
         </div>
-        <div class="row bg-info" id="searchBarContainerSmall"></div>
-<!--        <div class="row bg-info showing">-->
-<!--            <div class="col-xs-12">-->
-<!--                <div class="input-group ">-->
-<!--                    <form action="index.php?page=search" method="post">-->
-<!--                        <div class="input-group-btn">-->
-<!--                            <button type="button" class="btn btn-primary" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>-->
-<!--                            <button type="button" class="btn btn-primary" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>-->
-<!--                        </div>-->
-<!--                        <input type="text" id="search" name="search" class="form-control" placeholder="Search">-->
-<!--                        <input type="hidden" id="search-for" value="video">-->
-<!--                        <span class="input-group-btn">-->
-<!--                                <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>-->
-<!--                        </span>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->

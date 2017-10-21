@@ -34,7 +34,7 @@ class VideoController extends BaseController {
             $fileInputFieldDisplay = 'block';
             $required = 'required';
             $formAction = 'index.php?page=upload';
-
+            $selected = 'Other';
             $this->render('video/upload', [
                 'tags' => $tags,
                 'thumbnail_url' => $thumbnailUrl,
@@ -46,13 +46,13 @@ class VideoController extends BaseController {
                 'preview_div_display' => $previewDivDisplay,
                 'file_input_display' => $fileInputFieldDisplay,
                 'required' => $required,
-                'form_action' => $formAction
+                'form_action' => $formAction,
+                'selected' => $selected
             ]);
         } elseif ($requestMethod == 'POST') {
             if (isset($_SESSION['user']) &&
                 isset($_POST['title']) &&
-                isset($_POST['description']) &&
-                isset($_POST['tags'])) {
+                isset($_POST['description'])) {
 
                 $resultMsg = 'Your video was successfully uploaded!';
                 $userId = $_SESSION['user']->getId();
@@ -78,16 +78,17 @@ class VideoController extends BaseController {
                                 mkdir('../uploads/thumbnails', 0777);
                             }
                             file_put_contents($thumbPath, file_get_contents('data://' . $_POST['thumbnail']));
-                            $newVideo = new Video(null,
+                            $newVideo = new Video(
+                                null,
                                 $_POST['title'],
                                 $_POST['description'],
                                 date('Y-m-d'),
                                 $userId,
                                 $videoPath,
                                 $thumbPath,
-                                $_POST['tags']
+                                $_POST['tags'],
+                                '0'
                             );
-                            $newVideo->setHidden(0);
                             try {
                                 $videoId = $videoDao->insert($newVideo);
                             } catch (\PDOException $e) {
@@ -292,6 +293,7 @@ class VideoController extends BaseController {
             $title = $video->getTitle();
             $description = $video->getDescription();
             $videoUrl = $video->getVideoURL();
+            $tagId = $video->getTagId();
             $pageTitle = 'Edit video';
             $btnText = 'Edit';
             $previewDivDisplay = 'block';
@@ -311,7 +313,8 @@ class VideoController extends BaseController {
                 'preview_div_display' => $previewDivDisplay,
                 'file_input_display' => $fileInputFieldDisplay,
                 'required' => $required,
-                'form_action' => $formAction
+                'form_action' => $formAction,
+                'tag' => $tagId
             ]);
         } else if ($requestMethod == 'POST' &&
                     isset($_SESSION['user']) &&
@@ -325,19 +328,22 @@ class VideoController extends BaseController {
                 unlink($thumbnailURL);
                 file_put_contents($thumbnailURL, file_get_contents('data://' . $_POST['thumbnail']));
             }
-            $editedVideo = new Video($_POST['video-id'], $_POST['title'], $_POST['description'], null, null, null, null, $_POST['tags']);
+            $editedVideo = new Video($_POST['video-id'], $_POST['title'], $_POST['description'], null, null, null, null, $_POST['tags'], '0');
             try {
                 $videoDao = VideoDao::getInstance();
-                $videoDao->edit($editedVideo);
+                $rowsAffected = $videoDao->edit($editedVideo);
                 $resultMsg = 'Video edited successfully!';
+                if ($rowsAffected == 1) {
+                    $this->render('video/upload-result', [
+                        'result' => $resultMsg,
+                        'video_id' => $_POST['video-id']
+                    ]);
+                }
             }
             catch (\PDOException $e) {
                 $resultMsg = 'An error occurred! Please try again later!';
             }
-            $this->render('video/upload-result', [
-                'result' => $resultMsg,
-                'video_id' => $_POST['video-id']
-            ]);
+
         }
     }
 }

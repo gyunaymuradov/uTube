@@ -28,20 +28,24 @@
             <div class="form-group">
                 <textarea name="description" placeholder="Video Description" class="form-control" maxlength="200" rows="4" required><?= htmlentities($params['description']); ?></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4 col-md-offset-4">
                 <label>Tags: </label>
-                <select class="js-example-basic-multiple tags-select" name="tags" required>
+                <select class="form-control" name="tags">
                     <?php
                     foreach ($params['tags'] as $tag) {
                         $tagName = $tag['name'];
                         $tagId = $tag['id'];
-                        echo "<option value='$tagId'>$tagName</option>";
+                        if ($params['tag'] == $tagId) {
+                            echo "<option value=$tagId selected>$tagName</option>";
+                        } else {
+                            echo "<option value=$tagId>$tagName</option>";
+                        }
                     }
                     ?>
                 </select>
             </div>
-            <div class="form-group margin-center">
-            <input type="submit" name="Submit" value="<?= $params['btn_text'] ?>" class="btn btn-info btn-md col-lg-12">
+            <div class="form-group margin-center col-md-12">
+                <input type="submit" name="Submit" value="<?= $params['btn_text'] ?>" class="btn btn-info btn-md">
             </div>
         </form>
     </div>

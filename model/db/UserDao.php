@@ -11,8 +11,10 @@ class UserDao {
     private $pdo;
 
     const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ? AND password = ?";
+    const GET_INFO = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE id = ?";
     const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const EDIT = "UPDATE users SET username = ?, password = ?, email = ?, first_name = ?, last_name = ?, user_photo_url = ? WHERE id = ?";
+    const EDIT = "UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ? WHERE id = ?";
+    const EDIT_WITH_PASS = "UPDATE users SET username = ?, password = ?, email = ?, first_name = ?, last_name = ? WHERE id = ? AND password = ?";
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
     const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
@@ -37,6 +39,14 @@ class UserDao {
         return self::$instance;
     }
 
+    public function editWithPass(User $user, $newPass) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $statement = $this->pdo->prepare(self::EDIT_WITH_PASS);
+        $statement->execute(array($user->getUsername(), $newPass, $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId(), $user->getPassword()));
+        $rowsAffected = $statement->rowCount();
+        return $rowsAffected;
+    }
+
     /**
      * @param User $user
      * @return mixed|User
@@ -44,6 +54,26 @@ class UserDao {
     public function login(User $user) {
         $statement = $this->pdo->prepare(self::LOGIN);
         $statement->execute(array($user->getUsername(), $user->getPassword()));
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!empty($result)) {
+            $userFromDb = new User();
+            $userFromDb->setId($result['id']);
+            $userFromDb->setUsername($result['username']);
+            $userFromDb->setEmail($result['email']);
+            $userFromDb->setFirstName($result['first_name']);
+            $userFromDb->setLastName($result['last_name']);
+            $userFromDb->setUserPhotoUrl($result['user_photo_url']);
+            $userFromDb->setDateJoined($result['date_joined']);
+            $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
+            $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
+            return $userFromDb;
+        }
+        return $result;
+    }
+
+    public function getInfo($id) {
+        $statement = $this->pdo->prepare(self::GET_INFO);
+        $statement->execute(array($id));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (!empty($result)) {
             $userFromDb = new User();
@@ -80,8 +110,9 @@ class UserDao {
      */
     public function edit(User $user) {
         $statement = $this->pdo->prepare(self::EDIT);
-        $result = $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl(), $user->getId()));
-        return $result;
+        $statement->execute(array($user->getUsername(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId()));
+        $rowsAffected = $statement->rowCount();
+        return $rowsAffected;
     }
 
     /**

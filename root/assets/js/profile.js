@@ -254,3 +254,31 @@ function removeVideo(buttonId) {
         request.send();
     }
 }
+
+function submitEditProfile() {
+    var username = document.getElementById('username').value;
+    var firstName = document.getElementById('first-name').value;
+    var lastName = document.getElementById('last-name').value;
+    var email = document.getElementById('email').value;
+    var oldPass = document.getElementById('old-pass').value;
+    var userId = document.getElementById('user-id').value;
+    var newPass = document.getElementById('new-pass').value;
+    var newPassConfirm = document.getElementById('confirm-new-pass').value;
+    var request = new XMLHttpRequest();
+    var params = "username=" + username + "&first_name=" + firstName + "&last_name=" + lastName + "&email=" + email + "&old_pass=" + oldPass + "&user_id=" + userId + "&new_pass=" + newPass + "&new_pass_confirm=" + newPassConfirm;
+
+    request.onreadystatechange = function () {
+        var formContainer = document.getElementById('about');
+        if (this.readyState === 4 && this.status === 200) {
+            var response = this.responseText;
+            formContainer.innerHTML = response;
+        } else if (this.readyState === 4 && this.status === 304) {
+            formContainer.innerHTML = getAboutPage(userId);
+            document.getElementById('username-old').innerHTML = username;
+            }
+        };
+
+    request.open('POST', 'http://localhost/uTube/root/index.php?page=edit-profile', true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.send(params);
+}

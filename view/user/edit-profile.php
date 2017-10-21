@@ -1,54 +1,86 @@
-<form method="post" action="index.php?page=edit-profile" enctype="multipart/form-data">
+<form method="post" action="index.php?page=edit-profile" onsubmit="event.preventDefault()">
     <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="username" value="<?= $params['username']; ?>">
+            <input type="text" class="form-control" name="username"id="username" value="<?= htmlentities($params['username']); ?>">
+            <?php
+            if (!empty($params['errors']['username'])) {
+                foreach ($params['errors']['username'] as $error) {
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            }
+            ?>
         </div>
     </div>
     <div class="form-group row">
         <label for="firstName" class="col-sm-4 col-form-label  col-sm-offset-2">First name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="firstName" value="<?= $params['firstName']; ?>">
+            <input type="text" class="form-control" name="first-name" id="first-name" value="<?= htmlentities($params['first-name']); ?>">
+            <?php
+            if (!empty($params['errors']['first_name'])) {
+                foreach ($params['errors']['first_name'] as $error) {
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            }
+            ?>
         </div>
     </div>
     <div class="form-group row">
         <label for="lastName" class="col-sm-4 col-form-label  col-sm-offset-2">Last name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="lastName" value="<?= $params['lastName']; ?>">
+            <input type="text" class="form-control" name="last-name" id="last-name" value="<?= htmlentities($params['last-name']); ?>">
+            <?php
+            if (!empty($params['errors']['last_name'])) {
+                foreach ($params['errors']['last_name'] as $error) {
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            }
+            ?>
         </div>
     </div>
     <div class="form-group row">
         <label for="email" class="col-sm-4 col-form-label  col-sm-offset-2">Email</label>
         <div class="col-sm-4">
-            <input type="email" class="form-control" name="email" value="<?= $params['email']; ?>">
+            <input type="email" class="form-control" name="email" id="email" value="<?= htmlentities($params['email']); ?>">
+            <?php
+            if (!empty($params['errors']['email'])) {
+                foreach ($params['errors']['email'] as $error) {
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            }
+            ?>
         </div>
     </div>
     <div class="form-group row">
         <label for="newPass" class="col-sm-4 col-form-label  col-sm-offset-2">New password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" name="newPass">
+            <input type="password" class="form-control" id="new-pass" name="new-pass">
+            <?php
+            if (!empty($params['errors']['password'])) {
+                foreach ($params['errors']['password'] as $error) {
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            }
+            ?>
         </div>
     </div>
     <div class="form-group row">
         <label for="confirmNewPass" class="col-sm-4 col-form-label  col-sm-offset-2">Confirm new password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" name="confirmNewPass">
+            <input type="password" class="form-control" id="confirm-new-pass" name="confirm-new-pass">
         </div>
     </div>
     <div class="form-group row">
         <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" name="oldPass">
+            <input type="password" class="form-control" id="old-pass" name="old-pass">
+            <?php $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>"; ?>
         </div>
     </div>
     <div class="form-group row">
-        <label for="photo" class="btn btn-link col-sm-12 form-control" tabindex="2">Choose new photo</label>
-        <input type="file" id="photo" name="photo" style="visibility:hidden;">
-    </div>
-    <div class="form-group row">
         <div class="col-md-offset-6">
-            <button type="submit" class="btn btn-primary btn-md" name="edit">Edit</button>
-            <input type="hidden" name="userId" value="<?= $params['userId']; ?>">
+            <button type="submit" class="btn btn-primary btn-md" onclick="submitEditProfile();" name="edit">Edit</button>
+            <input type="hidden" name="user-id" id="user-id" value="<?= $params['user-id']; ?>">
         </div>
     </div>
 </form>

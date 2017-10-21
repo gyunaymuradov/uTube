@@ -276,57 +276,8 @@ class UserController extends BaseController {
     public function editProfileAction() {
         $userDao = UserDao::getInstance();
         $user = new User();
-
-        if (isset($_POST['edit'])) {
-            $userId = $_POST['userId'];
-            $username = $_POST['username'];
-            $firstName = $_POST['firstName'];
-            $lastName = $_POST['lastName'];
-            $email = $_POST['email'];
-            $newPass = $_POST['newPass'];
-            $confirmNewPass = $_POST['confirmNewPass'];
-            $oldPass = $_POST['oldPass'];
-            $imgPath = $_SESSION['user']->getUserPhotoUrl();
-            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0) {
-                if (!file_exists("../uploads/user_photos")) {
-                    mkdir("../uploads/user_photos", 0777);
-                }
-                unlink($imgPath);
-                $realFileName = $_FILES['photo']['name'];
-                $imgName = 'IMG_' . time();
-                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
-                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
-            }
-
-            $user->setId($userId);
-            $user->setUsername($username);
-            $user->setFirstName($firstName);
-            $user->setLastName($lastName);
-            $user->setEmail($email);
-            $user->setUserPhotoUrl($imgPath);
-            $user->setPassword($newPass);
-
-            $success = $userDao->edit($user);
-
-            if ($success) {
-                $user = $userDao->getById($userId);
-                $_SESSION['user'] = $user;
-                $userPhoto = $user->getUserPhotoUrl();
-                $firstName = $user->getFirstName();
-                $lastName = $user->getLastName();
-                $username = $user->getUsername();
-                $userId = $user->getId();
-                $email = $user->getEmail();
-                $dateJoined = $user->getDateJoined();
-
-                $videoDao = VideoDao::getInstance();
-                $videos = $videoDao->getNLatestByUploaderID(10, $userId);
-                $subscribersCount = $userDao->getSubscribersCount($userId);
-                $subscriptionsCount = $userDao->getSubscriptionsCount($userId);
-
-                header('Location:index.php?page=profile&id=' . $userId);
-            }
-        } else {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        if ($requestMethod == 'GET') {
             $userId = $_GET['id'];
             /* @var $user User */
             $user = $userDao->getById($userId);
@@ -335,14 +286,148 @@ class UserController extends BaseController {
             $lastName = $user->getLastName();
             $email = $user->getEmail();
 
-            $this->renderPartial('user/edit-profile' ,[
-                'userId' => $userId,
+            $this->renderPartial('user/edit-profile', [
+                'user-id' => $userId,
                 'username' => $username,
-                'firstName' => $firstName,
-                'lastName' => $lastName,
+                'first-name' => $firstName,
+                'last-name' => $lastName,
                 'email' => $email,
+                'msg' => ''
             ]);
+        } else if ($requestMethod == 'POST') {
+            $userId = $_POST['user_id'];
+            $username = $_POST['username'];
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $email = $_POST['email'];
+            $oldPass = $_POST['old_pass'];
+            $newPass = $_POST['new_pass'];
+            $newPassConfirm = $_POST['new_pass_confirm'];
+            $oldUsername = $_SESSION['user']->getUsername();
+            $msg = null;
+            $validator = Validator::getInstance();
+            $validUsername = $validator->validateUsername($username);
+            $validFirstName = $validator->validateFirstName($firstName);
+            $validLastName = $validator->validateLastName($lastName);
+            $validEmail = $validator->validateEmail($email);
+
+            $errors = array();
+            if (is_array($validUsername)) {
+                foreach ($validUsername as $error) {
+                    $errors['username'][] = $error;
+                }
+            }
+            if (is_array($validEmail)) {
+                foreach ($validEmail as $error) {
+                    $errors['email'][] = $error;
+                }
+            }
+            if (is_array($validFirstName)) {
+                foreach ($validFirstName as $error) {
+                    $errors['first_name'][] = $error;
+                }
+            }
+            if (is_array($validLastName)) {
+                foreach ($validLastName as $error) {
+                    $errors['last_name'][] = $error;
+                }
+            }
+
+            if ($oldUsername != $username) {
+                $usernameTaken = $userDao->checkIfExists($username);
+                if ($usernameTaken) {
+                    $errors['username'][] = 'Username is already taken.';
+                }
+            }
+
+            if (strlen($newPass) > 0) {
+                $validNewPass = $validator->validatePassword($newPass, $newPassConfirm);
+                if (is_array($validNewPass)) {
+                    foreach ($validNewPass as $error) {
+                        $errors['password'][] = $error;
+                    }
+                }
+            }
+
+
+            if (empty($errors) && strlen($newPass) == 0) {
+                $user = new User();
+                // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
+                $user->setUsername($username);
+                $user->setId($userId);
+                $user->setEmail($email);
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+
+                $affectedRowCount = $userDao->edit($user);
+                if ($affectedRowCount == 1) {
+                    $_SESSION['user'] = $userDao->getInfo($userId);
+                    http_response_code(304);
+                } else {
+                    // TODO CREATE AN ERROR PAGE
+                }
+            } else if (empty($errors) && strlen($newPass) > 0) {
+                $user = new User();
+                // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
+                $user->setUsername($username);
+                $user->setId($userId);
+                $user->setPassword($oldPass);
+                $user->setEmail($email);
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+
+                $affectedRowCount = $userDao->editWithPass($user, $newPass);
+                if ($affectedRowCount == 1) {
+                    $_SESSION['user'] = $userDao->getInfo($userId);
+                    http_response_code(304);
+                } else {
+                    $this->renderPartial('user/edit-profile', [
+                        'user-id' => $userId,
+                        'username' => $username,
+                        'first-name' => $firstName,
+                        'last-name' => $lastName,
+                        'email' => $email,
+                        'msg' => 'Wrong password.'
+                    ]);
+                }
+            } else {
+                $this->renderPartial('user/edit-profile', [
+                    'errors' => $errors,
+                    'user-id' => $userId,
+                    'username' => $username,
+                    'first-name' => $firstName,
+                    'last-name' => $lastName,
+                    'email' => $email,
+                    'msg' => $msg
+                ]);
+            }
         }
+
+//            $hasUploadedImg = !empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0;
+//
+//            if ($hasUploadedImg) {
+//                $fileRealName = $_FILES['photo']['name'];
+//                $fileTempName= $_FILES['photo']['tmp_name'];
+//                $extensions = ['jpeg', 'jpg', 'png'];
+//                $validImg = $validator->validateUploadedFile($fileRealName, $fileTempName, 5000000,  'image', $extensions);
+//                if (is_array($validImg)) {
+//                    foreach ($validImg as $error) {
+//                        $errors['img'][] = $error;
+//                    }
+//                }
+//            }
+//            if (!empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0) {
+//                if (!file_exists("../uploads/user_photos")) {
+//                    mkdir("../uploads/user_photos", 0777);
+//                }
+//                unlink($imgPath);
+//                $realFileName = $_FILES['photo']['name'];
+//                $imgName = 'IMG_' . time();
+//                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+//                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
+//            }
+//
+//
     }
 
     public function viewProfileAction() {

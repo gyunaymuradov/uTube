@@ -4,7 +4,7 @@
             <img src="<?= $params['userPhoto']; ?>" alt="" width="250" class="img-rounded" height="auto">
         </div>
         <div class="col-md-4 col-md-offset-2">
-            <h3 class="text-muted"><?= $params['username']; ?></h3>
+            <h3 class="text-muted" id="username-old"><?= $params['username']; ?></h3>
         </div>
         <div class="col-md-4 col-md-offset-2">
             <h3 class="text-muted"><?= $params['subscribersCount']; ?> <small> subscribers</small></h3>

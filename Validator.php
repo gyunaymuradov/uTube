@@ -66,7 +66,7 @@ class Validator
        * valid format
        * [chars]@[chars].[2+ letters]
        */
-        $emailRegex = '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/i';
+        $emailRegex = '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/';
         return preg_match($emailRegex, $email) === 1;
     }
 
@@ -74,7 +74,7 @@ class Validator
         /*
          * checks for at least 1 digit, lowercase and uppercase letter; also for length of minimum 8
          */
-        $passRegex = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';
+        $passRegex = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
         return preg_match($passRegex, $pass) === 1;
 
     }
@@ -121,8 +121,8 @@ class Validator
         if ($this->containsSpace($email)) {
             $errors[] = 'Email cannot contain whitespace.';
         }
-        if (!($this->hasLengthGreaterThan($email, 5))) {
-            $errors[] = 'Email must be at least 5 characters long.';
+        if (!($this->hasLengthGreaterThan($email, 7))) {
+            $errors[] = 'Email must be at least 7 characters long.';
         }
         if (!($this->hasValidEmail($email))) {
             $errors[] = 'Email format is not valid.';

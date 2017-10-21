@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/style/library/bootstrap.min.css">
     <link rel="icon" href="assets/images/favicon.ico">
     <script src="assets/js/library/bootstrap.min.js"></script>
+    <script src="assets/js/validations.js"></script>
 
 </head>
     <body>
@@ -31,63 +32,76 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form id="register-form" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data">
-                                        <div class="form-group">
-                                            <input type="text" name="username" tabindex="1" class="form-control" placeholder="Username" value="<?= htmlentities($params['username']); ?>" required>
-                                            <?php
-                                            if (!empty($params['errors']['username'])) {
-                                            foreach ($params['errors']['username'] as $error) {
-                                                echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
-                                                }
-                                            }
-                                            ?>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="email" name="email" tabindex="1" class="form-control" placeholder="Email Address" value="<?= htmlentities($params['email']); ?>" required>
-                                            <?php
-                                            if (!empty($params['errors']['email'])) {
-                                                foreach ($params['errors']['email'] as $error) {
+                                    <form id="register-form" onsubmit="event.preventDefault()" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data">
+                                        <div class="form-group" id="username-container">
+                                            <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" placeholder="Username" value="<?= htmlentities($params['username']); ?>" required>
+                                            <div id="username-errors">
+                                                <?php
+                                                if (!empty($params['errors']['username'])) {
+                                                foreach ($params['errors']['username'] as $error) {
                                                     echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="first-name" tabindex="1" class="form-control" placeholder="First Name" value="<?= htmlentities($params['first-name']); ?>" required>
+                                            <input type="email" name="email" tabindex="1" id="email" onblur="validateEmail()" class="form-control" placeholder="Email Address" value="<?= htmlentities($params['email']); ?>" required>
+                                        <div id="email-errors">
                                             <?php
-                                            if (!empty($params['errors']['first_name'])) {
-                                                foreach ($params['errors']['first_name'] as $error) {
-                                                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                if (!empty($params['errors']['email'])) {
+                                                    foreach ($params['errors']['email'] as $error) {
+                                                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
+                                        </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="last-name" tabindex="1" class="form-control" placeholder="Last Name" value="<?= htmlentities($params['last-name']); ?>" required>
-                                            <?php
-                                            if (!empty($params['errors']['last_name'])) {
-                                                foreach ($params['errors']['last_name'] as $error) {
-                                                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                            <input type="text" name="first-name" tabindex="1" id="first-name" onblur="validateFirstName()" class="form-control" placeholder="First Name" value="<?= htmlentities($params['first-name']); ?>" required>
+                                            <div id="first-name-errors">
+                                                <?php
+                                                if (!empty($params['errors']['first_name'])) {
+                                                    foreach ($params['errors']['first_name'] as $error) {
+                                                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" tabindex="2" class="form-control" placeholder="Password" required>
-                                            <?php
-                                            if (!empty($params['errors']['password'])) {
-                                                foreach ($params['errors']['password'] as $error) {
-                                                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                            <input type="text" name="last-name" tabindex="1" id="last-name" class="form-control" onblur="validateLastName()" placeholder="Last Name" value="<?= htmlentities($params['last-name']); ?>" required>
+                                            <div id="last-name-errors">
+                                                <?php
+                                                if (!empty($params['errors']['last_name'])) {
+                                                    foreach ($params['errors']['last_name'] as $error) {
+                                                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirm-pass" tabindex="2" class="form-control" placeholder="Confirm Password" required>
+                                            <input type="password" name="password" tabindex="2" id="password" onblur="validatePassword()" class="form-control" placeholder="Password" required>
+                                            <div id="password-errors">
+                                                <?php
+                                                if (!empty($params['errors']['password'])) {
+                                                    foreach ($params['errors']['password'] as $error) {
+                                                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="confirm-pass" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password" required>
+                                            <div id="confirm-password-errors">
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="photo" class="btn btn-link col-sm-12 form-control" tabindex="2">Upload Profile Photo</label>
-                                            <input type="file" id="photo" name="photo" style="visibility:hidden;" accept="image/x-png,image/jpg,image/jpeg">
+                                            <input type="file" id="photo" name="photo" onchange="validateImage()" style="visibility:hidden;" accept="image/x-png,image/jpg,image/jpeg">
+                                            <div id="file-error"></div>
                                             <?php
                                             if (!empty($params['errors']['img'])) {
                                                 foreach ($params['errors']['img'] as $error) {

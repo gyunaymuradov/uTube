@@ -46,7 +46,7 @@ function subscribe(profileId) {
     }
 }
 
-function getAboutPage(userId) {
+function getAboutPage(userId, delay) {
     var aboutPage = document.getElementById('about-page');
     if (aboutPage) {
         var url = 'http://localhost/uTube/root/index.php?page=about&id=' + userId;
@@ -69,8 +69,9 @@ function getAboutPage(userId) {
                 aboutHtmlContent += "<h3 class='text-muted'>" + dateJoined + "</h3></div>";
                 aboutHtmlContent += "<div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Subscriptions: </h3></div>";
                 aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + subscriptions + "</h3></div>";
-
-                aboutHtml.innerHTML = aboutHtmlContent;
+                setTimeout(function () {
+                    aboutHtml.innerHTML = aboutHtmlContent;
+                }, delay);
             }
         };
         request.open('GET', url);
@@ -262,18 +263,17 @@ function submitEditProfile() {
     var email = document.getElementById('email').value;
     var oldPass = document.getElementById('old-pass').value;
     var userId = document.getElementById('user-id').value;
-    var newPass = document.getElementById('new-pass').value;
-    var newPassConfirm = document.getElementById('confirm-new-pass').value;
+    var newPass = document.getElementById('password').value;
+    var newPassConfirm = document.getElementById('confirm-password').value;
     var request = new XMLHttpRequest();
     var params = "username=" + username + "&first_name=" + firstName + "&last_name=" + lastName + "&email=" + email + "&old_pass=" + oldPass + "&user_id=" + userId + "&new_pass=" + newPass + "&new_pass_confirm=" + newPassConfirm;
 
     request.onreadystatechange = function () {
         var formContainer = document.getElementById('about');
         if (this.readyState === 4 && this.status === 200) {
-            var response = this.responseText;
-            formContainer.innerHTML = response;
+            formContainer.innerHTML = this.responseText;
         } else if (this.readyState === 4 && this.status === 304) {
-            formContainer.innerHTML = getAboutPage(userId);
+            formContainer.innerHTML = getAboutPage(userId, 0);
             document.getElementById('username-old').innerHTML = username;
             }
         };

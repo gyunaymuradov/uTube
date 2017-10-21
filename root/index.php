@@ -78,11 +78,11 @@ require_once '../Validator.php';
     }
     else if($page === 'upload') {
         $controller = new controller\VideoController();
-        $controller->upload();
+        $controller->uploadAction();
     }
     else if($page === 'comment') {
         $controller = new controller\VideoController();
-        $controller->comment();
+        $controller->commentAction();
     }
     else if($page === 'search') {
         $controller = new controller\IndexController();

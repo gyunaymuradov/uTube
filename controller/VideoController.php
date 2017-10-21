@@ -16,7 +16,7 @@ class VideoController extends BaseController {
     public function __construct() {
     }
 
-    public function upload()
+    public function uploadAction()
     {
         $videoDao = VideoDao::getInstance();
         $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -24,7 +24,6 @@ class VideoController extends BaseController {
         if ($requestMethod == 'GET') {
             $tagDao = TagDao::getInstance();
             $tags = $tagDao->getAll();
-            $videoId = isset($_GET['id']) ? $_GET['id'] : null;
             $thumbnailUrl = null;
             $title = null;
             $description = null;
@@ -35,78 +34,62 @@ class VideoController extends BaseController {
             $fileInputFieldDisplay = 'block';
             $required = 'required';
             $formAction = 'index.php?page=upload';
-            if (!is_null($videoId)) {
-                $video = $videoDao->getByID($videoId);
-                $thumbnailUrl = $video->getThumbnailURL();
-                $title = $video->getTitle();
-                $description = $video->getDescription();
-                $videoUrl = $video->getVideoURL();
-                $pageTitle = 'Edit video';
-                $btnText = 'Edit';
-                $previewDivDisplay = 'block';
-                $fileInputFieldDisplay = 'none';
-                $required = '';
-                $formAction = 'index.php?page=edit-video';
-            }
 
             $this->render('video/upload', [
-                'videoId' => $videoId,
                 'tags' => $tags,
-                'thumbnailUrl' => $thumbnailUrl,
+                'thumbnail_url' => $thumbnailUrl,
                 'title' => $title,
                 'description' => $description,
-                'videoUrl' => $videoUrl,
-                'pageTitle' => $pageTitle,
-                'btnText' => $btnText,
-                'previewDivDisplay' => $previewDivDisplay,
-                'fileInputDisplay' => $fileInputFieldDisplay,
+                'video_url' => $videoUrl,
+                'page_title' => $pageTitle,
+                'btn_text' => $btnText,
+                'preview_div_display' => $previewDivDisplay,
+                'file_input_display' => $fileInputFieldDisplay,
                 'required' => $required,
-                'formAction' => $formAction
+                'form_action' => $formAction
             ]);
         } elseif ($requestMethod == 'POST') {
             if (isset($_SESSION['user']) &&
-                isset($_POST["Title"]) &&
-                $_POST["Title"] != "" &&
-                isset($_POST["Description"]) &&
-                $_POST["Description"] != "" &&
-                isset($_POST["tags"])) {
+                isset($_POST['title']) &&
+                isset($_POST['description']) &&
+                isset($_POST['tags'])) {
 
-                $resultMsg = "Your video was successfully uploaded!";
+                $resultMsg = 'Your video was successfully uploaded!';
                 $userId = $_SESSION['user']->getId();
 
-                $tmpFileName = $_FILES['videoFile']['tmp_name'];
-                $realFileName = $_FILES['videoFile']['name'];
-                $fileType = $_FILES['videoFile']['type'];
-
+                $tmpFileName = $_FILES['video-file']['tmp_name'];
+                $realFileName = $_FILES['video-file']['name'];
+                $fileType = $_FILES['video-file']['type'];
+                $videoId = '';
                 if (is_uploaded_file($tmpFileName)) {
-                    if (strpos($fileType, "video") === false) {
-                        $resultMsg = "Error! File is not a video!";
+                    if (strpos($fileType, 'video') === false) {
+                        $resultMsg = 'Error! File is not a video!';
                     } else {
-                        if (!file_exists("../uploads/videos")) {
-                            mkdir("../uploads/videos", 0777);
+                        if (!file_exists('../uploads/videos')) {
+                            mkdir('../uploads/videos', 0777);
                         }
-                        $videoName = "VID_" . $userId . "_" . time();
+                        $videoName = 'VID_' . $userId . "_" . time();
                         $videoPath = "../uploads/videos/$videoName." . pathinfo($realFileName, PATHINFO_EXTENSION);
                         $thumbPath = "../uploads/thumbnails/$videoName.png";
-                        move_uploaded_file($tmpFileName, "$videoPath");
+                        move_uploaded_file($tmpFileName, $videoPath);
                         if (file_exists($videoPath)) {
 
-                            if (!file_exists("../uploads/thumbnails")) {
-                                mkdir("../uploads/thumbnails", 0777);
+                            if (!file_exists('../uploads/thumbnails')) {
+                                mkdir('../uploads/thumbnails', 0777);
                             }
-                            file_put_contents($thumbPath, file_get_contents("data://".$_POST["Thumbnail"]));
+                            file_put_contents($thumbPath, file_get_contents('data://' . $_POST['thumbnail']));
                             $newVideo = new Video(null,
-                                $_POST['Title'],
-                                $_POST['Description'],
-                                date("Y-m-d"),
+                                $_POST['title'],
+                                $_POST['description'],
+                                date('Y-m-d'),
                                 $userId,
                                 $videoPath,
                                 $thumbPath,
-                                $_POST["tags"]
+                                $_POST['tags']
                             );
                             $newVideo->setHidden(0);
                             try {
-                                $videoDao->insert($newVideo);
+                                $videoId = $videoDao->insert($newVideo);
                             } catch (\PDOException $e) {
                                 if (file_exists($videoPath)) {
                                     unlink($videoPath);
@@ -114,17 +97,20 @@ class VideoController extends BaseController {
                                 if (file_exists($thumbPath)) {
                                     unlink($thumbPath);
                                 }
-                                $resultMsg = "An error occurred! Please try again later.";
+                                $resultMsg = 'An error occurred! Please try again later.';
                             }
                         }
                     }
                 } else {
-                    $resultMsg = "Error uploading file!";
+                    $resultMsg = 'Error uploading file!';
                 }
-                $this->render('video/uploadResult', array("Result" => $resultMsg));
+                $this->render('video/upload-result',[
+                    'result' => $resultMsg,
+                    'video_id' => $videoId
+                ]);
             }
             else {
-                header("Location: index.php?page=upload");
+                header('Location: index.php?page=upload');
             }
         }
     }
@@ -195,25 +181,25 @@ class VideoController extends BaseController {
         }
 
         $this->render('video/watch', [
-            'uploaderId' => $uploaderId,
-            'videoId' => $videoId,
-            'videoUrl' => $videoUrl,
-            'videoTitle' => $videoTitle,
-            'videoDescription' => $videoDescription,
-            'dateAdded' => $dateAdded,
+            'uploader_id' => $uploaderId,
+            'video_id' => $videoId,
+            'video_url' => $videoUrl,
+            'video_title' => $videoTitle,
+            'video_description' => $videoDescription,
+            'date_added' => $dateAdded,
             'uploader' => $uploader,
             'likes' => $likes,
             'dislikes' => $dislikes,
-            'loggedUserId' => $loggedUserId,
+            'logged_user_id' => $loggedUserId,
             'logged' => $logged,
             'comments' => $comments,
-            'suggestedVideos' => $similarVideos,
-            'sidebarTitle' => $sideBarTitle,
-            'playlistId' => $playlistId
+            'suggested_videos' => $similarVideos,
+            'sidebar_title' => $sideBarTitle,
+            'playlist_id' => $playlistId
         ]);
     }
 
-    public function deleteAction () {
+    public function deleteAction() {
         if (isset($_GET['videoId'])) {
             try {
                 $videoDao = VideoDao::getInstance();
@@ -267,10 +253,10 @@ class VideoController extends BaseController {
         ]);
     }
 
-    public function comment() {
+    public function commentAction() {
         $commentText = $_POST['comment'];
-        $videoId = $_POST['videoId'];
-        $userId = $_POST['userId'];
+        $videoId = $_POST['video-id'];
+        $userId = $_POST['user-id'];
         $date = date('Y-m-d');
         $comment = new Comment($videoId, $userId, $commentText, $date);
 
@@ -286,42 +272,72 @@ class VideoController extends BaseController {
             'comment' => $commentText,
             'date' => $date,
             'username' => $username,
-            'userId' => $userId,
-            'userPhoto' => $userPhotoUrl,
-            'commentId' => $lastInsertId,
+            'user_id' => $userId,
+            'user_photo' => $userPhotoUrl,
+            'comment_id' => $lastInsertId,
             'likes' => '0',
             'dislikes' => '0'
         ]);
     }
 
     public function editAction() {
-        if (isset($_SESSION['user']) &&
-            isset($_POST['videoId']) &&
-            $_POST['videoId'] != "" &&
-            isset($_POST["Title"]) &&
-            $_POST["Title"] != "" &&
-            isset($_POST["Description"]) &&
-            $_POST["Description"] != "" &&
-            isset($_POST["OldThumbnailUrl"]) &&
-            $_POST["OldThumbnailUrl"] != "") {
-            $thumbnailURL = $_POST['OldThumbnailUrl'];
-            if (file_exists($thumbnailURL) && $_POST['Thumbnail'] != "") {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        $videoDao = VideoDao::getInstance();
+        if ($requestMethod == 'GET') {
+            $tagDao = TagDao::getInstance();
+            $tags = $tagDao->getAll();
+            $videoId = $_GET['id'];
+            $video = $videoDao->getByID($videoId);
+            $thumbnailUrl = $video->getThumbnailURL();
+            $title = $video->getTitle();
+            $description = $video->getDescription();
+            $videoUrl = $video->getVideoURL();
+            $pageTitle = 'Edit video';
+            $btnText = 'Edit';
+            $previewDivDisplay = 'block';
+            $fileInputFieldDisplay = 'none';
+            $required = '';
+            $formAction = 'index.php?page=edit-video';
+
+            $this->render('video/upload', [
+                'video_id' => $videoId,
+                'tags' => $tags,
+                'thumbnail_url' => $thumbnailUrl,
+                'title' => $title,
+                'description' => $description,
+                'video_url' => $videoUrl,
+                'page_title' => $pageTitle,
+                'btn_text' => $btnText,
+                'preview_div_display' => $previewDivDisplay,
+                'file_input_display' => $fileInputFieldDisplay,
+                'required' => $required,
+                'form_action' => $formAction
+            ]);
+        } else if ($requestMethod == 'POST' &&
+                    isset($_SESSION['user']) &&
+                    isset($_POST['video-id']) &&
+                    isset($_POST['title']) &&
+                    isset($_POST['description']) &&
+                    isset($_POST['old-thumbnail-url'])) {
+
+            $thumbnailURL = $_POST['old-thumbnail-url'];
+            if (file_exists($thumbnailURL) && $_POST['thumbnail'] != '') {
                 unlink($thumbnailURL);
-                file_put_contents($thumbnailURL, file_get_contents("data://".$_POST["Thumbnail"]));
+                file_put_contents($thumbnailURL, file_get_contents('data://' . $_POST['thumbnail']));
             }
-            $editedVideo = new Video($_POST['videoId'], $_POST['Title'], $_POST['Description'], null, null, null, null, $_POST['tags']);
+            $editedVideo = new Video($_POST['video-id'], $_POST['title'], $_POST['description'], null, null, null, null, $_POST['tags']);
             try {
                 $videoDao = VideoDao::getInstance();
                 $videoDao->edit($editedVideo);
-                $resultMsg = "Video edited successfully!";
+                $resultMsg = 'Video edited successfully!';
             }
             catch (\PDOException $e) {
-                $resultMsg = "An error occurred! Please try again later!";
+                $resultMsg = 'An error occurred! Please try again later!';
             }
+            $this->render('video/upload-result', [
+                'result' => $resultMsg,
+                'video_id' => $_POST['video-id']
+            ]);
         }
-        else {
-            $resultMsg = "You cannot leave empty fields!";
-        }
-        $this->render('video/uploadResult', array("Result" => $resultMsg));
     }
 }

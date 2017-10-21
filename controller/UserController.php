@@ -76,6 +76,10 @@ class UserController extends BaseController {
                 }
             }
             if (is_array($validPassword)) {
+                    if (isset($validPassword['confirm-pass'])) {
+                        $errors['confirm-pass'] = $validPassword['confirm-pass'];
+                        unset($validPassword['confirm-pass']);
+                    }
                 foreach ($validPassword as $error) {
                     $errors['password'][] = $error;
                 }
@@ -357,6 +361,10 @@ class UserController extends BaseController {
             if (strlen($newPass) > 0) {
                 $validNewPass = $validator->validatePassword($newPass, $newPassConfirm);
                 if (is_array($validNewPass)) {
+                    if (isset($validNewPass['confirm-pass'])) {
+                        $errors['confirm-pass'] = $validNewPass['confirm-pass'];
+                        unset($validNewPass['confirm-pass']);
+                    }
                     foreach ($validNewPass as $error) {
                         $errors['password'][] = $error;
                     }
@@ -378,7 +386,14 @@ class UserController extends BaseController {
                     $_SESSION['user'] = $userDao->getInfo($userId);
                     http_response_code(304);
                 } else {
-                    // TODO CREATE AN ERROR PAGE
+                    $oldUser = $_SESSION['user'];
+                    $refreshedUser = $userDao->getInfo($userId);
+                    if ($oldUser == $refreshedUser) {
+                        http_response_code(304);
+                    } else {
+                        // redirect to error page
+                        // TODO CREATE AN ERROR PAGE
+                    }
                 }
             } else if (empty($errors) && strlen($newPass) > 0) {
                 $user = new User();

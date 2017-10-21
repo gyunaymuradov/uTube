@@ -2,7 +2,7 @@ function validateUsername() {
     var usernameInputField = document.getElementById('username');
     var username = usernameInputField.value;
     var errors = [];
-    if (username.trim().length > 0) {
+    if (username.length > 0) {
         if (!hasLengthLessThan(username, 11)) {
             errors.push('Username cannot contain more than 10 characters.');
         }
@@ -11,6 +11,9 @@ function validateUsername() {
         }
         if (hasWhiteSpace(username)) {
             errors.push('Username cannot contain whitespace.');
+        }
+        if (hasSpecialChars(username)) {
+            errors.push('Username cannot contain special characters.');
         }
     }
     // var usernameErrors = document.getElementById('username-errors');
@@ -34,7 +37,7 @@ function validateFirstName() {
     var firsNameInputField = document.getElementById('first-name');
     var firstName = firsNameInputField.value;
     var errors = [];
-    if (firstName.trim().length > 0) {
+    if (firstName.length > 0) {
         if (!hasLengthLessThan(firstName, 16)) {
             errors.push('First name cannot contain more than 15 characters.');
         }
@@ -44,6 +47,9 @@ function validateFirstName() {
         if (hasWhiteSpace(firstName)) {
             errors.push('First name cannot contain whitespace.');
         }
+        if (hasSpecialChars(firstName)) {
+            errors.push('First name cannot contain special characters.');
+        }
     }
     manipulateInputField('first-name-errors', errors, firsNameInputField);
 }
@@ -52,7 +58,7 @@ function validateLastName() {
     var lastNameInputField = document.getElementById('last-name');
     var lastName = lastNameInputField.value;
     var errors = [];
-    if (lastName.trim().length > 0) {
+    if (lastName.length > 0) {
         if (!hasLengthLessThan(lastName, 16)) {
             errors.push('Last name cannot contain more than 15 characters.');
         }
@@ -62,6 +68,9 @@ function validateLastName() {
         if (hasWhiteSpace(lastName)) {
             errors.push('Last name cannot contain whitespace.');
         }
+        if (hasSpecialChars(lastName)) {
+            errors.push('Last name cannot contain special characters.');
+        }
     }
     manipulateInputField('last-name-errors', errors, lastNameInputField);
 }
@@ -70,7 +79,7 @@ function validateEmail() {
     var emailInputField = document.getElementById('email');
     var email = emailInputField.value;
     var errors = [];
-    if (email.trim().length > 0) {
+    if (email.length > 0) {
         if (!hasLengthMoreThan(email, 6)) {
             errors.push('Email must be at least 7 characters long.');
         }
@@ -89,12 +98,13 @@ function validatePassword() {
     var confirmPassword = document.getElementById('confirm-password').value;
     var password = passwordInputField.value;
     var errors = [];
-    if (password.trim().length > 0) {
+    displayConfirmPassErr();
+    if (password.length > 0) {
         if (!hasValidPassword(password)) {
             errors.push('Password should contain at least 1 digit, 1 uppercase and 1 lowercase letters and should be at least 6 characters long.');
         }
-        if (confirmPassword.length === 0) {
-            errors.push('Confirm password cannot be blank.');
+        if (!hasLengthLessThan(password, 21)) {
+            errors.push('Password cannot contain more than 20 characters.');
         }
         if (password !== confirmPassword) {
             errors.push('The passwords do not match.');
@@ -117,7 +127,6 @@ function validateImage() {
         manipulateInputField('file-error', errors, fileInputField);
     }
 }
-
 
 function getMimeType() {
     var blob = document.getElementById('photo').files[0];
@@ -152,6 +161,9 @@ function hasValidFilesize() {
     return file.size < 5000000;
 }
 
+function hasSpecialChars(value) {
+    return /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(value);
+}
 
 function hasLengthMoreThan(string, length) {
     return string.length > length;
@@ -186,6 +198,22 @@ function manipulateInputField(errorContainer, array, inputField) {
         });
     } else {
         inputField.style.border = '1px solid #ddd';
+        return true;
+    }
+}
+
+function displayConfirmPassErr() {
+    var confirmPassword = document.getElementById('confirm-password');
+    var errorDiv = document.getElementById('confirm-password-errors');
+    errorDiv.innerHTML = '';
+    if (confirmPassword.value.length === 0 && document.getElementById('password').value.length > 0) {
+        confirmPassword.style.borderColor = 'red';
+        var erorrSpan = document.createElement('span');
+        erorrSpan.className = 'help-block';
+        erorrSpan.innerHTML = "<p class='text-danger'>Confirm password cannot be blank.</p>";
+        errorDiv.appendChild(erorrSpan);
+    } else {
+        confirmPassword.style.border = '1px solid #ddd';
         return true;
     }
 }

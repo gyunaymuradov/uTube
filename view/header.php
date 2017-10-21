@@ -11,6 +11,7 @@
         <script src="assets/js/responsive.js"></script>
         <script src="assets/js/index.js"></script>
         <script src="assets/js/video.js"></script>
+        <script src="assets/js/validations.js"></script>
         <link rel="stylesheet" href="assets/style/style.css" type="text/css">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />

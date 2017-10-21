@@ -1,47 +1,48 @@
 <div class="col-md-10 justify-content-center text-center">
-    <h1><?= $params['pageTitle'] ?></h1>
+    <h2><?= $params['page_title'] ?></h2>
 
-    <div class="row text-center margin-5" id="preview" style="display: <?= $params['previewDivDisplay'] ?>">
-        <h3>Video Preview</h3>
-        <video width="400" src="<?= $params['videoUrl'] ?>" id="videoPreview" controls></video>
-        <h3>Thumbnail Generation</h3>
+    <div class="row text-center margin-5" id="preview" style="display: <?= $params['preview_div_display'] ?>">
+        <h4>Video Preview</h4>
+        <video width="400" src="<?= $params['video_url'] ?>" id="videoPreview" controls></video>
+        <h4>Thumbnail Generation</h4>
         <canvas id="canvas" style="display:none"></canvas>
         <div class="form-group">
             <button class="btn btn-info btn-md" onclick="createThumbnail()">Create Thumbnail</button>
         </div>
         <div class="form-group">
-            <img id="thumbnailIMG" src="<?= $params['thumbnailUrl'] ?>" width="400" height="auto"/>
+            <img id="thumbnailIMG" src="<?= $params['thumbnail_url'] ?>" width="400" height="auto"/>
         </div>
 
     </div>
-
-    <form enctype="multipart/form-data" method="post" action="<?= $params['formAction'] ?>">
-        <input type="hidden" name="Thumbnail" id="thumbnailSRC">
-        <input type="hidden" name="videoId" value="<?= $params['videoId'] ?>">
-        <input type="hidden" name="OldThumbnailUrl" value="<?= $params['thumbnailUrl'] ?>">
-        <div class="form-group">
-            <input type="file" name="videoFile" class="form-control margin-center" accept="video/*" onchange="previewVideo(this)" <?= $params['required']; ?> style="display:<?= $params['fileInputDisplay']; ?>">
-        </div>
-        <div class="form-group">
-            <input type="text" name="Title" value="<?= $params['title'] ?>" placeholder="Video Title" class="form-control" maxlength="100" required>
-        </div>
-        <div class="form-group">
-            <input type="text" name="Description" value="<?= $params['description'] ?>" placeholder="Video Description" class="form-control" maxlength="200" required>
-        </div>
-        <div class="form-group">
-            <label>Tags: </label>
-            <select class="js-example-basic-multiple tags-select" name="tags" required>
-                <?php
-                foreach ($params['tags'] as $tag) {
-                    $tagName = $tag['name'];
-                    $tagId = $tag['id'];
-                    echo "<option value='$tagId'>$tagName</option>";
-                }
-                ?>
-            </select>
-        </div>
-        <div class="form-group margin-center">
-        <input type="submit" name="Submit" value="<?= $params['btnText'] ?>" class="btn btn-info btn-md col-lg-12">
-        </div>
-    </form>
+    <div class="col-md-8 col-md-offset-2 text-center">
+        <form enctype="multipart/form-data" method="post" action="<?= $params['form_action'] ?>">
+            <input type="hidden" name="thumbnail" id="thumbnailSRC">
+            <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
+            <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
+            <div class="form-group">
+                <input type="file" name="video-file" class="form-control margin-center" accept="video/*" onchange="previewVideo(this)" <?= $params['required']; ?> style="display:<?= $params['file_input_display']; ?>">
+            </div>
+            <div class="form-group">
+                <input type="text" name="title" value="<?= htmlentities($params['title']); ?>" placeholder="Video Title" class="form-control" maxlength="100" required>
+            </div>
+            <div class="form-group">
+                <textarea name="description" placeholder="Video Description" class="form-control" maxlength="200" rows="4" required><?= htmlentities($params['description']); ?></textarea>
+            </div>
+            <div class="form-group">
+                <label>Tags: </label>
+                <select class="js-example-basic-multiple tags-select" name="tags" required>
+                    <?php
+                    foreach ($params['tags'] as $tag) {
+                        $tagName = $tag['name'];
+                        $tagId = $tag['id'];
+                        echo "<option value='$tagId'>$tagName</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="form-group margin-center">
+            <input type="submit" name="Submit" value="<?= $params['btn_text'] ?>" class="btn btn-info btn-md col-lg-12">
+            </div>
+        </form>
+    </div>
 </div>

@@ -122,6 +122,7 @@ class VideoDao {
 //                $statement->execute(array($tagID, $video->getId()));
 //            }
             $this->pdo->commit();
+            return $video->getId();
         }
         catch (PDOException $e) {
             if($this->pdo->inTransaction()) {

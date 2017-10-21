@@ -8,7 +8,7 @@
             $users = $params['navSuggestions'];
             /* @var $user \model\User */
             foreach ($users as $user) {
-                $username = $user->getUsername();
+                $username = htmlentities($user->getUsername());
                 $userId = $user->getId();
                 $userPhoto = $user->getUserPhotoUrl();
 

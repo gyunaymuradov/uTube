@@ -203,3 +203,7 @@ body {
 .margin-left {
     margin-left: 3px;
 }
+
+textarea {
+    resize: none;
+}

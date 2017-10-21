@@ -13,8 +13,8 @@
     <div class="row margin-top">
         <div class="col-md-11 col-md-offset-1">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="black" data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
-                <li class="profile-tab-middle" onclick="getAboutPage(<?= $params['userId'] ?>)"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
+                <li class="active profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>, 500)"><a class="black" data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
+                <li class="profile-tab-middle" onclick="getAboutPage(<?= $params['userId'] ?>, 500)"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
                 <li class="profile-tab-end"><a class="black" data-toggle="tab" href="#about"><h4>About</h4></a></li>
             </ul>
             <div class="tab-content container-fluid bg-info">
@@ -31,7 +31,7 @@
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
-                            <a href='index.php?page=upload&id=$videoId'><button class='video-edit-btn btn btn-info' id='edit$videoId'>Edit</button></a>
+                            <a href='index.php?page=edit-video&id=$videoId'><button class='video-edit-btn btn btn-info' id='edit$videoId'>Edit</button></a>
                             <button class='video-delete-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
                             <button class='video-addTo-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
                             <div class='video-addTo-div well-sm' id='addToField$videoId'>

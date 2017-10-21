@@ -8,7 +8,7 @@
             $mostLiked = $params['mostLiked'];
             foreach ($mostLiked as $video) {
                 $id = $video['id'];
-                $title = $video['title'];
+                $title = htmlentities($video['title']);
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
@@ -30,7 +30,7 @@
             $newest = $params['newest'];
             foreach ($newest as $video) {
                 $id = $video['id'];
-                $title = $video['title'];
+                $title = htmlentities($video['title']);
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>

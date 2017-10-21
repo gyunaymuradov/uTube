@@ -1,6 +1,6 @@
 function likeDislikeVideo(videoId, likeDislike) {
     var request = new XMLHttpRequest();
-    var loggedUserId = document.getElementById('loggedUserId').value;
+    var loggedUserId = document.getElementById('logged-user-id').value;
     var logged = document.getElementById('logged').value;
     if (logged === 'false') {
         alert('Please sign in/up in order to be able like or dislike videos.');
@@ -21,7 +21,7 @@ function likeDislikeVideo(videoId, likeDislike) {
 
 function likeDislikeComment(commentId, likeDislike) {
     var request = new XMLHttpRequest();
-    var loggedUserId = document.getElementById('loggedUserId').value;
+    var loggedUserId = document.getElementById('logged-user-id').value;
     var logged = document.getElementById('logged').value;
     if (logged === 'false') {
         alert('Please sign in/up in order to be able like or dislike comments.');
@@ -42,13 +42,16 @@ function likeDislikeComment(commentId, likeDislike) {
 
 function comment(videoId) {
     var request = new XMLHttpRequest();
-    var loggedUserId = document.getElementById('loggedUserId').value;
+    var loggedUserId = document.getElementById('logged-user-id').value;
     var logged = document.getElementById('logged').value;
     var commentText;
     if (logged === 'false') {
         alert('Please sign in/up in order to be able to comment videos.');
     } else {
         commentText = document.getElementById('comment-field').value; // input field value
+        if (commentText.trim().length === 0) {
+            return;
+        }
         document.getElementById('comment-field').value = '';
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -62,9 +65,9 @@ function comment(videoId) {
                 var dateAdded = response['date'];
                 var likes = response['likes'];
                 var dislikes = response['dislikes'];
-                var commentId = response['commentId'];
-                var userId = response['userId'];
-                var userPhoto = response['userPhoto'];
+                var commentId = response['comment_id'];
+                var userId = response['user_id'];
+                var userPhoto = response['user_photo'];
 
 
                 var newCommentDiv = document.createElement('div');
@@ -89,7 +92,7 @@ function comment(videoId) {
         };
             request.open('POST', 'http://localhost/uTube/root/index.php?page=comment', true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send("comment=" + commentText + '&videoId=' + videoId + '&userId=' + loggedUserId);
+            request.send("comment=" + commentText + '&video-id=' + videoId + '&user-id=' + loggedUserId);
 
     }
 }

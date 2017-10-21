@@ -2,78 +2,96 @@
     <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="username"id="username" value="<?= htmlentities($params['username']); ?>">
-            <?php
-            if (!empty($params['errors']['username'])) {
-                foreach ($params['errors']['username'] as $error) {
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            <input type="text" class="form-control" name="username" id="username" onblur="validateUsername()" value="<?= htmlentities($params['username']); ?>">
+            <div id="username-errors">
+                <?php
+                if (!empty($params['errors']['username'])) {
+                    foreach ($params['errors']['username'] as $error) {
+                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
         <label for="firstName" class="col-sm-4 col-form-label  col-sm-offset-2">First name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="first-name" id="first-name" value="<?= htmlentities($params['first-name']); ?>">
-            <?php
-            if (!empty($params['errors']['first_name'])) {
-                foreach ($params['errors']['first_name'] as $error) {
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            <input type="text" class="form-control" name="first-name" id="first-name" onblur="validateFirstName()" value="<?= htmlentities($params['first-name']); ?>">
+            <div id="first-name-errors">
+                <?php
+                if (!empty($params['errors']['first_name'])) {
+                    foreach ($params['errors']['first_name'] as $error) {
+                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
         <label for="lastName" class="col-sm-4 col-form-label  col-sm-offset-2">Last name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="last-name" id="last-name" value="<?= htmlentities($params['last-name']); ?>">
-            <?php
-            if (!empty($params['errors']['last_name'])) {
-                foreach ($params['errors']['last_name'] as $error) {
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            <input type="text" class="form-control" name="last-name" id="last-name" onblur="validateLastName()" value="<?= htmlentities($params['last-name']); ?>" maxlength="15">
+            <div id="last-name-errors">
+                <?php
+                if (!empty($params['errors']['last_name'])) {
+                    foreach ($params['errors']['last_name'] as $error) {
+                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
-        <label for="email" class="col-sm-4 col-form-label  col-sm-offset-2">Email</label>
+        <label for="email" class="col-sm-4 col-form-label col-sm-offset-2">Email</label>
         <div class="col-sm-4">
-            <input type="email" class="form-control" name="email" id="email" value="<?= htmlentities($params['email']); ?>">
-            <?php
-            if (!empty($params['errors']['email'])) {
-                foreach ($params['errors']['email'] as $error) {
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            <input type="email" class="form-control" name="email" id="email" onblur="validateEmail()" value="<?= htmlentities($params['email']); ?>" maxlength="15">
+            <div id="email-errors">
+                <?php
+                if (!empty($params['errors']['email'])) {
+                    foreach ($params['errors']['email'] as $error) {
+                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
         <label for="newPass" class="col-sm-4 col-form-label  col-sm-offset-2">New password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="new-pass" name="new-pass">
-            <?php
-            if (!empty($params['errors']['password'])) {
-                foreach ($params['errors']['password'] as $error) {
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            <input type="password" class="form-control" id="password" onblur="validatePassword()" name="new-pass"  maxlength="20">
+            <div id="password-errors">
+                <?php
+                if (!empty($params['errors']['password'])) {
+                    foreach ($params['errors']['password'] as $error) {
+                        echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
         <label for="confirmNewPass" class="col-sm-4 col-form-label  col-sm-offset-2">Confirm new password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="confirm-new-pass" name="confirm-new-pass">
+            <input type="password" class="form-control" id="confirm-password" name="confirm-new-pass">
+            <div id="confirm-password-errors">
+                <?php
+                if (!empty($params['errors']['confirm-pass'])) {
+                    $error = $params['errors']['confirm-pass'];
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+                ?>
+            </div>
         </div>
     </div>
     <div class="form-group row">
         <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="old-pass" name="old-pass">
+            <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="15">
             <?php $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>"; ?>
         </div>
     </div>

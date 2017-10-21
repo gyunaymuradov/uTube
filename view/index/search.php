@@ -16,8 +16,8 @@
             foreach ($videos as $video) {
                 $thumbnail = $video['thumbnail_url'];
                 $id = $video['id'];
-                $title = $video['title'];
-                $description = $video['description'];
+                $title = htmlentities($video['title']);
+                $description = htmlentities($video['description']);
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
                         <div class='col-md-3'>
@@ -33,12 +33,12 @@
             $users = $params['result'];
             foreach ($users as $user) {
                 $id = $user['id'];
-                $name = $user['full_name'];
+                $name = htmlentities($user['full_name']);
                 $photo = $user['user_photo_url'];
-                $username = $user['username'];
+                $username = htmlentities($user['username']);
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
-                    <div div class='col-md-3'>
+                    <div class='col-md-3'>
                         <a href='index.php?page=user&id=$id'><img src='$photo' width='200' height='auto'></a>
                     </div>
                     <div class='col-md-8'>
@@ -51,11 +51,11 @@
             $playlists = $params['result'];
             foreach ($playlists as $playlist) {
                 $playlistId = $playlist['playlist_id'];
-                $playlistTitle = $playlist['title'];
+                $playlistTitle = htmlentities($playlist['title']);
                 $playlistThumbnail = $playlist['thumbnail_url'];
                 $dateCreated = $playlist['date_added'];
                 $authorId = $playlist['creator_id'];
-                $authorName = $playlist['username'];
+                $authorName = htmlentities($playlist['username']);
                 $authorPhotoUrl = $playlist['user_photo_url'];
                 $videoCount = $playlist['video_count'];
 

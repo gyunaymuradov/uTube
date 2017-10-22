@@ -46,7 +46,7 @@
                     $thumbnail = $playlist->getThumbnailURL();
                     $playlistId = $playlist->getId();
                     echo "
-                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showButtons(this.id)' onmouseleave='hideButtons(this.id)'>
+                        <div class=\"col-md-3 margin-top\" id='$playlistId'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
@@ -56,29 +56,37 @@
                 ?>
             </div>
             <div id="about" class="tab-pane fade">
-                <div class="col-md-3 col-md-offset-2">
-                    <h3 class="text-muted">Name: </h3>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-2">
+                        <h3 class="text-muted">Name: </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-muted"><?= $params['firstName'] . ' ' . $params['lastName']; ?></h3>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="text-muted"><?= $params['firstName'] . ' ' . $params['lastName']; ?></h3>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-2">
+                        <h3 class="text-muted">Email: </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-muted"><?= $params['email'] ?></h3>
+                    </div>
                 </div>
-                <div class="col-md-3 col-md-offset-2">
-                    <h3 class="text-muted">Email: </h3>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-2">
+                        <h3 class="text-muted">Member since: </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-muted"><?= $params['dateJoined']; ?></h3>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="text-muted"><?= $params['email'] ?></h3>
-                </div>
-                <div class="col-md-3 col-md-offset-2">
-                    <h3 class="text-muted">Member since: </h3>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="text-muted"><?= $params['dateJoined']; ?></h3>
-                </div>
-                <div class="col-md-3 col-md-offset-2">
-                    <h3 class="text-muted">Subscriptions: </h3>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="text-muted"><?= $params['subscriptionsCount']; ?></h3>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-2">
+                        <h3 class="text-muted">Subscriptions: </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-muted"><?= $params['subscriptionsCount']; ?></h3>
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
             <div class="form-group">
-                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="validateVideo()" onchange="previewVideo(this)" style="display:<?= $params['file_input_display']; ?>">
+                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="validateVideo(); previewVideo(this);" style="display:<?= $params['file_input_display']; ?>">
                 <div id="video-file-errors">
                     <?php
                     if (!empty($params['errors']['video'])) {

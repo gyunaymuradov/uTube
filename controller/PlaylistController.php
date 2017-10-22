@@ -43,7 +43,8 @@ class PlaylistController extends BaseController
                 $thumbnailURL = $video->getThumbnailURL();
                 $playlist = new Playlist(null, $title, $date, $userID, $thumbnailURL, array($videoID));
                 $playlistDao->insert($playlist);
-                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
+                $result = $playlistDao->getNLatestByCreatorID(10, $userID);
+//                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
             }
             else {
                 $result = array("Result" => "Error! You cant leave empty fields!");

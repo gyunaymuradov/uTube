@@ -12,7 +12,20 @@ class BaseController {
 
     }
 
+//    private function escapeParameters($params) {
+//        if(is_array($params)) {
+//            $result = array();
+//            foreach($params as $key=>$param) {
+//                $result[$key] = $this->escapeParameters($param);
+//            }
+//            return $result;
+//        } else {
+//            return htmlentities($params);
+//        }
+//    }
+
     public function render($file, $params = []) {
+//        $params = $this->escapeParameters($params);
         $userPhotoSrc = null;
         $userId = null;
         $logged = false;
@@ -46,10 +59,12 @@ class BaseController {
     }
 
     public function renderPartial($file, $params = []) {
+//        $params = $this->escapeParameters($params);
         require_once '../view/' . $file . '.php';
     }
 
     public function jsonEncodeParams($params = []) {
+//        $params = $this->escapeParameters($params);
         echo json_encode($params, JSON_UNESCAPED_SLASHES);
     }
 }

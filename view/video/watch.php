@@ -74,50 +74,51 @@
 
             </div>
         </div>
-
-        <h2>Comments</h2>
-        <div class="form-group row">
-            <div class="col-md-10">
-                <input type="text" id="comment-field" placeholder="Write a comment" class="form-control" maxlength="200">
+        <div class="col-md-10 row">
+            <h2>Comments</h2>
+            <div class="form-group row">
+                <div class="col-md-9">
+                    <input type="text" id="comment-field" placeholder="Write a comment" class="form-control" maxlength="200">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-info btn-md form-control" onclick="comment(<?= $params['video_id']; ?>)">Comment</button>
+                </div>
             </div>
-            <div class="col-md-2">
-                <button class="btn btn-info btn-md form-control" onclick="comment(<?= $params['video_id']; ?>)">Comment</button>
-            </div>
-        </div>
-        <div class="well-sm text-left" id="comment-section">
+            <div class="well-sm text-left col-md-12 row" id="comment-section">
 
-            <?php
+                <?php
 
-                $commentsArr = $params['comments'];
-                /* @var $comment \model\Comment */
-                if (!empty($commentsArr)) {
-                    foreach ($commentsArr as $comment) {
-                        $username = htmlentities($comment->getCreatorUsername());
-                        $commentText = htmlentities($comment->getText());
-                        $dateAdded = $comment->getDateAdded();
-                        $likes = $comment->getLikes();
-                        $dislikes = $comment->getDislikes();
-                        $commentId = $comment->getId();
-                        $userId = $comment->getUserId();
-                        $userPhoto = $comment->getCreatorPhoto();
+                    $commentsArr = $params['comments'];
+                    /* @var $comment \model\Comment */
+                    if (!empty($commentsArr)) {
+                        foreach ($commentsArr as $comment) {
+                            $username = htmlentities($comment->getCreatorUsername());
+                            $commentText = htmlentities($comment->getText());
+                            $dateAdded = $comment->getDateAdded();
+                            $likes = $comment->getLikes();
+                            $dislikes = $comment->getDislikes();
+                            $commentId = $comment->getId();
+                            $userId = $comment->getUserId();
+                            $userPhoto = $comment->getCreatorPhoto();
 
-                        echo "<div class='row bg-info margin-5 width-100'>
-                                    <div class='col-md-9'>
-                                        <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&id=$userId'>$username</a></label>
-                                        <div class='well-sm'>
-                                           <p><strong>$commentText</strong></p>
-                                           <small class='date_style'>$dateAdded</small>
+                            echo "<div class='row bg-info margin-5 width-100'>
+                                        <div class='col-md-8'>
+                                            <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&id=$userId'>$username</a></label>
+                                            <div class='well-sm'>
+                                               <p><strong>$commentText</strong></p>
+                                               <small class='date_style'>$dateAdded</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class='col-md-3 btn-toolbar '>
-                                        <button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 1)'><span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-$commentId'>$likes</span></span></button>
-                                        <button class='btn btn-danger btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 0)'><span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-$commentId'>$dislikes</span></span></button>
-                                    </div>
-                               </div>";
+                                        <div class='col-md-4 btn-toolbar '>
+                                            <button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 1)'><span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-$commentId'>$likes</span></span></button>
+                                            <button class='btn btn-danger btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 0)'><span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-$commentId'>$dislikes</span></span></button>
+                                        </div>
+                                   </div>";
+                            }
                         }
-                    }
 
-            ?>
+                ?>
 
+            </div>
         </div>
     </div>

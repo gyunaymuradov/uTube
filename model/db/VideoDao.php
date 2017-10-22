@@ -184,6 +184,9 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_BY_ID);
         $statement->execute(array($videoID));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$result) {
+            return null;
+        }
         return $this->sqlResultToVideoArray($result);
     }
     /**

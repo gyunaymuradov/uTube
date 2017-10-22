@@ -230,6 +230,9 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::GET_VIDEOS_BY_ID);
         $statement->execute(array($playlistId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (!$result) {
+            return null;
+        }
         return $result;
     }
 }

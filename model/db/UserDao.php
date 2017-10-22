@@ -145,6 +145,9 @@ class UserDao {
         $statement = $this->pdo->prepare(self::GET_BY_ID);
         $statement->execute(array($id));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$result) {
+            return null;
+        }
         $user = new User();
         $user->setId($id);
         $user->setUsername($result['username']);

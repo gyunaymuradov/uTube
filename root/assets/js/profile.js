@@ -150,7 +150,18 @@ function createPlaylist(buttonId) {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
-                alert(response['Result']);
+                if (!response['Result']) {
+                    var playlistsContainer = document.getElementById('playlists');
+                    var containerContents = "";
+                    for (var i in response) {
+                        containerContents += "<div class='col-md-3 margin-top' id='" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=$playlistId'> <img src='" + response[i]['thumbnailURL'] +"' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-edit-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-delete-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='playlist-remove-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='buttonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                    }
+                    playlistsContainer.innerHTML = containerContents;
+                    alert("Playlist created successfully. The video has been added in it.");
+                }
+                else {
+                    alert(response['Result']);
+                }
             }
         };
         request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-create&title=' + playlistTitle + '&videoID=' + videoId);

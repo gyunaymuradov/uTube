@@ -38,8 +38,7 @@ class UserController extends BaseController {
                 && isset($_POST['email'])
                 && isset($_POST['password'])
                 && isset($_POST['confirm-pass'])
-                && isset($_POST['register'])
-            ) {
+                && isset($_POST['register'])) {
                 $username = $_POST['username'];
                 $firstName = $_POST['first-name'];
                 $lastName = $_POST['last-name'];
@@ -243,7 +242,6 @@ class UserController extends BaseController {
     public function viewUserAction() {
         try {
             $profileId = $_GET['id'];
-
             $logged = 'false';
             $loggedUserId = null;
             if (isset($_SESSION['user'])) {
@@ -260,6 +258,9 @@ class UserController extends BaseController {
             /* @var $userDao \model\db\UserDao */
             $userDao = UserDao::getInstance();
             $user = $userDao->getById($profileId);
+            if (is_null($user)) {
+                header('Location:index.php');
+            }
             $subscribeButtonText = 'Subscribe';
             $alreadySubscribed = $userDao->checkIfFollowed($profileId, $loggedUserId);
             if ($alreadySubscribed) {

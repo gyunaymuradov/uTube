@@ -176,6 +176,9 @@ class VideoController extends BaseController {
             if (!isset($_GET['playlist-id'])) {
                 $videoId = $_GET['id'];
                 $video = $videoDao->getByID($videoId);
+                if (is_null($video)) {
+                    header('Location:index.php');
+                }
                 $videoUrl = $video->getVideoURL();
                 $videoTitle = $video->getTitle();
                 $videoDescription = $video->getDescription();
@@ -199,6 +202,9 @@ class VideoController extends BaseController {
             } else {
                 $playlistId = $_GET['playlist-id'];
                 $playlistContent = $playlistDao->getVideoById($playlistId);
+                if (is_null($playlistContent)) {
+                    header('Location:index.php');
+                }
                 $videoId = $playlistContent[0]['id'];
                 $sideBarTitle = 'Playlist ' . $playlistDao->getByID($playlistId)->getTitle();
                 if (isset($_GET['vid-id'])) {

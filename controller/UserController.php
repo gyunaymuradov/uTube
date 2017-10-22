@@ -244,7 +244,6 @@ class UserController extends BaseController {
     public function viewUserAction() {
         try {
             $profileId = $_GET['id'];
-
             $logged = 'false';
             $loggedUserId = null;
             if (isset($_SESSION['user'])) {
@@ -261,6 +260,9 @@ class UserController extends BaseController {
             /* @var $userDao \model\db\UserDao */
             $userDao = UserDao::getInstance();
             $user = $userDao->getById($profileId);
+            if (is_null($user)) {
+                header('Location:index.php');
+            }
             $subscribeButtonText = 'Subscribe';
             $alreadySubscribed = $userDao->checkIfFollowed($profileId, $loggedUserId);
             if ($alreadySubscribed) {

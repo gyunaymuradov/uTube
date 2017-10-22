@@ -76,7 +76,7 @@ require_once '../Validator.php';
         } else if ($page === 'like-comment') {
             $controller = new controller\VideoController();
             $controller->likeDislikeCommentAction();
-        } else if ($page === 'watch' && !empty($_GET['id'])) {
+        } else if ($page === 'watch') {
             $controller = new controller\VideoController();
             // check in controller if there is record with this id
             $controller->watchAction();

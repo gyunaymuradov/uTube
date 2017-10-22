@@ -10,15 +10,15 @@ class UserDao {
     private static $instance;
     private $pdo;
 
-    const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ? AND password = ?";
+    const LOGIN = "SELECT id, username, password, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ?";
     const GET_INFO = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE id = ?";
     const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const EDIT = "UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ? WHERE id = ?";
-    const EDIT_WITH_PASS = "UPDATE users SET username = ?, password = ?, email = ?, first_name = ?, last_name = ? WHERE id = ? AND password = ?";
+    const EDIT_WITH_PASS = "UPDATE users SET username = ?, password = ?, email = ?, first_name = ?, last_name = ? WHERE id = ?";
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
     const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
-    const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
+    const GET_BY_ID = "SELECT username, password, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
     const GET_SUBSCRIBERS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
@@ -39,10 +39,10 @@ class UserDao {
         return self::$instance;
     }
 
-    public function editWithPass(User $user, $newPass) {
+    public function editWithPass(User $user) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::EDIT_WITH_PASS);
-        $statement->execute(array($user->getUsername(), $newPass, $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId(), $user->getPassword()));
+        $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId()));
         $rowsAffected = $statement->rowCount();
         return $rowsAffected;
     }
@@ -53,12 +53,13 @@ class UserDao {
      */
     public function login(User $user) {
         $statement = $this->pdo->prepare(self::LOGIN);
-        $statement->execute(array($user->getUsername(), $user->getPassword()));
+        $statement->execute(array($user->getUsername()));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (!empty($result)) {
             $userFromDb = new User();
             $userFromDb->setId($result['id']);
             $userFromDb->setUsername($result['username']);
+            $userFromDb->setPassword($result['password']);
             $userFromDb->setEmail($result['email']);
             $userFromDb->setFirstName($result['first_name']);
             $userFromDb->setLastName($result['last_name']);
@@ -147,6 +148,7 @@ class UserDao {
         $user = new User();
         $user->setId($id);
         $user->setUsername($result['username']);
+        $user->setPassword($result['password']);
         $user->setFirstName($result['first_name']);
         $user->setLastName($result['last_name']);
         $user->setEmail($result['email']);

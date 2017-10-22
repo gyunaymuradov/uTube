@@ -108,9 +108,7 @@ class UserController extends BaseController {
                 if (empty($errors)) {
                     $user = new User();
                     $user->setUsername($username);
-//                This encrypts the pass. Uncomment and delete bottom line when profile edit is done
-//                $user->setPassword(password_hash($pass, PASSWORD_DEFAULT));
-                    $user->setPassword($pass);
+                    $user->setPassword(password_hash($pass, PASSWORD_DEFAULT));
                     $user->setEmail($email);
                     $user->setFirstName($firstName);
                     $user->setLastName($lastName);
@@ -177,27 +175,27 @@ class UserController extends BaseController {
                 $result = $userDao->login($user);
 
 //            This checks the encrypted password. Uncomment when done with profile edit.
-//                if ($result !== false && password_verify($password, $result->getPassword())) {
-//                    $_SESSION['user'] = $result;
-//                    header("Location:index.php");
-//
-//                } else {
-//                    $errors = 'Invalid username or password.';
-//                    $this->renderPartial('user/login', [
-//                        'errors' => $errors,
-//                        'username' => $username,
-//                    ]);
-//                }
-                if ($result === false) {
+                if ($result !== false && password_verify($password, $result->getPassword())) {
+                    $_SESSION['user'] = $result;
+                    header("Location:index.php");
+
+                } else {
                     $errors = 'Invalid username or password.';
                     $this->renderPartial('user/login', [
                         'errors' => $errors,
                         'username' => $username,
                     ]);
-                } else {
-                    $_SESSION['user'] = $result;
-                    header("Location:index.php");
                 }
+//                if ($result === false) {
+//                    $errors = 'Invalid username or password.';
+//                    $this->renderPartial('user/login', [
+//                        'errors' => $errors,
+//                        'username' => $username,
+//                    ]);
+//                } else {
+//                    $_SESSION['user'] = $result;
+//                    header("Location:index.php");
+//                }
             }
         }
         catch (\PDOException $e) {
@@ -390,12 +388,17 @@ class UserController extends BaseController {
                             $errors['password'][] = $error;
                         }
                     }
+                    //old pass validation with encryption
+                    $userFromDB = $userDao->getById($userId);
+                    if (!password_verify($oldPass, $userFromDB->getPassword())) {
+                        $errors['oldpassword'] = "The old password is incorrect.";
+                    }
+
                 }
 
 
                 if (empty($errors) && strlen($newPass) == 0) {
                     $user = new User();
-                    // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
                     $user->setUsername($username);
                     $user->setId($userId);
                     $user->setEmail($email);
@@ -413,20 +416,19 @@ class UserController extends BaseController {
                             http_response_code(304);
                         } else {
                             // redirect to error page
-                            // TODO CREATE AN ERROR PAGE
+                            $this->render('index/error');
                         }
                     }
                 } else if (empty($errors) && strlen($newPass) > 0) {
                     $user = new User();
-                    // TODO SASHO IS GOING TO ENCRYPT THE PASSWORD
                     $user->setUsername($username);
                     $user->setId($userId);
-                    $user->setPassword($oldPass);
+                    $user->setPassword(password_hash($newPass, PASSWORD_DEFAULT));
                     $user->setEmail($email);
                     $user->setFirstName($firstName);
                     $user->setLastName($lastName);
 
-                    $affectedRowCount = $userDao->editWithPass($user, $newPass);
+                    $affectedRowCount = $userDao->editWithPass($user);
                     if ($affectedRowCount == 1) {
                         $_SESSION['user'] = $userDao->getInfo($userId);
                         http_response_code(304);

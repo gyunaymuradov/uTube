@@ -105,7 +105,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="photo" class="btn btn-link col-sm-12 form-control" tabindex="2">Upload Profile Photo</label>
+                                            <label for="photo" class="btn btn-register col-sm-12 form-control" tabindex="2">Upload Profile Photo</label>
                                             <input type="file" id="photo" name="photo" onchange="validateImage()" style="visibility:hidden;" accept="image/x-png,image/jpg,image/jpeg">
                                             <div id="file-error"></div>
                                             <?php

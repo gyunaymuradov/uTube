@@ -68,3 +68,6 @@
                     } ?>
                 </div>
         </div>
+        <div class="row bg-info" id="searchBarContainerSmall">
+<!--            this is for the responsive design-->
+        </div>

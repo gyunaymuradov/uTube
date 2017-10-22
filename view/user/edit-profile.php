@@ -60,6 +60,19 @@
         </div>
     </div>
     <div class="form-group row">
+        <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
+        <div class="col-sm-4">
+            <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="15">
+            <?php $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>";
+                if(!empty($params['errors']['oldpassword'])) {
+                    $error = $params['errors']['oldpassword'];
+                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                }
+            ?>
+
+        </div>
+    </div>
+    <div class="form-group row">
         <label for="newPass" class="col-sm-4 col-form-label  col-sm-offset-2">New password</label>
         <div class="col-sm-4">
             <input type="password" class="form-control" id="password" onblur="validatePassword()" name="new-pass"  maxlength="20">
@@ -88,14 +101,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group row">
-        <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
-        <div class="col-sm-4">
-            <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="15">
-            <?php $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>"; ?>
-        </div>
-    </div>
-    <div class="form-group row">
+    <div class="form-group row text-center">
         <div class="col-md-offset-6">
             <button type="submit" class="btn btn-primary btn-md" onclick="submitEditProfile();" name="edit">Edit</button>
             <input type="hidden" name="user-id" id="user-id" value="<?= $params['user-id']; ?>">

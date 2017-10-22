@@ -56,9 +56,9 @@
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                             </a>
-                            <button class='video-delete-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>
-                            <button class='video-addTo-btn btn btn-info' id='removeVid$playlistId' onclick='showRemoveVid(this.id)'>Remove Video</button>
-                            <div class='video-addTo-div well-sm' id='removeField$playlistId'>
+                            <button class='video-edit-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>
+                            <button class='video-delete-btn btn btn-info' id='removeVid$playlistId' onclick='showRemoveVid(this.id)'>Remove Video</button>
+                            <div class='playlist-remove-div well-sm' id='removeField$playlistId'>
                                 <p>Choose Video:</p>
                                 <div id='buttonContainer$playlistId'></div>
                             </div>
@@ -68,32 +68,41 @@
                     ?>
                 </div>
                 <div id="about" class="tab-pane fade">
-                    <div class="col-md-3 col-md-offset-2">
-                        <h3 class="text-muted">Name: </h3>
+
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-2">
+                            <h3 class="text-muted">Name: </h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="text-muted"><?= $params['firstName'] . ' ' . $params['lastName']; ?></h3>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <h3 class="text-muted"><?= $params['firstName'] . ' ' . $params['lastName']; ?></h3>
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-2">
+                            <h3 class="text-muted">Email: </h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="text-muted"><?= $params['email'] ?></h3>
+                        </div>
                     </div>
-                    <div class="col-md-1 margin-top">
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-2">
+                            <h3 class="text-muted">Member since: </h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="text-muted"><?= $params['dateJoined']; ?></h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-2">
+                            <h3 class="text-muted">Subscriptions: </h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="text-muted"><?= $params['subscriptionsCount']; ?></h3>
+                        </div>
+                    </div>
+                    <div class="row text-center margin-bottom-5">
                         <button class="btn btn-info" onclick="getEditForm(<?= $params['userId'] ?>)">Edit profile</button>
-                    </div>
-                    <div class="col-md-3 col-md-offset-2">
-                        <h3 class="text-muted">Email: </h3>
-                    </div>
-                    <div class="col-md-4">
-                        <h3 class="text-muted"><?= $params['email'] ?></h3>
-                    </div>
-                    <div class="col-md-3 col-md-offset-2">
-                        <h3 class="text-muted">Member since: </h3>
-                    </div>
-                    <div class="col-md-4">
-                        <h3 class="text-muted"><?= $params['dateJoined']; ?></h3>
-                    </div>
-                    <div class="col-md-3 col-md-offset-2">
-                        <h3 class="text-muted">Subscriptions: </h3>
-                    </div>
-                    <div class="col-md-4">
-                        <h3 class="text-muted"><?= $params['subscriptionsCount']; ?></h3>
                     </div>
                 </div>
             </div>

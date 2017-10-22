@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign up</title>
+    <script src="assets/js/library/jquery.min.js"></script>
     <link rel="stylesheet" href="assets/style/getting_started.css" type="text/css">
+    <script src="assets/js/library/bootstrap.min.js"></script>
     <link rel="stylesheet" href="assets/style/library/bootstrap.min.css">
     <link rel="icon" href="assets/images/favicon.ico">
-    <script src="assets/js/library/bootstrap.min.js"></script>
 
 </head>
     <body>

@@ -15,7 +15,7 @@
 
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
-        <form enctype="multipart/form-data" method="POST" action="<?= $params['form_action'] ?>" id="upload-form" onsubmit="submitUpload(e)">
+        <form enctype="multipart/form-data" method="POST" action="<?= $params['form_action'] ?>" id="upload-form" onsubmit="submitUpload(ev)">
             <input type="hidden" name="thumbnail" id="thumbnailSRC">
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
@@ -75,6 +75,7 @@
                 <input type="submit" name="Submit" value="<?= $params['btn_text'] ?>" class="btn btn-info btn-md">
             </div>
         </form>
+        <script src="assets/js/validations.js"></script>
     </div>
     <br>
 </div>

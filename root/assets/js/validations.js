@@ -9,12 +9,19 @@ var validTitle = false;
 var validDescription = false;
 var validVideo = false;
 
-document.getElementById('register-form').addEventListener('submit', submitRegister);
-document.getElementById('upload-form').addEventListener('submit', submitUpload);
+var uploadForm = document.getElementById('upload-form');
+if  (uploadForm) {
+    uploadForm.addEventListener('submit', submitUpload);
+}
 
-function submitUpload(e) {
+var registerForm = document.getElementById('register-form');
+if (registerForm) {
+    registerForm.addEventListener('submit', submitRegister);
+}
+
+function submitUpload(ev) {
     if (!validTitle || !validDescription || !validVideo) {
-        e.preventDefault();
+        ev.preventDefault();
         return false;
     }
 }

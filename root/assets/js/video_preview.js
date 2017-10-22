@@ -31,7 +31,7 @@ function createThumbnail() {
     var w = 600;
     var h = 400;
     canvas.width = w;
-    canvas.height = h
+    canvas.height = h;
     var video = document.getElementById('videoPreview');
     context.fillRect(0, 0, w, h);
     context.drawImage(video, 0, 0, w, h);

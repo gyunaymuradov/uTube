@@ -15,18 +15,45 @@
 
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
-        <form enctype="multipart/form-data" method="post" action="<?= $params['form_action'] ?>">
+        <form enctype="multipart/form-data" method="POST" action="<?= $params['form_action'] ?>">
             <input type="hidden" name="thumbnail" id="thumbnailSRC">
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
             <div class="form-group">
-                <input type="file" name="video-file" class="form-control margin-center" accept="video/*" onchange="previewVideo(this)" <?= $params['required']; ?> style="display:<?= $params['file_input_display']; ?>">
+                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="validateVideo()" onchange="previewVideo(this)" <?= $params['required']; ?> style="display:<?= $params['file_input_display']; ?>">
+                <div id="video-file-errors">
+                    <?php
+                    if (!empty($params['errors']['video'])) {
+                        foreach ($params['errors']['video'] as $error) {
+                            echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                        }
+                    }
+                    ?>
+                </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" value="<?= htmlentities($params['title']); ?>" placeholder="Video Title" class="form-control" maxlength="100" required>
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onblur="validateTitle()"  placeholder="Video Title" class="form-control">
+                <div id="title-errors">
+                    <?php
+                    if (!empty($params['errors']['title'])) {
+                        foreach ($params['errors']['title'] as $error) {
+                            echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                        }
+                    }
+                    ?>
+                </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" class="form-control" maxlength="200" rows="4" required><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onblur="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <div id="description-errors">
+                    <?php
+                    if (!empty($params['errors']['description'])) {
+                        foreach ($params['errors']['description'] as $error) {
+                            echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+                        }
+                    }
+                    ?>
+                </div>
             </div>
             <div class="form-group col-md-4 col-md-offset-4">
                 <label>Tags: </label>
@@ -49,4 +76,5 @@
             </div>
         </form>
     </div>
+    <br>
 </div>

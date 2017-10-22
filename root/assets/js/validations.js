@@ -16,20 +16,6 @@ function validateUsername() {
             errors.push('Username cannot contain special characters.');
         }
     }
-    // var usernameErrors = document.getElementById('username-errors');
-    // usernameErrors.innerHTML = '';
-    // if (errors.length > 0) {
-    //     usernameInputField.style.borderColor = 'red';
-    //     errors.forEach(function (e) {
-    //         var erorrSpan = document.createElement('span');
-    //         erorrSpan.className = 'help-block';
-    //         erorrSpan.innerHTML = "<p class='text-danger'>" + e + "</p>";
-    //         usernameErrors.appendChild(erorrSpan);
-    //     });
-    // } else {
-    //     usernameInputField.style.border = '1px solid #ddd';
-    //     return true;
-    // }
     manipulateInputField('username-errors', errors, usernameInputField);
 }
 
@@ -117,18 +103,18 @@ function validateImage() {
     if (document.getElementById('photo').value !== "") {
         var fileInputField = document.getElementById('photo');
         var errors = [];
-        var mimeType =  getMimeType();
+        var mimeType =  getMimeTypeOfImg();
         if (mimeType !== 'image/jpeg' || mimeType !== 'image/png') {
             errors.push('Allowed image types are .jpg .jpeg and .png.');
         }
-        if (!hasValidFilesize()) {
+        if (!hasValidFilesize(5000000, 'photo')) {
             errors.push('File cannot be larger than 5 megabytes.');
         }
         manipulateInputField('file-error', errors, fileInputField);
     }
 }
 
-function getMimeType() {
+function getMimeTypeOfImg() {
     var blob = document.getElementById('photo').files[0];
     var fileReader = new FileReader();
     var header = "";
@@ -156,9 +142,9 @@ function getMimeType() {
 }
 
 
-function hasValidFilesize() {
-    var file = document.getElementById('photo').files[0];
-    return file.size < 5000000;
+function hasValidFilesize(value, fieldId) {
+    var file = document.getElementById(fieldId).files[0];
+    return file.size < value;
 }
 
 function hasSpecialChars(value) {
@@ -215,5 +201,78 @@ function displayConfirmPassErr() {
     } else {
         confirmPassword.style.border = '1px solid #ddd';
         return true;
+    }
+}
+
+function validateTitle() {
+    var titleInputField = document.getElementById('title');
+    var title = titleInputField.value;
+    var errors = [];
+    if (title.length > 0) {
+        if (!hasLengthLessThan(title, 56)) {
+            errors.push('Title cannot contain more than 55 characters.');
+        }
+        if (!hasLengthMoreThan(title, 4)) {
+            errors.push('Title must be at least 5 characters long.');
+        }
+    }
+    manipulateInputField('title-errors', errors, titleInputField);
+}
+
+function validateDescription() {
+    var descriptionInputField = document.getElementById('description');
+    var description = descriptionInputField.value;
+    var errors = [];
+    if (description.length > 0) {
+        if (!hasLengthLessThan(description, 256)) {
+            errors.push('Description cannot contain more than 255 characters.');
+        }
+        if (!hasLengthMoreThan(description, 4)) {
+            errors.push('Description must be at least 5 characters long.');
+        }
+    }
+    manipulateInputField('description-errors', errors, descriptionInputField);
+}
+
+function getMimeTypeOfVideo() {
+    var blob = document.getElementById('video-file').files[0];
+    var fileReader = new FileReader();
+    var header = "";
+    fileReader.onloadend = function(e) {
+        var arr = (new Uint8Array(e.target.result)).subarray(0, 4);
+        for(var i = 0; i < arr.length; i++) {
+            header += arr[i].toString(16);
+        }
+    };
+    fileReader.readAsArrayBuffer(blob);
+    var type = '';
+    switch (header) {
+        case "4f676753":
+            return "video/ogg";
+            break;
+        case "1a45dfa3":
+            return "video/webm";
+            break;
+        case "66747970":
+            return "video/mp4";
+            break;
+        default:
+            return "unknown";
+            break;
+    }
+}
+
+function validateVideo() {
+    if (document.getElementById('video-file').value !== "") {
+        var videoFileInputField = document.getElementById('video-file');
+        var errors = [];
+        var mimeType =  getMimeTypeOfVideo();
+        if (mimeType !== 'video/mp4' || mimeType !== 'video/webm' || mimeType !== 'video/ogg') {
+            errors.push('Allowed video types are .mp4 .webm and .ogg.');
+        }
+        if (!hasValidFilesize(52428800, 'video-file')) {
+            errors.push('File cannot be larger than 50 megabytes.');
+        }
+        manipulateInputField('video-file-errors', errors, videoFileInputField);
     }
 }

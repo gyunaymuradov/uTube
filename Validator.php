@@ -176,7 +176,7 @@ class Validator
             $errors[] = 'Last name cannot contain whitespace.';
         }
         if ($this->hasSpecialChars($lastName)) {
-            $errors[] = 'Last name cannot special characters.';
+            $errors[] = 'Last name cannot contain special characters.';
         }
         if (!($this->hasLengthLessThan($lastName, 15))) {
             $errors[] = 'Last name cannot contain more than 15 characters.';
@@ -232,5 +232,60 @@ class Validator
         return $errors;
     }
 
+    public function validateTitle($title) {
+        $errors = array();
+        if (!($this->hasLengthLessThan($title, 55))) {
+            $errors[] = 'Title cannot contain more than 55 characters.';
+        }
+        if (!($this->hasLengthGreaterThan($title, 5))) {
+            $errors[] = 'Title must be at least 5 characters long.';
+        }
+        if ($this->isBlank($title)) {
+            $errors[] = 'Title cannot be blank.';
+        }
+        if (empty($errors)) {
+            return true;
+        }
+        return $errors;
+    }
+
+    public function validateDescription($description) {
+        $errors = array();
+        if (!($this->hasLengthLessThan($description, 255))) {
+            $errors[] = 'Description cannot contain more than 255 characters.';
+        }
+        if (!($this->hasLengthGreaterThan($description, 5))) {
+            $errors[] = 'Description must be at least 5 characters long.';
+        }
+        if ($this->isBlank($description)) {
+            $errors[] = 'Description cannot be blank.';
+        }
+        if (empty($errors)) {
+            return true;
+        }
+        return $errors;
+    }
+
+    public function validateUploadedVideo($fileRealName, $fileTmpName, $allowedSize, $mimeType, array $extensions) {
+        $errors = array();
+        if (!($this->hasValidFileSize($fileTmpName, $allowedSize))) {
+            $mb = round($allowedSize  / 1048576);
+            $errors[] = "Video cannot be larger than $mb megabytes.";
+        }
+        if (!($this->hasValidMimeType($fileTmpName, $mimeType))) {
+            $errors[] = 'The uploaded file must be a video.';
+        }
+        if (!($this->hasValidExtension($fileRealName, $extensions))) {
+            $extensionsString = '';
+            foreach ($extensions as $extension) {
+                $extensionsString .= ' ' . $extension;
+            }
+            $errors[] = 'Allowed video types are' . $extensionsString . '.';
+        }
+        if (empty($errors)) {
+            return true;
+        }
+        return $errors;
+    }
 
 }

@@ -11,7 +11,6 @@
         <script src="assets/js/responsive.js"></script>
         <script src="assets/js/index.js"></script>
         <script src="assets/js/video.js"></script>
-        <script src="assets/js/validations.js"></script>
         <link rel="stylesheet" href="assets/style/style.css" type="text/css">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
@@ -32,9 +31,9 @@
                         <form action="index.php?page=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-primary" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
-                                    <button type="button" class="btn btn-primary" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
-                                    <button type="button" class="btn btn-primary" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
+                                    <button type="button" class="btn btn-info" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
+                                    <button type="button" class="btn btn-info" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
+                                    <button type="button" class="btn btn-info" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                                 </div>
                                 <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['search_placeholder']; ?>" autocomplete="off">
                                 <div id="search-autocomplete"></div>

@@ -38,8 +38,7 @@ class UserController extends BaseController {
                 && isset($_POST['email'])
                 && isset($_POST['password'])
                 && isset($_POST['confirm-pass'])
-                && isset($_POST['register'])
-            ) {
+                && isset($_POST['register'])) {
                 $username = $_POST['username'];
                 $firstName = $_POST['first-name'];
                 $lastName = $_POST['last-name'];

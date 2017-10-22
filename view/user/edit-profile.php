@@ -2,7 +2,7 @@
     <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="username" id="username" onblur="validateUsername()" value="<?= htmlentities($params['username']); ?>">
+            <input type="text" class="form-control" name="username" id="username" value="<?= htmlentities($params['username']); ?>">
             <div id="username-errors">
                 <?php
                 if (!empty($params['errors']['username'])) {
@@ -32,7 +32,7 @@
     <div class="form-group row">
         <label for="lastName" class="col-sm-4 col-form-label  col-sm-offset-2">Last name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="last-name" id="last-name" onblur="validateLastName()" value="<?= htmlentities($params['last-name']); ?>" maxlength="15">
+            <input type="text" class="form-control" name="last-name" id="last-name" value="<?= htmlentities($params['last-name']); ?>" maxlength="15">
             <div id="last-name-errors">
                 <?php
                 if (!empty($params['errors']['last_name'])) {
@@ -47,7 +47,7 @@
     <div class="form-group row">
         <label for="email" class="col-sm-4 col-form-label col-sm-offset-2">Email</label>
         <div class="col-sm-4">
-            <input type="email" class="form-control" name="email" id="email" onblur="validateEmail()" value="<?= htmlentities($params['email']); ?>" maxlength="15">
+            <input type="email" class="form-control" name="email" id="email" value="<?= htmlentities($params['email']); ?>" maxlength="15">
             <div id="email-errors">
                 <?php
                 if (!empty($params['errors']['email'])) {
@@ -62,7 +62,7 @@
     <div class="form-group row">
         <label for="newPass" class="col-sm-4 col-form-label  col-sm-offset-2">New password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="password" onblur="validatePassword()" name="new-pass"  maxlength="20">
+            <input type="password" class="form-control" id="password" name="new-pass"  maxlength="20">
             <div id="password-errors">
                 <?php
                 if (!empty($params['errors']['password'])) {

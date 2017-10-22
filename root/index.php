@@ -43,7 +43,7 @@ require_once '../Validator.php';
         $controller->loginAction();
     }
     else {
-        if ($page === 'profile') {
+        if ($page === 'profile' && !empty($_GET['id'])) {
             $controller = new controller\UserController();
             $controller->viewProfileAction();
         } else if ($page === 'user') {
@@ -76,8 +76,9 @@ require_once '../Validator.php';
         } else if ($page === 'like-comment') {
             $controller = new controller\VideoController();
             $controller->likeDislikeCommentAction();
-        } else if ($page === 'watch') {
+        } else if ($page === 'watch' && !empty($_GET['id'])) {
             $controller = new controller\VideoController();
+            // check in controller if there is record with this id
             $controller->watchAction();
         } else if ($page === 'delete-video') {
             $controller = new controller\VideoController();

@@ -234,8 +234,8 @@ class Validator
 
     public function validateTitle($title) {
         $errors = array();
-        if (!($this->hasLengthLessThan($title, 55))) {
-            $errors[] = 'Title cannot contain more than 55 characters.';
+        if (!($this->hasLengthLessThan($title, 70))) {
+            $errors[] = 'Title cannot contain more than 70 characters.';
         }
         if (!($this->hasLengthGreaterThan($title, 5))) {
             $errors[] = 'Title must be at least 5 characters long.';

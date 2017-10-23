@@ -26,12 +26,6 @@ class VideoController extends BaseController {
             $title = null;
             $description = null;
             $videoUrl = null;
-            $pageTitle = 'Upload video';
-            $btnText = 'Upload';
-            $previewDivDisplay = 'none';
-            $fileInputFieldDisplay = 'block';
-            $required = 'required';
-            $formAction = 'index.php?page=upload';
             $selected = 16;
 
             if ($requestMethod == 'GET') {
@@ -41,12 +35,6 @@ class VideoController extends BaseController {
                     'title' => $title,
                     'description' => $description,
                     'video_url' => $videoUrl,
-                    'page_title' => $pageTitle,
-                    'btn_text' => $btnText,
-                    'preview_div_display' => $previewDivDisplay,
-                    'file_input_display' => $fileInputFieldDisplay,
-                    'required' => $required,
-                    'form_action' => $formAction,
                     'selected' => $selected
                 ]);
             } elseif ($requestMethod == 'POST') {
@@ -148,12 +136,6 @@ class VideoController extends BaseController {
                             'title' => $title,
                             'description' => $description,
                             'video_url' => $videoUrl,
-                            'page_title' => $pageTitle,
-                            'btn_text' => $btnText,
-                            'preview_div_display' => $previewDivDisplay,
-                            'file_input_display' => $fileInputFieldDisplay,
-                            'required' => $required,
-                            'form_action' => $formAction,
                             'selected' => $tagId,
                             'errors' => $errors
                         ]);
@@ -336,20 +318,9 @@ class VideoController extends BaseController {
             $commentDao = CommentDao::getInstance();
             $lastInsertId = $commentDao->add($comment);
 
-            /* @var $user User */
-            $user = $_SESSION['user'];
-            $username = $user->getUsername();
-            $userPhotoUrl = $user->getUserPhotoUrl();
-
-            $this->jsonEncodeParams([
-                'comment' => $commentText,
-                'date' => $date,
-                'username' => $username,
-                'user_id' => $userId,
-                'user_photo' => $userPhotoUrl,
-                'comment_id' => $lastInsertId,
-                'likes' => '0',
-                'dislikes' => '0'
+            $comments = $commentDao->getByVideoId($videoId);
+            $this->renderPartial('video/comments',[
+               'comments' => $comments
             ]);
         }
         catch (\PDOException $e) {
@@ -370,27 +341,15 @@ class VideoController extends BaseController {
             $description = $video->getDescription();
             $videoUrl = $video->getVideoURL();
             $tagId = $video->getTagId();
-            $pageTitle = 'Edit video';
-            $btnText = 'Edit';
-            $previewDivDisplay = 'block';
-            $fileInputFieldDisplay = 'none';
-            $required = '';
-            $formAction = 'index.php?page=edit-video';
 
             if ($requestMethod == 'GET') {
-                $this->render('video/upload', [
+                $this->render('video/edit', [
                     'video_id' => $videoId,
                     'tags' => $tags,
                     'thumbnail_url' => $thumbnailUrl,
                     'title' => $title,
                     'description' => $description,
                     'video_url' => $videoUrl,
-                    'page_title' => $pageTitle,
-                    'btn_text' => $btnText,
-                    'preview_div_display' => $previewDivDisplay,
-                    'file_input_display' => $fileInputFieldDisplay,
-                    'required' => $required,
-                    'form_action' => $formAction,
                     'tag' => $tagId
                 ]);
             } else if ($requestMethod == 'POST' &&
@@ -448,12 +407,6 @@ class VideoController extends BaseController {
                         'title' => $_POST['title'],
                         'description' => $_POST['description'],
                         'video_url' => $videoUrl,
-                        'page_title' => $pageTitle,
-                        'btn_text' => $btnText,
-                        'preview_div_display' => $previewDivDisplay,
-                        'file_input_display' => $fileInputFieldDisplay,
-                        'required' => $required,
-                        'form_action' => $formAction,
                         'tag' => $tagId,
                         'errors' => $errors
                     ]);

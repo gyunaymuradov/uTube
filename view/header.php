@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="assets/style/library/bootstrap.min.css">
         <script src="assets/js/library/jquery.min.js"></script>
         <script src="assets/js/library/bootstrap.min.js"></script>
+        <script src="assets/js/validations.js"></script>
         <script src="assets/js/profile.js"></script>
         <script src="assets/js/responsive.js"></script>
         <script src="assets/js/index.js"></script>
@@ -16,11 +17,10 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
         <script src="assets/js/video_preview.js"></script>
-        <script src="assets/js/validations.js"></script>
 
         <title>uTube</title>
     </head>
-<body onload="clickListener(); respondToSize();">
+<body class="break-word" onload="clickListener(); respondToSize();">
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">

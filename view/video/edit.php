@@ -1,7 +1,7 @@
 <div class="col-md-10 justify-content-center text-center">
-    <h2>Upload video</h2>
+    <h2>Edit video</h2>
 
-    <div class="row text-center margin-5" id="preview" style="display:none">
+    <div class="row text-center margin-5" id="preview" style="display:block">
         <h4>Video Preview</h4>
         <video width="400" src="<?= $params['video_url'] ?>" id="videoPreview" controls></video>
         <h4>Thumbnail Generation</h4>
@@ -15,12 +15,12 @@
 
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
-        <form enctype="multipart/form-data" method="POST" action="index.php?page=upload" id="upload-form" onsubmit="submitUpload(ev)">
+        <form enctype="multipart/form-data" method="POST" action="index.php?page=edit-video" id="edit-video-form" onsubmit="submitEditVideo(e)">
             <input type="hidden" name="thumbnail" id="thumbnailSRC">
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
             <div class="form-group">
-                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="validateVideo(); previewVideo(this);" style="display:block">
+                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="previewVideo(this);" style="display:none">
                 <div id="video-file-errors">
                     <?php
                     if (!empty($params['errors']['video'])) {
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onblur="validateTitle()"  placeholder="Video Title" class="form-control">
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onmouseover="validateTitle()"  placeholder="Video Title" class="form-control">
                 <div id="title-errors">
                     <?php
                     if (!empty($params['errors']['title'])) {
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onblur="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onmouseover="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {
@@ -72,7 +72,7 @@
                 </select>
             </div>
             <div class="form-group margin-center col-md-12">
-                <input type="submit" name="Submit" value="Upload" class="btn btn-info btn-md">
+                <input type="submit" name="Submit" value="Edit" class="btn btn-info btn-md">
             </div>
         </form>
         <script src="assets/js/validations.js"></script>

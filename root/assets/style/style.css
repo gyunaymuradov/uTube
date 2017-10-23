@@ -226,3 +226,7 @@ textarea {
     right: 70px;
     display: block;
 }
+
+.break-word {
+    word-break: break-all;
+}

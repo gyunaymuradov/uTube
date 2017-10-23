@@ -16,28 +16,17 @@ function subscribe(profileId) {
         alert('Please sign in to gain full access!');
     } else {
         var loggedUserId = document.getElementById('loggedUserId').value;
-        var navbar = document.getElementById('navbar');
         var request = new XMLHttpRequest();
         var subscribeBtn = document.getElementById('subscribe');
+        var subscribesSection = document.getElementById('subscribes-section');
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                var response = JSON.parse(this.responseText);
-                var userPhoto = response['user-photo'];
-                var username = response['username'];
-                var subscribersHtml = document.getElementById('subscribers');
-                subscribersHtml.innerHTML = '';
-                subscribersHtml.innerHTML = response['subscribers'];
+                subscribesSection.innerHTML = '';
+                subscribesSection.innerHTML = this.responseText;
                 if (subscribeBtn.innerHTML === 'Subscribe') {
                     subscribeBtn.innerHTML = 'Unsubscribe';
-                    var a = document.createElement('a');
-                    a.href = "index.php?page=user&id=" + profileId;
-                    a.id = profileId;
-                    a.innerHTML = "<div class='margin-5 width-100 text-left'><img src='" + userPhoto + "' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;" + username + "</label></div></a>";
-                    navbar.appendChild(a);
                 } else {
                     subscribeBtn.innerHTML = 'Subscribe';
-                    var navbarElement = document.getElementById(profileId);
-                    navbar.removeChild(navbarElement)
                 }
             }
         };
@@ -272,8 +261,8 @@ function submitEditProfile() {
     var firstName = document.getElementById('first-name').value;
     var lastName = document.getElementById('last-name').value;
     var email = document.getElementById('email').value;
-    var oldPass = document.getElementById('old-pass').value;
     var userId = document.getElementById('user-id').value;
+    var oldPass = document.getElementById('old-pass').value;
     var newPass = document.getElementById('password').value;
     var newPassConfirm = document.getElementById('confirm-password').value;
     var request = new XMLHttpRequest();

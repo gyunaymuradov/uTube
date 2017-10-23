@@ -216,22 +216,22 @@ class UserController extends BaseController {
             /* @var $userDao UserDao */
             $userDao = UserDao::getInstance();
             $alreadyFollowed = $userDao->checkIfFollowed($profileId, $loggedUserId);
-            $userPhoto = '';
-            $username = '';
             if (!$alreadyFollowed) {
                 $userDao->follow($loggedUserId, $profileId);
-                $userPhoto = $userDao->getById($profileId)->getUserPhotoUrl();
-                $username = $userDao->getById($profileId)->getUsername();
             } else {
                 $userDao->unfollow($loggedUserId, $profileId);
             }
 
-            $subscribersCount = $userDao->getSubscribersCount($profileId);
-
-            $this->jsonEncodeParams([
-                'subscribers' => $subscribersCount,
-                'user-photo' => $userPhoto,
-                'username' => $username
+            $suggestions = $userDao->getSubscriptions($loggedUserId);
+            if (count($suggestions) == 0) {
+                $navTitle = 'Most subscribed users:';
+                $suggestions = $userDao->getMostSubscribed();
+            } else {
+                $navTitle = 'Subscriptions:';
+            }
+            $this->renderPartial('index/subscribes', [
+                'nav_title' => $navTitle,
+                'nav_suggestions' => $suggestions
             ]);
         }
         catch (\PDOException $e) {
@@ -310,12 +310,13 @@ class UserController extends BaseController {
         }
     }
 
+
     public function editProfileAction() {
         try {
             $userDao = UserDao::getInstance();
-            $user = new User();
             $requestMethod = $_SERVER['REQUEST_METHOD'];
             if ($requestMethod == 'GET') {
+                $user = new User();
                 $userId = $_GET['id'];
                 /* @var $user User */
                 $user = $userDao->getById($userId);
@@ -392,11 +393,9 @@ class UserController extends BaseController {
                     //old pass validation with encryption
                     $userFromDB = $userDao->getById($userId);
                     if (!password_verify($oldPass, $userFromDB->getPassword())) {
-                        $errors['oldpassword'] = "The old password is incorrect.";
+                        $errors['old-password'] = "The old password is incorrect.";
                     }
-
                 }
-
 
                 if (empty($errors) && strlen($newPass) == 0) {
                     $user = new User();
@@ -406,20 +405,9 @@ class UserController extends BaseController {
                     $user->setFirstName($firstName);
                     $user->setLastName($lastName);
 
-                    $affectedRowCount = $userDao->edit($user);
-                    if ($affectedRowCount == 1) {
-                        $_SESSION['user'] = $userDao->getInfo($userId);
-                        http_response_code(304);
-                    } else {
-                        $oldUser = $_SESSION['user'];
-                        $refreshedUser = $userDao->getInfo($userId);
-                        if ($oldUser == $refreshedUser) {
-                            http_response_code(304);
-                        } else {
-                            // redirect to error page
-                            $this->render('index/error');
-                        }
-                    }
+                    $userDao->edit($user);
+                    $_SESSION['user'] = $userDao->getInfo($userId);
+                    http_response_code(304);
                 } else if (empty($errors) && strlen($newPass) > 0) {
                     $user = new User();
                     $user->setUsername($username);
@@ -429,20 +417,9 @@ class UserController extends BaseController {
                     $user->setFirstName($firstName);
                     $user->setLastName($lastName);
 
-                    $affectedRowCount = $userDao->editWithPass($user);
-                    if ($affectedRowCount == 1) {
-                        $_SESSION['user'] = $userDao->getInfo($userId);
-                        http_response_code(304);
-                    } else {
-                        $this->renderPartial('user/edit-profile', [
-                            'user-id' => $userId,
-                            'username' => $username,
-                            'first-name' => $firstName,
-                            'last-name' => $lastName,
-                            'email' => $email,
-                            'msg' => 'Wrong password.'
-                        ]);
-                    }
+                    $userDao->editWithPass($user);
+                    $_SESSION['user'] = $userDao->getInfo($userId);
+                    http_response_code(304);
                 } else {
                     $this->renderPartial('user/edit-profile', [
                         'errors' => $errors,
@@ -451,11 +428,9 @@ class UserController extends BaseController {
                         'first-name' => $firstName,
                         'last-name' => $lastName,
                         'email' => $email,
-                        'msg' => $msg
                     ]);
                 }
             }
-
 //            $hasUploadedImg = !empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0;
 //
 //            if ($hasUploadedImg) {

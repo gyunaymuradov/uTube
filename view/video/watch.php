@@ -1,4 +1,4 @@
-    <div class="col-md-10 text-left">
+    <div class="col-md-10 text-left margin-5">
         <div class="row">
             <div class="col-md-8 thumbnail watch-height">
                 <video width="600" height="400" controls class="video-style">
@@ -10,8 +10,8 @@
                     </div>
                     <div class="col-md-4 margin-top">
                         <div class="btn-toolbar">
-                            <button class="btn btn-success btn-lg" onclick="likeDislikeVideo(<?= $params['video_id']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
-                            <button class="btn btn-danger btn-lg" onclick="likeDislikeVideo(<?= $params['video_id']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;<span class="badge" id="video-dislike"><?= $params['dislikes']; ?></span></button>
+                            <button class="btn btn-info btn-lg" onclick="likeDislikeVideo(<?= $params['video_id']; ?>, 1)"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;<span class="badge" id="video-like"><?= $params['likes']; ?></span></button>
+                            <button class="btn btn-primary btn-lg" onclick="likeDislikeVideo(<?= $params['video_id']; ?>, 0)"><span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;<span class="badge" id="video-dislike"><?= $params['dislikes']; ?></span></button>
                             <input type="hidden" id="logged" value="<?= $params['logged']; ?>">
                             <input type="hidden" id="logged-user-id" value="<?= $params['logged_user_id']; ?>">
                         </div>
@@ -104,18 +104,18 @@
                             echo "<div class='row bg-info margin-5 width-100'>
                                         <div class='col-md-8'>
                                             <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&id=$userId'>$username</a></label>
-                                            <div class='well-sm'>
-                                               <p><strong>$commentText</strong></p>
+                                            <div class='well-sm width-100'>
+                                               <p class='break-word'><strong>$commentText</strong></p>
                                                <small class='date_style'>$dateAdded</small>
                                             </div>
                                         </div>
                                         <div class='col-md-4 btn-toolbar '>
-                                            <button class='btn btn-success btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 1)'><span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-$commentId'>$likes</span></span></button>
-                                            <button class='btn btn-danger btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 0)'><span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-$commentId'>$dislikes</span></span></button>
+                                            <button class='btn btn-info btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 1)'><span class='glyphicon glyphicon-thumbs-up'>&nbsp;<span class='badge' id='comment-like-$commentId'>$likes</span></span></button>
+                                            <button class='btn btn-primary btn-md col-lg-4 margin-comment-buttons' onclick='likeDislikeComment($commentId, 0)'><span class='glyphicon glyphicon-thumbs-down'>&nbsp;<span class='badge' id='comment-dislike-$commentId'>$dislikes</span></span></button>
                                         </div>
                                    </div>";
-                            }
                         }
+                    }
 
                 ?>
 

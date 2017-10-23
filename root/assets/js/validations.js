@@ -9,21 +9,34 @@ var validTitle = false;
 var validDescription = false;
 var validVideo = false;
 
+var editVideoForm = document.getElementById('edit-video-form');
+if  (editVideoForm) {
+    editVideoForm.addEventListener('submit', submitEditVideo);
+}
+
+function submitEditVideo(e) {
+    if (!validTitle || !validDescription) {
+        e.preventDefault();
+        return false;
+    }
+}
+
 var uploadForm = document.getElementById('upload-form');
 if  (uploadForm) {
     uploadForm.addEventListener('submit', submitUpload);
 }
 
-var registerForm = document.getElementById('register-form');
-if (registerForm) {
-    registerForm.addEventListener('submit', submitRegister);
-}
 
 function submitUpload(ev) {
     if (!validTitle || !validDescription || !validVideo) {
         ev.preventDefault();
         return false;
     }
+}
+
+var registerForm = document.getElementById('register-form');
+if (registerForm) {
+    registerForm.addEventListener('submit', submitRegister);
 }
 
 function submitRegister(e) {
@@ -181,8 +194,8 @@ function validateTitle() {
     var titleInputField = document.getElementById('title');
     var title = titleInputField.value;
     var errors = [];
-    if (!hasLengthLessThan(title, 56)) {
-        errors.push('Title cannot contain more than 55 characters.');
+    if (!hasLengthLessThan(title, 71)) {
+        errors.push('Title cannot contain more than 70 characters.');
     }
     if (!hasLengthMoreThan(title, 4)) {
         errors.push('Title must be at least 5 characters long.');

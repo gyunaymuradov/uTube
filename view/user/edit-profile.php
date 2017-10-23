@@ -1,4 +1,4 @@
-<form method="post" action="index.php?page=edit-profile" onsubmit="event.preventDefault()">
+<form method="post" action="index.php?page=edit-profile" id="edit-profile" onsubmit="event.preventDefault()">
     <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
@@ -17,7 +17,7 @@
     <div class="form-group row">
         <label for="firstName" class="col-sm-4 col-form-label  col-sm-offset-2">First name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="first-name" id="first-name" onblur="validateFirstName()" value="<?= htmlentities($params['first-name']); ?>">
+            <input type="text" class="form-control" name="first-name" id="first-name" value="<?= htmlentities($params['first-name']); ?>">
             <div id="first-name-errors">
                 <?php
                 if (!empty($params['errors']['first_name'])) {
@@ -63,11 +63,11 @@
         <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
         <div class="col-sm-4">
             <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="15">
-            <?php $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>";
-                if(!empty($params['errors']['oldpassword'])) {
-                    $error = $params['errors']['oldpassword'];
-                    echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
-                }
+            <?php /* $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>"; */
+            if(!empty($params['errors']['old-password'])) {
+                $error = $params['errors']['old-password'];
+                echo "<span class='help-block'><p class='text-danger'>$error</p></span>";
+            }
             ?>
 
         </div>
@@ -102,8 +102,8 @@
         </div>
     </div>
     <div class="form-group row text-center">
-        <div class="col-md-offset-6">
-            <button type="submit" class="btn btn-primary btn-md" onclick="submitEditProfile();" name="edit">Edit</button>
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-info btn-md" onclick="submitEditProfile();" name="edit">Edit</button>
             <input type="hidden" name="user-id" id="user-id" value="<?= $params['user-id']; ?>">
         </div>
     </div>

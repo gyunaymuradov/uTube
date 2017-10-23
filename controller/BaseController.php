@@ -32,7 +32,7 @@ class BaseController {
         if (isset($_SESSION['user'])) {
             /* @var $user User */
             $user = $_SESSION['user'];
-            $userPhotoSrc = /* '/uTube/root/' . */ $user->getUserPhotoUrl();
+            $userPhotoSrc = $user->getUserPhotoUrl();
             $userId = $user->getId();
             $logged = true;
         }

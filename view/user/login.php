@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="assets/style/getting_started.css" type="text/css">
         <link rel="stylesheet" href="assets/style/library/bootstrap.min.css">
         <link rel="icon" href="assets/images/favicon.ico">
+        <script src="assets/js/library/jquery.min.js"></script>
         <script src="assets/js/library/bootstrap.min.js"></script>
 
     </head>

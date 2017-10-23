@@ -48,19 +48,28 @@ function getAboutPage(userId, delay) {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
+                var username = response['username'];
+                var userPhoto = response['userPhoto'];
+                var subscribers = response['subscribers'];
                 var name = response['first_name'] + ' ' + response['last_name'];
                 var email = response['email'];
                 var dateJoined = response['date_joined'];
                 var subscriptions = response['subscriptions'];
-                var aboutHtmlContent = "<div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Name: </h3></div>";
-                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + name + "</h3></div>";
-                aboutHtmlContent += "<div class='col-md-1 margin-top'><button class='btn btn-info' onclick='getEditForm(" + userId + ")'>Edit profile</button></div>";
-                aboutHtmlContent += "<div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Email: </h3></div><div class='col-md-4'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + email + "</h3></div>";
-                aboutHtmlContent += "<div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Member since: </h3></div><div class='col-md-4'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + dateJoined + "</h3></div>";
-                aboutHtmlContent += "<div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Subscriptions: </h3></div>";
-                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + subscriptions + "</h3></div>";
+                var aboutHtmlContent = "<div class='row margin-top'><div class='col-md-4 col-md-offset-1'>";
+                aboutHtmlContent += "<img src='"+ userPhoto +"' alt='' width='100%' class='img-rounded' height='auto'></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-2'><h3 class='text-muted' id='username-old'>" + username + "</h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-2'>";
+                aboutHtmlContent += "<h3 class='text-muted'>" + subscribers + "<small> subscribers</small></h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Name: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + name + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Email: </h3></div><div class='col-md-4'>";
+                aboutHtmlContent += "<h3 class='text-muted'>" + email + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Member since: </h3></div><div class='col-md-4'>";
+                aboutHtmlContent += "<h3 class='text-muted'>" + dateJoined + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Subscriptions: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + subscriptions + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row text-center margin-bottom-5'><button class='btn btn-info' onclick='getEditForm(" + userId + ")'>Edit profile</button></div>";
+
                 setTimeout(function () {
                     aboutHtml.innerHTML = aboutHtmlContent;
                 }, delay);
@@ -85,6 +94,19 @@ function hideVideoButtons(Id) {
     document.getElementById("addToField" + Id).style.display = "none";
     document.getElementById("buttonContainer" + Id).innerHTML = "";
 }
+
+function showAddButton(Id) {
+    document.getElementById("addToBtn" + Id).style.display = "block";
+}
+
+function hideAddButton(Id) {
+    document.getElementById("addToBtn" + Id).style.display = "none";
+    document.getElementById("addToBtn" + Id).disabled = false;
+    document.getElementById("addToField" + Id).style.display = "none";
+    document.getElementById("buttonContainer" + Id).innerHTML = "";
+}
+
+
 
 function deleteVideo(buttonId) {
     if (confirm("Are you sure you want to delete this video?")) {
@@ -122,13 +144,28 @@ function showAddTo(buttonId) {
             var playlistId;
             for (var i in response) {
                 playlistId = response[i]['id'];
-                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5' id='" + videoId + "|" + playlistId +"' onclick='insertVideo(this.id)'>" + response[i]['title'] + "</button>";
+                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5 white-space width-100' id='" + videoId + "|" + playlistId +"' onclick='insertVideo(this.id)'>" + response[i]['title'] + "</button>";
             }
         }
     };
     request.open('GET', 'index.php?page=get-playlist-names');
     request.send();
 
+}
+
+function showHideAddTo(buttonId) {
+    var videoId = buttonId.replace('addToBtn', '');
+    var divId = buttonId.replace('addToBtn', 'addToField');
+    var addToDiv = document.getElementById(divId);
+    if (addToDiv.style.display === "none") {
+        showAddTo(buttonId);
+        document.getElementById(buttonId).disabled = false;
+    }
+    else {
+        document.getElementById("addToBtn" + videoId).disabled = false;
+        document.getElementById("addToField" + videoId).style.display = "none";
+        document.getElementById("buttonContainer" + videoId).innerHTML = "";
+    }
 }
 
 function createPlaylist(buttonId) {
@@ -230,7 +267,7 @@ function showRemoveVid(buttonId) {
             var videoId;
             for (var i in response) {
                 videoId = response[i]['id'];
-                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5' id='" + videoId + "|" + playlistId +"' onclick='removeVideo(this.id)'>" + response[i]['title'] + "</button>";
+                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5 white-space width-100' id='" + videoId + "|" + playlistId +"' onclick='removeVideo(this.id)'>" + response[i]['title'] + "</button>";
             }
         }
     };

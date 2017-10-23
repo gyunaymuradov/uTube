@@ -512,6 +512,9 @@ class UserController extends BaseController {
             $userDao = UserDao::getInstance();
             $userObj = $userDao->getById($userId);
             $userArr = array();
+            $userArr['username'] = $userObj->getUsername();
+            $userArr['userPhoto'] = $userObj->getUserPhotoUrl();
+            $userArr['subscribers'] = $userDao->getSubscribersCount($userId);
             $userArr['first_name'] = $userObj->getFirstName();
             $userArr['last_name'] = $userObj->getLastName();
             $userArr['email'] = $userObj->getEmail();

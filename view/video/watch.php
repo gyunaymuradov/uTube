@@ -1,6 +1,6 @@
     <div class="col-md-10 text-left margin-5">
         <div class="row">
-            <div class="col-md-8 thumbnail watch-height">
+            <div class="col-md-8 thumbnail watch-height" id="<?= $params['video_id']; ?>">
                 <video width="600" height="400" controls class="video-style">
                     <source src="<?= $params['video_url']; ?>" type="video/mp4">
                 </video>
@@ -23,6 +23,12 @@
                         <div><label>Uploaded by:&nbsp;&nbsp;</label><a href="index.php?page=user&id=<?= $params['uploader_id']; ?>"><?= htmlentities($params['uploader']); ?></a></div>
                         <div><label>Added On:&nbsp;&nbsp;</label><?= $params['date_added']; ?></div>
                     </div>
+                </div>
+                <button class='watch-bottom-btn btn btn-info' id='addToBtn<?= $params['video_id']; ?>' onclick='showHideAddTo(this.id)'>Add To</button>
+                <div class='watch-bottom-div well-sm' style="display:none;" id='addToField<?= $params['video_id']; ?>'>
+                    <p>Choose Playlist:</p>
+                    <button class='btn btn-info margin-bottom-5 width-100' id='create<?= $params['video_id']; ?>' onclick='createPlaylist(this.id)'>Create New Playlist</button>
+                    <div id='buttonContainer<?= $params['video_id']; ?>'></div>
                 </div>
             </div>
             <div class="col-md-4 well pre-scrollable watch-height">

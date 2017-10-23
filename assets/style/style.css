@@ -150,7 +150,7 @@ body {
 
 }
 
-.video-edit-btn {
+.video-top-btn {
     z-index: 100;
     position: absolute;
     top: 10px;
@@ -158,7 +158,7 @@ body {
     display: none;
 }
 
-.video-delete-btn {
+.video-middle-btn {
     z-index: 100;
     position: absolute;
     top: 50px;
@@ -166,14 +166,14 @@ body {
     display: none;
 }
 
-.video-addTo-btn {
+.video-bottom-btn {
     z-index: 100;
     position: absolute;
     top: 90px;
     right: 5px;
     display: none;
 }
-.video-addTo-div {
+.video-bottom-div {
     width: 200px;
     height: auto;
     text-align: center;
@@ -184,7 +184,7 @@ body {
     right: 5px;
     display: none;
 }
-.playlist-remove-div {
+.video-middle-div {
     width: 200px;
     height: auto;
     text-align: center;
@@ -192,6 +192,17 @@ body {
     z-index: 100;
     position: absolute;
     top: 85px;
+    right: 5px;
+    display: none;
+}
+.video-top-div {
+    width: 200px;
+    height: auto;
+    text-align: center;
+    background-color: white;
+    z-index: 100;
+    position: absolute;
+    top: 45px;
     right: 5px;
     display: none;
 }
@@ -229,4 +240,30 @@ textarea {
 
 .break-word {
     word-break: break-all;
+}
+.no-padding-right {
+    padding-right: 0;
+}
+.display-block {
+    display: block;
+}
+.white-space {
+    white-space: normal;
+}
+.watch-bottom-btn {
+    z-index: 100;
+    position: absolute;
+    top: 650px;
+    right: 5px;
+}
+.watch-bottom-div {
+    width: 200px;
+    height: auto;
+    text-align: center;
+    background-color: white;
+    z-index: 100;
+    position: absolute;
+    top: 690px;
+    right: 5px;
+    display: none;
 }

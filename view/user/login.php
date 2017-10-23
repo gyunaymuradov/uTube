@@ -35,7 +35,7 @@
                                 <div class="col-lg-12">
                                     <form id="login-form" action="index.php?page=login" method="post" role="form">
                                         <div class="form-group">
-                                            <input type="text" name="username" tabindex="1" class="form-control" value="<?= htmlentities($params['username']); ?>" placeholder="Username" required>
+                                            <input type="text" name="username" tabindex="1" class="form-control" value="<?= htmlentities($params['username']); ?>" placeholder="Username" required autocomplete="off">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" name="password" tabindex="2" class="form-control" placeholder="Password" required>
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center">&copy; 2017 uTube</div>
+                        <div class="text-center">&copy; 2017 <strong>uTube</strong> | By <strong>Gyunay Muradov</strong> and <strong>Alexandar Markov</strong></div>
                     </div>
                 </div>
             </div>

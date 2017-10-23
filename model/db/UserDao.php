@@ -10,7 +10,7 @@ class UserDao {
     private static $instance;
     private $pdo;
 
-    const LOGIN = "SELECT id, username, password, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ?";
+    const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ?";
     const GET_INFO = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE id = ?";
     const INSERT = "INSERT INTO users (username, password, email, first_name, last_name, user_photo_url, date_joined) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const EDIT = "UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ? WHERE id = ?";
@@ -39,23 +39,35 @@ class UserDao {
         return self::$instance;
     }
 
-    public function editWithPass(User $user) {
-        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $statement = $this->pdo->prepare(self::EDIT_WITH_PASS);
-        $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId()));
-        $rowsAffected = $statement->rowCount();
-        return $rowsAffected;
+    public function editWithPass(User $user, $username, $oldPass)
+    {
+        $pass = $this->passAssist($username);
+        if (password_verify($oldPass, $pass)) {
+            $statement = $this->pdo->prepare(self::EDIT_WITH_PASS);
+            $statement->execute(array($user->getUsername(), $user->getPassword(), $user->getEmail(), $user->getFirstName(), $user->getLastName(), $user->getId()));
+            $affectedRows = $statement->rowCount();
+            return $affectedRows;
+        }
+        return false;
     }
 
+    private function passAssist($username) {
+        $statement = $this->pdo->prepare("SELECT password FROM users WHERE username = ?");
+        $statement->execute(array($username));
+        $result = $statement->fetch(PDO::FETCH_ASSOC)['password'];
+        return $result;
+    }
     /**
      * @param User $user
      * @return mixed|User
      */
     public function login(User $user) {
-        $statement = $this->pdo->prepare(self::LOGIN);
-        $statement->execute(array($user->getUsername()));
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!empty($result) && password_verify($user->getPassword(), $result['password'])) {
+        $pass = $this->passAssist($user->getUsername());
+        if (password_verify($user->getPassword(), $pass)) {
+            $statement = $this->pdo->prepare(self::LOGIN);
+            $statement->execute(array($user->getUsername()));
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+
             $userFromDb = new User();
             $userFromDb->setId($result['id']);
             $userFromDb->setUsername($result['username']);

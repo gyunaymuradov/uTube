@@ -175,7 +175,6 @@ class UserController extends BaseController {
                 $user->setUsername($username);
                 $user->setPassword($password);
                 $result = $userDao->login($user);
-
 //            This checks the encrypted password. Uncomment when done with profile edit.
                 if ($result) {
                     $_SESSION['user'] = $result;
@@ -303,7 +302,8 @@ class UserController extends BaseController {
     }
 
 
-    public function editProfileAction() {
+    public function editProfileAction()
+    {
         try {
             $userDao = UserDao::getInstance();
             $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -382,11 +382,6 @@ class UserController extends BaseController {
                             $errors['password'][] = $error;
                         }
                     }
-                    //old pass validation with encryption
-                    $userFromDB = $userDao->getById($userId);
-                    if (!password_verify($oldPass, $userFromDB->getPassword())) {
-                        $errors['old-password'] = "The old password is incorrect.";
-                    }
                 }
 
                 if (empty($errors) && strlen($newPass) == 0) {
@@ -408,10 +403,21 @@ class UserController extends BaseController {
                     $user->setEmail($email);
                     $user->setFirstName($firstName);
                     $user->setLastName($lastName);
-
-                    $userDao->editWithPass($user);
-                    $_SESSION['user'] = $userDao->getInfo($userId);
-                    http_response_code(304);
+                    $rowsAffected = $userDao->editWithPass($user, $_SESSION['user']->getUsername(), $oldPass);
+                    if ($rowsAffected == 0) {
+                        $errors['old-password'] = 'Incorrect password';
+                        $this->renderPartial('user/edit-profile', [
+                            'errors' => $errors,
+                            'user-id' => $userId,
+                            'username' => $username,
+                            'first-name' => $firstName,
+                            'last-name' => $lastName,
+                            'email' => $email
+                        ]);
+                    } else {
+                        $_SESSION['user'] = $userDao->getInfo($userId);
+                        http_response_code(304);
+                    }
                 } else {
                     $this->renderPartial('user/edit-profile', [
                         'errors' => $errors,
@@ -423,6 +429,7 @@ class UserController extends BaseController {
                     ]);
                 }
             }
+        }
 //            $hasUploadedImg = !empty($_FILES['photo']['name']) && $_FILES['photo']['size'] != 0;
 //
 //            if ($hasUploadedImg) {
@@ -446,10 +453,10 @@ class UserController extends BaseController {
 //                $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
 //                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
 //            }
-        }
+
         catch (\Exception $e) {
-            $this->render('index/error');
-        }
+                $this->render('index/error');
+            }
     }
 
     public function viewProfileAction() {

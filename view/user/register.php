@@ -34,7 +34,7 @@
                                 <div class="col-lg-12">
                                     <form id="register-form" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
                                         <div class="form-group">
-                                            <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" placeholder="Username" value="<?= htmlentities($params['username']); ?>" maxlength="15">
+                                            <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" required placeholder="Username" value="<?= htmlentities($params['username']); ?>" maxlength="20">
                                             <div id="username-errors">
                                                 <?php
                                                 if (!empty($params['errors']['username'])) {
@@ -46,7 +46,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" name="email" tabindex="1" id="email" onblur="validateEmail()" class="form-control" placeholder="Email Address" value="<?= htmlentities($params['email']); ?>" >
+                                            <input type="email" name="email" tabindex="1" id="email" onblur="validateEmail()" class="form-control" required maxlength="50" placeholder="Email Address" value="<?= htmlentities($params['email']); ?>" >
                                         <div id="email-errors">
                                             <?php
                                                 if (!empty($params['errors']['email'])) {
@@ -58,7 +58,7 @@
                                         </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="first-name" tabindex="1" id="first-name" onblur="validateFirstName()" class="form-control" placeholder="First Name" value="<?= htmlentities($params['first-name']); ?>" maxlength="15" >
+                                            <input type="text" name="first-name" tabindex="1" id="first-name" onblur="validateFirstName()" class="form-control" required placeholder="First Name" value="<?= htmlentities($params['first-name']); ?>" maxlength="20" >
                                             <div id="first-name-errors">
                                                 <?php
                                                 if (!empty($params['errors']['first_name'])) {
@@ -70,7 +70,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="last-name" tabindex="1" id="last-name" class="form-control" onblur="validateLastName()" placeholder="Last Name" value="<?= htmlentities($params['last-name']); ?>" maxlength="15" >
+                                            <input type="text" name="last-name" tabindex="1" id="last-name" class="form-control" onblur="validateLastName()" required placeholder="Last Name" value="<?= htmlentities($params['last-name']); ?>" maxlength="20" >
                                             <div id="last-name-errors">
                                                 <?php
                                                 if (!empty($params['errors']['last_name'])) {
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" tabindex="2" id="password" onchange="validatePassword()" class="form-control" maxlength="20" placeholder="Password" >
+                                            <input type="password" name="password" tabindex="2" id="password" onchange="validatePassword()" class="form-control" required maxlength="20" placeholder="Password" >
                                             <div id="password-errors">
                                                 <?php
                                                 if (!empty($params['errors']['password'])) {
@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirm-pass" id="confirm-password" onchange="validatePassword()" tabindex="2" class="form-control" maxlength="20" placeholder="Confirm Password">
+                                            <input type="password" name="confirm-pass" id="confirm-password" onchange="validatePassword()" tabindex="2" class="form-control" required maxlength="20" placeholder="Confirm Password">
                                             <div id="confirm-password-errors">
                                                     <?php
                                                     if (!empty($params['errors']['confirm-pass'])) {
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center">&copy; 2017 uTube</div>
+                        <div class="text-center">&copy; 2017 <strong>uTube</strong> | By <strong>Gyunay Muradov</strong> and <strong>Alexandar Markov</strong></div>
                     </div>
                 </div>
             </div>

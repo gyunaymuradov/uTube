@@ -25,7 +25,6 @@ if  (uploadForm) {
     uploadForm.addEventListener('submit', submitUpload);
 }
 
-
 function submitUpload(e) {
     if (!validTitle || !validDescription || !validVideo) {
         return false;
@@ -52,8 +51,8 @@ function validateUsername() {
     var username = usernameInputField.value;
     var errors = [];
 
-    if (!hasLengthLessThan(username, 11)) {
-        errors.push('Username cannot contain more than 10 characters.');
+    if (!hasLengthLessThan(username, 21)) {
+        errors.push('Username cannot contain more than 20 characters.');
     }
     if (!hasLengthMoreThan(username, 4)) {
         errors.push('Username must be at least 5 characters long.');
@@ -71,8 +70,8 @@ function validateFirstName() {
     var firsNameInputField = document.getElementById('first-name');
     var firstName = firsNameInputField.value;
     var errors = [];
-    if (!hasLengthLessThan(firstName, 16)) {
-        errors.push('First name cannot contain more than 15 characters.');
+    if (!hasLengthLessThan(firstName, 21)) {
+        errors.push('First name cannot contain more than 20 characters.');
     }
     if (!hasLengthMoreThan(firstName, 1)) {
         errors.push('First name must be at least 2 characters long.');
@@ -90,8 +89,8 @@ function validateLastName() {
     var lastNameInputField = document.getElementById('last-name');
     var lastName = lastNameInputField.value;
     var errors = [];
-    if (!hasLengthLessThan(lastName, 16)) {
-        errors.push('Last name cannot contain more than 15 characters.');
+    if (!hasLengthLessThan(lastName, 21)) {
+        errors.push('Last name cannot contain more than 20 characters.');
     }
     if (!hasLengthMoreThan(lastName, 1)) {
         errors.push('Last name must be at least 2 characters long.');
@@ -109,8 +108,8 @@ function validateEmail() {
     var emailInputField = document.getElementById('email');
     var email = emailInputField.value;
     var errors = [];
-    if (!hasLengthMoreThan(email, 6)) {
-        errors.push('Email must be at least 7 characters long.');
+    if (!hasLengthMoreThan(email, 5)) {
+        errors.push('Email must be at least 6 characters long.');
     }
     if (hasWhiteSpace(email)) {
         errors.push('Email name cannot contain whitespace.');
@@ -191,8 +190,8 @@ function validateTitle() {
     var titleInputField = document.getElementById('title');
     var title = titleInputField.value;
     var errors = [];
-    if (!hasLengthLessThan(title, 71)) {
-        errors.push('Title cannot contain more than 70 characters.');
+    if (!hasLengthLessThan(title, 91)) {
+        errors.push('Title cannot contain more than 91 characters.');
     }
     if (!hasLengthMoreThan(title, 4)) {
         errors.push('Title must be at least 5 characters long.');
@@ -204,8 +203,8 @@ function validateDescription() {
     var descriptionInputField = document.getElementById('description');
     var description = descriptionInputField.value;
     var errors = [];
-    if (!hasLengthLessThan(description, 256)) {
-        errors.push('Description cannot contain more than 255 characters.');
+    if (!hasLengthLessThan(description, 351)) {
+        errors.push('Description cannot contain more than 350 characters.');
     }
     if (!hasLengthMoreThan(description, 4)) {
         errors.push('Description must be at least 5 characters long.');

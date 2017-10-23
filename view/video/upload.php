@@ -20,7 +20,7 @@
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
             <div class="form-group">
-                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" onchange="validateVideo(); previewVideo(this);" style="display:block">
+                <input type="file" name="video-file" id="video-file" class="form-control margin-center" accept="video/webm, video/mp4, video/ogg" required onchange="validateVideo(); previewVideo(this);" style="display:block">
                 <div id="video-file-errors">
                     <?php
                     if (!empty($params['errors']['video'])) {
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onchange="validateTitle()"  placeholder="Video Title" class="form-control">
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onmouseout="validateTitle()" maxlength="90" required placeholder="Video Title" class="form-control">
                 <div id="title-errors">
                     <?php
                     if (!empty($params['errors']['title'])) {
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onchange="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onmouseout="validateDescription()" class="form-control" maxlength="350" required rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {

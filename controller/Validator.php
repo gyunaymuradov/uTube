@@ -111,8 +111,8 @@ class Validator
         if ($this->hasSpecialChars($username)) {
             $errors[] = 'Username cannot special characters.';
         }
-        if (!($this->hasLengthLessThan($username, 10))) {
-            $errors[] = 'Username cannot contain more than 10 characters.';
+        if (!($this->hasLengthLessThan($username, 20))) {
+            $errors[] = 'Username cannot contain more than 20 characters.';
         }
         if (!($this->hasLengthGreaterThan($username, 5))) {
             $errors[] = 'Username must be at least 5 characters long.';
@@ -131,8 +131,8 @@ class Validator
         if ($this->containsSpace($email)) {
             $errors[] = 'Email cannot contain whitespace.';
         }
-        if (!($this->hasLengthGreaterThan($email, 7))) {
-            $errors[] = 'Email must be at least 7 characters long.';
+        if (!($this->hasLengthGreaterThan($email, 6))) {
+            $errors[] = 'Email must be at least 6 characters long.';
         }
         if (!($this->hasValidEmail($email))) {
             $errors[] = 'Email format is not valid.';
@@ -154,8 +154,8 @@ class Validator
         if ($this->hasSpecialChars($firstName)) {
             $errors[] = 'First name cannot special characters.';
         }
-        if (!($this->hasLengthLessThan($firstName, 15))) {
-            $errors[] = 'First name cannot contain more than 15 characters.';
+        if (!($this->hasLengthLessThan($firstName, 20))) {
+            $errors[] = 'First name cannot contain more than 20 characters.';
         }
         if (!($this->hasLengthGreaterThan($firstName, 2))) {
             $errors[] = 'First name must be at least 2 characters long.';
@@ -178,8 +178,8 @@ class Validator
         if ($this->hasSpecialChars($lastName)) {
             $errors[] = 'Last name cannot contain special characters.';
         }
-        if (!($this->hasLengthLessThan($lastName, 15))) {
-            $errors[] = 'Last name cannot contain more than 15 characters.';
+        if (!($this->hasLengthLessThan($lastName, 20))) {
+            $errors[] = 'Last name cannot contain more than 20 characters.';
         }
         if (!($this->hasLengthGreaterThan($lastName, 2))) {
             $errors[] = 'Last name must be at least 2 characters long.';
@@ -196,7 +196,7 @@ class Validator
             $errors[] = 'Password should contain at least 1 digit, 1 uppercase and 1 lowercase letters and should be at least 6 characters long.';
         }
         if (!($this->hasLengthLessThan($pass, 20))) {
-            $errors[] = 'Password name cannot contain more than 20 characters.';
+            $errors[] = 'Password cannot contain more than 20 characters.';
         }
         if ($this->isBlank($confirmPass)) {
             $errors['confirm-pass'] = 'Confirm password cannot be blank.';
@@ -234,8 +234,8 @@ class Validator
 
     public function validateTitle($title) {
         $errors = array();
-        if (!($this->hasLengthLessThan($title, 70))) {
-            $errors[] = 'Title cannot contain more than 70 characters.';
+        if (!($this->hasLengthLessThan($title, 90))) {
+            $errors[] = 'Title cannot contain more than 90 characters.';
         }
         if (!($this->hasLengthGreaterThan($title, 5))) {
             $errors[] = 'Title must be at least 5 characters long.';
@@ -251,8 +251,8 @@ class Validator
 
     public function validateDescription($description) {
         $errors = array();
-        if (!($this->hasLengthLessThan($description, 255))) {
-            $errors[] = 'Description cannot contain more than 255 characters.';
+        if (!($this->hasLengthLessThan($description, 350))) {
+            $errors[] = 'Description cannot contain more than 350 characters.';
         }
         if (!($this->hasLengthGreaterThan($description, 5))) {
             $errors[] = 'Description must be at least 5 characters long.';

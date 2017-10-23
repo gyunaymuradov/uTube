@@ -70,7 +70,7 @@ function getSuggestions() {
                     }
                 }
             };
-            request.open('GET', 'http://localhost/uTube/root/index.php?page=search&search-option=' + searchOption + '&value=' + searchValue);
+            request.open('GET', 'index.php?page=search&search-option=' + searchOption + '&value=' + searchValue);
             request.send();
         }
         autocompleteDiv.style.display = 'none';

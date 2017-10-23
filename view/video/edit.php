@@ -15,7 +15,7 @@
 
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
-        <form enctype="multipart/form-data" method="POST" action="index.php?page=edit-video" id="edit-video-form" onsubmit="submitEditVideo(e)">
+        <form enctype="multipart/form-data" method="POST" action="index.php?page=edit-video" id="edit-video-form" onsubmit="return submitEditVideo(this)">
             <input type="hidden" name="thumbnail" id="thumbnailSRC">
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onmouseover="validateTitle()"  placeholder="Video Title" class="form-control">
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onmousemove="validateTitle()"  placeholder="Video Title" class="form-control">
                 <div id="title-errors">
                     <?php
                     if (!empty($params['errors']['title'])) {
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onmouseover="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onmousemove="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="form-group col-md-4 col-md-offset-4">
-                <label>Tags: </label>
+                <label>Category: </label>
                 <select class="form-control" name="tags">
                     <?php
                     foreach ($params['tags'] as $tag) {

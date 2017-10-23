@@ -16,7 +16,6 @@ if  (editVideoForm) {
 
 function submitEditVideo(e) {
     if (!validTitle || !validDescription) {
-        e.preventDefault();
         return false;
     }
 }
@@ -27,9 +26,8 @@ if  (uploadForm) {
 }
 
 
-function submitUpload(ev) {
+function submitUpload(e) {
     if (!validTitle || !validDescription || !validVideo) {
-        ev.preventDefault();
         return false;
     }
 }
@@ -41,7 +39,6 @@ if (registerForm) {
 
 function submitRegister(e) {
     if (!validUsername || !validFirstName || !validLastName || !validEmail || !validPass) {
-        e.preventDefault();
         return false;
     }
     if (document.getElementById('photo').value !== "" && !validImg) {

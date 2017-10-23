@@ -3,14 +3,9 @@
 session_start();
 
 function __autoload($className) {
-    $className = '..\\' . $className;
     $className = str_replace("\\", "/", $className);
     require_once $className . '.php';
 }
-
-require_once '../Validator.php';
-
-
 
     $page = isset($_GET['page']) ? $_GET['page'] : null;
 //when url is ....?controller=XXX&action=YYY
@@ -64,9 +59,6 @@ require_once '../Validator.php';
         } else if ($page === 'register') {
             $controller = new controller\UserController();
             $controller->registerAction();
-        } else if ($page === 'register-success') {
-            $controller = new controller\UserController();
-            $controller->registerSuccess();
         } else if ($page === 'logout') {
             $controller = new controller\UserController();
             $controller->logoutAction();

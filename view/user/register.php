@@ -32,7 +32,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form id="register-form" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data" onsubmit="submitRegister(e)">
+                                    <form id="register-form" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
                                         <div class="form-group">
                                             <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" placeholder="Username" value="<?= htmlentities($params['username']); ?>" maxlength="15">
                                             <div id="username-errors">
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" tabindex="2" id="password" onblur="validatePassword()" class="form-control" maxlength="20" placeholder="Password" >
+                                            <input type="password" name="password" tabindex="2" id="password" onchange="validatePassword()" class="form-control" maxlength="20" placeholder="Password" >
                                             <div id="password-errors">
                                                 <?php
                                                 if (!empty($params['errors']['password'])) {
@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirm-pass" id="confirm-password" onblur="validatePassword()" tabindex="2" class="form-control" maxlength="20" placeholder="Confirm Password">
+                                            <input type="password" name="confirm-pass" id="confirm-password" onchange="validatePassword()" tabindex="2" class="form-control" maxlength="20" placeholder="Confirm Password">
                                             <div id="confirm-password-errors">
                                                     <?php
                                                     if (!empty($params['errors']['confirm-pass'])) {

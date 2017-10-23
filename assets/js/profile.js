@@ -6,7 +6,7 @@ function getEditForm(userId) {
             formDiv.innerHTML = this.responseText;
         }
     };
-    request.open('GET', 'http://localhost/uTube/root/index.php?page=edit-profile&id=' + userId);
+    request.open('GET', 'index.php?page=edit-profile&id=' + userId);
     request.send();
 }
 
@@ -30,7 +30,7 @@ function subscribe(profileId) {
                 }
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=subscribe&loggedId=' + loggedUserId + '&profileId=' + profileId);
+        request.open('GET', 'index.php?page=subscribe&loggedId=' + loggedUserId + '&profileId=' + profileId);
         request.send();
     }
 }
@@ -38,7 +38,7 @@ function subscribe(profileId) {
 function getAboutPage(userId, delay) {
     var aboutPage = document.getElementById('about-page');
     if (aboutPage) {
-        var url = 'http://localhost/uTube/root/index.php?page=about&id=' + userId;
+        var url = 'index.php?page=about&id=' + userId;
         var request = new XMLHttpRequest();
         var aboutHtml = document.getElementById('about');
 
@@ -99,7 +99,7 @@ function deleteVideo(buttonId) {
                 }
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=delete-video&videoId=' + videoId);
+        request.open('GET', 'index.php?page=delete-video&videoId=' + videoId);
         request.send();
     }
 }
@@ -132,7 +132,7 @@ function createPlaylist(buttonId) {
     var videoId = buttonId.replace('create', '');
     var playlistTitle = prompt("Please enter the new playlist's title:");
     if (playlistTitle == "") {
-        alert("You cant leave an empty field!");
+        alert("You can't leave an empty field!");
     }
     else if(playlistTitle != null){
         var request = new XMLHttpRequest();
@@ -153,7 +153,7 @@ function createPlaylist(buttonId) {
                 }
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-create&title=' + playlistTitle + '&videoID=' + videoId);
+        request.open('GET', 'index.php?page=playlist-create&title=' + playlistTitle + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -169,7 +169,7 @@ function insertVideo(btnId) {
             alert(response['Result']);
         }
     };
-    request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-insert&playlistID=' + playlistId + '&videoID=' + videoId);
+    request.open('GET', 'index.php?page=playlist-insert&playlistID=' + playlistId + '&videoID=' + videoId);
     request.send();
 }
 
@@ -207,7 +207,7 @@ function renamePlaylist(buttonId) {
 
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-rename&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
+        request.open('GET', 'index.php?page=playlist-rename&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
         request.send();
     }
 }
@@ -231,7 +231,7 @@ function showRemoveVid(buttonId) {
             }
         }
     };
-    request.open('GET', 'http://localhost/uTube/root/index.php?page=get-playlist-videos&playlistID=' + playlistId);
+    request.open('GET', 'index.php?page=get-playlist-videos&playlistID=' + playlistId);
     request.send();
 }
 
@@ -251,7 +251,7 @@ function removeVideo(buttonId) {
                 }
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=playlist-delete&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.open('GET', 'index.php?page=playlist-delete&playlistID=' + playlistId + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -278,7 +278,7 @@ function submitEditProfile() {
             }
         };
 
-    request.open('POST', 'http://localhost/uTube/root/index.php?page=edit-profile', true);
+    request.open('POST', 'index.php?page=edit-profile', true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(params);
 }

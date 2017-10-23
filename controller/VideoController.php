@@ -35,7 +35,7 @@ class VideoController extends BaseController {
                     'title' => $title,
                     'description' => $description,
                     'video_url' => $videoUrl,
-                    'selected' => $selected
+                    'tag' => $selected
                 ]);
             } elseif ($requestMethod == 'POST') {
                 if (isset($_SESSION['user']) &&
@@ -50,7 +50,6 @@ class VideoController extends BaseController {
                     $userId = $_SESSION['user']->getId();
 
                     $resultMsg = 'Your video was successfully uploaded!';
-                    $fileType = $_FILES['video-file']['type'];
                     $videoId = '';
 
                     $validator = Validator::getInstance();
@@ -78,15 +77,15 @@ class VideoController extends BaseController {
 
                     if (empty($errors)) {
                         if (is_uploaded_file($tmpFileName)) {
-                            if (!file_exists('../uploads/videos')) {
-                                mkdir('../uploads/videos', 0777);
+                            if (!file_exists('uploads/videos')) {
+                                mkdir('uploads/videos', 0777);
                             }
                             $videoName = 'VID_' . $userId . "_" . time();
-                            $videoPath = "../uploads/videos/$videoName." . pathinfo($realFileName, PATHINFO_EXTENSION);
-                            $thumbPath = "../uploads/thumbnails/$videoName.png";
+                            $videoPath = "uploads/videos/$videoName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                            $thumbPath = "uploads/thumbnails/$videoName.png";
                             move_uploaded_file($tmpFileName, $videoPath);
-                            if (!file_exists('../uploads/thumbnails')) {
-                                mkdir('../uploads/thumbnails', 0777);
+                            if (!file_exists('uploads/thumbnails')) {
+                                mkdir('uploads/thumbnails', 0777);
                             }
                             file_put_contents($thumbPath, file_get_contents('data://' . $_POST['thumbnail']));
                             $newVideo = new Video(
@@ -107,7 +106,7 @@ class VideoController extends BaseController {
                                     'video_id' => $videoId,
                                     'success' => 1
                                 ]);
-                            } catch (\PDOException $e) {
+                            } catch (\Exception $e) {
                                 if (file_exists($videoPath)) {
                                     unlink($videoPath);
                                 }
@@ -136,7 +135,7 @@ class VideoController extends BaseController {
                             'title' => $title,
                             'description' => $description,
                             'video_url' => $videoUrl,
-                            'selected' => $tagId,
+                            'tag' => $tagId,
                             'errors' => $errors
                         ]);
                     }
@@ -144,7 +143,7 @@ class VideoController extends BaseController {
                 }
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -238,7 +237,7 @@ class VideoController extends BaseController {
                 'playlist_id' => $playlistId
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -250,7 +249,7 @@ class VideoController extends BaseController {
                 $videoDao->delete($_GET['videoId']);
                 $result = "Success";
             }
-            catch (\PDOException $e) {
+            catch (\Exception $e) {
                 $result = "An error occurred! Please Try Again Later!";
             }
             $this->jsonEncodeParams(["Result" => $result]);
@@ -277,7 +276,7 @@ class VideoController extends BaseController {
                 'dislikes' => $dislikes
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -302,7 +301,7 @@ class VideoController extends BaseController {
                 'dislikes' => $dislikes
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -323,7 +322,7 @@ class VideoController extends BaseController {
                'comments' => $comments
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -391,7 +390,7 @@ class VideoController extends BaseController {
                             'result' => $resultMsg,
                             'video_id' => $_POST['video-id']
                         ]);
-                    } catch (\PDOException $e) {
+                    } catch (\Exception $e) {
                         $resultMsg = 'An error occurred! Please try again later!';
                         $this->render('video/upload-result', [
                             'result' => $resultMsg,
@@ -414,7 +413,7 @@ class VideoController extends BaseController {
 
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }

@@ -14,7 +14,8 @@ class UserController extends BaseController {
 
     }
 
-    public function registerAction() {
+    public function registerAction()
+    {
         try {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -118,35 +119,38 @@ class UserController extends BaseController {
                         }
                         $realFileName = $_FILES['photo']['name'];
                         $imgName = 'IMG_' . time();
-                        $imgPath = "../uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
+                        $imgPath = "uploads/user_photos/$imgName." . pathinfo($realFileName, PATHINFO_EXTENSION);
                         move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
                         $user->setUserPhotoUrl($imgPath);
                     } else {
-                        $user->setUserPhotoUrl('../uploads/default_photo.png');
+                        $user->setUserPhotoUrl('uploads/default_photo.png');
                     }
                     $success = $userDao->insert($user);
                     if ($success) {
-                        header('Location:index.php?page=register-success');
+                        $user->setPassword($pass);
+                        $result = $userDao->login($user);
+                        if ($result) {
+                            $_SESSION['user'] = $result;
+                            header("Location:index.php");
+                        } else {
+                            $this->render('index/error');
+                        }
                     }
-
+                } else {
+                    $this->renderPartial('user/register', [
+                        'errors' => $errors,
+                        'username' => $username,
+                        'first-name' => $firstName,
+                        'last-name' => $lastName,
+                        'email' => $email
+                    ]);
                 }
-                $this->renderPartial('user/register', [
-                    'errors' => $errors,
-                    'username' => $username,
-                    'first-name' => $firstName,
-                    'last-name' => $lastName,
-                    'email' => $email
-                ]);
-
+                }
             }
-        }
-        catch (\PDOException $e) {
-            $this->render('index/error');
-        }
-    }
-
-    public function registerSuccess() {
-        $this->renderPartial('user/register-success');
+        catch
+            (\Exception $e) {
+                $this->render('index/error');
+            }
     }
 
     public function loginAction() {
@@ -161,8 +165,7 @@ class UserController extends BaseController {
                 ]);
             } else if ($requestMethod == 'POST'
                 && isset($_POST['username'])
-                && isset($_POST['password'])
-            ) {
+                && isset($_POST['password'])) {
 
                 $username = $_POST['username'];
                 $password = $_POST['password'];
@@ -174,10 +177,9 @@ class UserController extends BaseController {
                 $result = $userDao->login($user);
 
 //            This checks the encrypted password. Uncomment when done with profile edit.
-                if ($result !== false && password_verify($password, $result->getPassword())) {
+                if ($result) {
                     $_SESSION['user'] = $result;
                     header("Location:index.php");
-
                 } else {
                     $errors = 'Invalid username or password.';
                     $this->renderPartial('user/login', [
@@ -185,19 +187,9 @@ class UserController extends BaseController {
                         'username' => $username,
                     ]);
                 }
-//                if ($result === false) {
-//                    $errors = 'Invalid username or password.';
-//                    $this->renderPartial('user/login', [
-//                        'errors' => $errors,
-//                        'username' => $username,
-//                    ]);
-//                } else {
-//                    $_SESSION['user'] = $result;
-//                    header("Location:index.php");
-//                }
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -234,7 +226,7 @@ class UserController extends BaseController {
                 'nav_suggestions' => $suggestions
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -455,7 +447,7 @@ class UserController extends BaseController {
 //                move_uploaded_file($_FILES['photo']['tmp_name'], $imgPath);
 //            }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -502,7 +494,7 @@ class UserController extends BaseController {
                 'playlists' => $playlists
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -520,7 +512,7 @@ class UserController extends BaseController {
             $userArr['subscriptions'] = $userDao->getSubscriptionsCount($userId);
             $this->jsonEncodeParams($userArr);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }

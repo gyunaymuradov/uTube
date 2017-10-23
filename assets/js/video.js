@@ -14,7 +14,7 @@ function likeDislikeVideo(videoId, likeDislike) {
                 dislikeHtml.innerHTML = response['dislikes'];
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=like-video&like=' + likeDislike + '&video-id=' + videoId + '&user-id=' + loggedUserId);
+        request.open('GET', 'index.php?page=like-video&like=' + likeDislike + '&video-id=' + videoId + '&user-id=' + loggedUserId);
         request.send();
     }
 }
@@ -35,7 +35,7 @@ function likeDislikeComment(commentId, likeDislike) {
                 dislikeHtml.innerHTML = response['dislikes'];
             }
         };
-        request.open('GET', 'http://localhost/uTube/root/index.php?page=like-comment&like=' + likeDislike + '&comment-id=' + commentId + '&user-id=' + loggedUserId);
+        request.open('GET', 'index.php?page=like-comment&like=' + likeDislike + '&comment-id=' + commentId + '&user-id=' + loggedUserId);
         request.send();
     }
 }
@@ -57,7 +57,7 @@ function comment(videoId) {
                     commentField.innerHTML = this.responseText;
                 }
             };
-            request.open('POST', 'http://localhost/uTube/root/index.php?page=comment', true);
+            request.open('POST', 'index.php?page=comment', true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send("comment=" + commentText + '&video-id=' + videoId + '&user-id=' + loggedUserId);
         }

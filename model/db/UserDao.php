@@ -18,7 +18,7 @@ class UserDao {
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
     const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
-    const GET_BY_ID = "SELECT username, password, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
+    const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
     const GET_SUBSCRIBERS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
@@ -55,11 +55,10 @@ class UserDao {
         $statement = $this->pdo->prepare(self::LOGIN);
         $statement->execute(array($user->getUsername()));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!empty($result)) {
+        if (!empty($result) && password_verify($user->getPassword(), $result['password'])) {
             $userFromDb = new User();
             $userFromDb->setId($result['id']);
             $userFromDb->setUsername($result['username']);
-            $userFromDb->setPassword($result['password']);
             $userFromDb->setEmail($result['email']);
             $userFromDb->setFirstName($result['first_name']);
             $userFromDb->setLastName($result['last_name']);
@@ -69,7 +68,7 @@ class UserDao {
             $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
             return $userFromDb;
         }
-        return $result;
+        return false;
     }
 
     public function getInfo($id) {
@@ -151,7 +150,6 @@ class UserDao {
         $user = new User();
         $user->setId($id);
         $user->setUsername($result['username']);
-        $user->setPassword($result['password']);
         $user->setFirstName($result['first_name']);
         $user->setLastName($result['last_name']);
         $user->setEmail($result['email']);

@@ -52,15 +52,15 @@ class BaseController {
         $params['nav_title'] = $navTitle;
         $params['search_placeholder'] = 'Search video';
 
-        require_once '../view/header.php';
-        require_once '../view/nav.php';
-        require_once '../view/' . $file . '.php';
-        require_once '../view/footer.php';
+        require_once 'view/header.php';
+        require_once 'view/nav.php';
+        require_once 'view/' . $file . '.php';
+        require_once 'view/footer.php';
     }
 
     public function renderPartial($file, $params = []) {
 //        $params = $this->escapeParameters($params);
-        require_once '../view/' . $file . '.php';
+        require_once 'view/' . $file . '.php';
     }
 
     public function jsonEncodeParams($params = []) {

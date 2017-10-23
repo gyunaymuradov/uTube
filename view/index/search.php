@@ -1,4 +1,4 @@
-<div class="col-md-10 margin-5">
+<div class="col-md-10 margin-5 no-padding-right">
     <?php
 
     if (empty($params['result'])) {

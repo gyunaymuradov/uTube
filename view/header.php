@@ -20,7 +20,7 @@
 
         <title>uTube</title>
     </head>
-<body class="break-word" onload="clickListener(); respondToSize();">
+<body onload="clickListener(); respondToSize();">
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">

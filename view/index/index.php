@@ -1,7 +1,7 @@
-<div class="col-md-10 justify-content-center text-center">
+<div class="col-md-10 justify-content-center text-center no-padding-right">
     <div class="well-sm text-left bg-info video-container">
         <h3>Most liked</h3>
-        <div class="row">
+        <div class="row text-center">
 
             <?php
 
@@ -12,8 +12,8 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
-                            <img class='img-thumbnail' src='$thumbnailUrl'>
-                            <label>$title</label>
+                            <img class='img-thumbnail display-block' src='$thumbnailUrl'>
+                            <label class='display-block' '>$title</label>
                         </div>
                       </a>";
             }
@@ -23,7 +23,7 @@
 
     <div class="well-sm text-left bg-info video-container">
         <h3>Newest</h3>
-        <div class="row">
+        <div class="row text-center">
 
             <?php
 
@@ -34,8 +34,8 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
-                            <img class='img-thumbnail' src='$thumbnailUrl'>
-                            <label>$title</label>
+                            <img class='img-thumbnail display-block' src='$thumbnailUrl'>
+                            <label class='display-block' '>$title</label>
                         </div>
                       </a>";
             }

@@ -1,11 +1,11 @@
 <div class="col-md-10 justify-content-center text-center no-padding-right">
     <div class="well-sm text-left bg-info video-container">
         <h3>Most liked</h3>
-        <div class="row text-center">
+        <div class="row text-center" id="most-liked">
 
             <?php
-
-            $mostLiked = $params['mostLiked'];
+            $mostLikedPagesCount = $params['most_liked_pages_count'];
+            $mostLiked = $params['most_liked'];
             foreach ($mostLiked as $video) {
                 $id = $video['id'];
                 $title = htmlentities($video['title']);
@@ -19,14 +19,20 @@
             }
             ?>
         </div>
+        <input type="hidden" id="liked-pages-count" value="<?= $mostLikedPagesCount; ?>">
+        <div class="row text-center margin-top">
+            <button class="btn btn-group btn-lg btn-info" onclick="previousMostLiked()"><<</button>
+            <button class="btn btn-group btn-lg btn-info" onclick="nextMostLiked()">>></button>
+        </div>
+        <h3></h3>
     </div>
 
     <div class="well-sm text-left bg-info video-container">
         <h3>Newest</h3>
-        <div class="row text-center">
+        <div class="row text-center" id="newest">
 
             <?php
-
+            $newestPagesCount = $params['newest_pages_count'];
             $newest = $params['newest'];
             foreach ($newest as $video) {
                 $id = $video['id'];
@@ -41,5 +47,11 @@
             }
             ?>
         </div>
+        <div class="row text-center margin-top">
+            <input type="hidden" id="newest-pages-count" value="<?= $newestPagesCount; ?>">
+            <button class="btn btn-group btn-lg btn-info" onclick="previousNewest(1)"><<</button>
+            <button class="btn btn-group btn-lg btn-info" onclick="nextNewest(1)">>></button>
+        </div>
+        <h3></h3>
     </div>
 </div>

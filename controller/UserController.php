@@ -269,12 +269,24 @@ class UserController extends BaseController {
             /* @var $videoDao VideoDao */
             $videoDao = VideoDao::getInstance();
 
-            $videos = $videoDao->getNLatestByUploaderID(10, $profileId);
+            $videos = $videoDao->getNLatestByUploaderID($profileId, 4, 0);
+            $videosCount = $videoDao->getCountByUploaderId($profileId)['video_count'];
+            $videoPagesCount = ceil($videosCount / 4);
+            $videoBtnsVisibility = 'block';
+            if ($videoPagesCount < 2) {
+                $videoBtnsVisibility = 'none';
+            }
 
             /* @var $playlistDao PlaylistDao */
             $playlistDao = PlaylistDao::getInstance();
 
-            $playlists = $playlistDao->getNLatestByCreatorID(10, $profileId);
+            $playlists = $playlistDao->getNLatestByCreatorID($profileId, 4, 0);
+            $playlistsCount = $playlistDao->getCountByCreatorId($profileId)['playlist_count'];
+            $playlistPagesCount = ceil($playlistsCount / 4);
+            $playlistBtnsVisibility = 'block';
+            if ($playlistPagesCount < 2) {
+                $playlistBtnsVisibility = 'none';
+            }
 
             $subscribersCount = $userDao->getSubscribersCount($profileId);
             $subscriptionsCount = $userDao->getSubscriptionsCount($profileId);
@@ -292,15 +304,18 @@ class UserController extends BaseController {
                 'logged' => $logged,
                 'videos' => $videos,
                 'playlists' => $playlists,
+                'playlist_pages_count' => $playlistPagesCount,
+                'playlist_btns_vsblty' => $playlistBtnsVisibility,
                 'loggedUserId' => $loggedUserId,
-                'subscribeButton' => $subscribeButtonText
+                'subscribeButton' => $subscribeButtonText,
+                'video_pages_count' => $videoPagesCount,
+                'video_btns_vsblty' => $videoBtnsVisibility
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
-
 
     public function editProfileAction()
     {
@@ -463,6 +478,10 @@ class UserController extends BaseController {
         try {
             /* @var $userDao UserDao */
             $userDao = UserDao::getInstance();
+            /* @var $videoDao VideoDao */
+            $videoDao = VideoDao::getInstance();
+            /* @var $playlistDao PlaylistDao */
+            $playlistDao = PlaylistDao::getInstance();
             /* @var $user User */
             $user = $_SESSION['user'];
 
@@ -474,15 +493,21 @@ class UserController extends BaseController {
             $email = $user->getEmail();
             $dateJoined = $user->getDateJoined();
 
-            /* @var $videoDao VideoDao */
-            $videoDao = VideoDao::getInstance();
+            $videos = $videoDao->getNLatestByUploaderID($userId, 4, 0);
+            $videosCount = $videoDao->getCountByUploaderId($userId)['video_count'];
+            $videoPagesCount = ceil($videosCount / 4);
+            $videoBtnsVisibility = 'block';
+            if ($videoPagesCount < 2) {
+                $videoBtnsVisibility = 'none';
+            }
 
-            $videos = $videoDao->getNLatestByUploaderID(10, $userId);
-
-            /* @var $playlistDao PlaylistDao */
-            $playlistDao = PlaylistDao::getInstance();
-
-            $playlists = $playlistDao->getNLatestByCreatorID(10, $userId);
+            $playlists = $playlistDao->getNLatestByCreatorID($userId, 4, 0);
+            $playlistsCount = $playlistDao->getCountByCreatorId($userId)['playlist_count'];
+            $playlistPagesCount = ceil($playlistsCount / 4);
+            $playlistBtnsVisibility = 'block';
+            if ($playlistPagesCount < 2) {
+                $playlistBtnsVisibility = 'none';
+            }
 
             $subscribersCount = $userDao->getSubscribersCount($userId);
             $subscriptionsCount = $userDao->getSubscriptionsCount($userId);
@@ -498,7 +523,11 @@ class UserController extends BaseController {
                 'subscribersCount' => $subscribersCount,
                 'subscriptionsCount' => $subscriptionsCount,
                 'videos' => $videos,
-                'playlists' => $playlists
+                'video_pages_count' => $videoPagesCount,
+                'video_btns_vsblty' => $videoBtnsVisibility,
+                'playlists' => $playlists,
+                'playlist_pages_count' => $playlistPagesCount,
+                'playlist_btns_vsblty' => $playlistBtnsVisibility,
             ]);
         }
         catch (\Exception $e) {
@@ -525,6 +554,56 @@ class UserController extends BaseController {
         catch (\Exception $e) {
             $this->render('index/error');
         }
+    }
+
+    public function getVideosAction() {
+        /* @var $videoDao VideoDao */
+        $videoDao = VideoDao::getInstance();
+        $userId = $_GET['id'];
+        $page = isset($_GET['pg']) ? $_GET['pg'] : 1;
+
+        $videosCount = $videoDao->getCountByUploaderId($userId)['video_count'];
+        $pagesCount = ceil($videosCount / 4);
+
+        if ($page > $pagesCount) {
+            $page = $pagesCount;
+        } elseif  ($page <= 0) {
+            $page = 1;
+        }
+
+        $offset = $page * 4 - 4;
+
+        /* @var $videos \model\Video */
+        $videos = $videoDao->getNLatestByUploaderID($userId, 4, $offset);
+
+        $this->renderPartial('user/videos', [
+            'videos' => $videos,
+        ]);
+    }
+
+    public function getPlaylistsAction() {
+        /* @var $playlistDao PlaylistDao */
+        $playlistDao = PlaylistDao::getInstance();
+        $userId = $_GET['id'];
+        $page = isset($_GET['pg']) ? $_GET['pg'] : 1;
+
+        $playlistsCount = $playlistDao->getCountByCreatorId($userId)['playlist_count'];
+        $playlisPagesCount = ceil($playlistsCount / 4);
+
+        if ($page > $playlisPagesCount) {
+            $page = $playlisPagesCount;
+        } elseif  ($page <= 0) {
+            $page = 1;
+        }
+
+        $offset = $page * 4 - 4;
+
+        /* @var $videos \model\Video */
+        $playlists = $playlistDao->getNLatestByCreatorID($userId, 4, $offset);
+
+        $this->renderPartial('user/playlists', [
+            'playlists' => $playlists,
+        ]);
     }
 
 }

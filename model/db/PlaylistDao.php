@@ -15,7 +15,7 @@ class PlaylistDao {
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
     const DELETE_PLAYLIST = "DELETE FROM playlists WHERE id = ?";
     const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
-    const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY date_added DESC LIMIT ?";
+    const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
                             FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos WHERE video_id=?) LIMIT ?";
     const GET_N_BY_VIDEO_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url
@@ -26,6 +26,7 @@ class PlaylistDao {
                             JOIN users u ON p.creator_id = u.id JOIN playlists_videos pv ON p.id = pv.playlist_id WHERE p.title LIKE ? GROUP BY pv.playlist_id";
     const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username FROM videos v JOIN users u ON u.id = v.uploader_id 
                               JOIN playlists_videos pv ON pv.video_id = v.id JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ?";
+    const GET_PLAYLISTS_COUNT = "SELECT COUNT(*) as playlist_count FROM playlists WHERE creator_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -37,6 +38,17 @@ class PlaylistDao {
             self::$instance = new PlaylistDao();
         }
         return self::$instance;
+    }
+
+    /**
+     * @param int $creatorId
+     * @return array
+     */
+    public function getCountByCreatorId($creatorId) {
+        $statement = $this->pdo->prepare(self::GET_PLAYLISTS_COUNT);
+        $statement->execute(array($creatorId));
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /** Converts PDO SQL Result Set to an Array of Playlist Objects
@@ -159,14 +171,15 @@ class PlaylistDao {
 
     /**
      * Return an array of N Playlists from DB by Creator id
-     * @param int $numberOfPlaylists
-     * @param int $creatorID
+     * @param int $creatorId
+     * @param int $limit
+     * @param int $offset
      * @return array
      */
-    public function getNLatestByCreatorID($numberOfPlaylists, $creatorID){
+    public function getNLatestByCreatorID($creatorId, $limit = 4, $offset = 0){
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_N_LATEST_BY_CREATOR);
-        $statement->execute(array($creatorID, $numberOfPlaylists));
+        $statement->execute(array($creatorId, $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToPlaylistArray($result);
     }

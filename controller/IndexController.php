@@ -16,12 +16,20 @@ class IndexController extends BaseController {
     public function indexAction() {
         try {
             $videoDao = VideoDao::getInstance();
-            $mostLikedVideos = $videoDao->getMostLiked();
-            $newestVideos = $videoDao->getNewest();
+
+            $totalLikedVideosCount = $videoDao->getTotalLikedCount()['total_liked_count'];
+            $mostLikedPagesCount = ceil($totalLikedVideosCount / 4);
+            $mostLikedVideos = $videoDao->getMostLiked(4, 0);
+
+            $videosCount = $videoDao->getTotalCount()['total_count'];
+            $newestPagesCount = ceil($videosCount / 4);
+            $newestVideos = $videoDao->getNewest(4, 0);
 
             $this->render('index/index', [
-                'mostLiked' => $mostLikedVideos,
-                'newest' => $newestVideos
+                'most_liked' => $mostLikedVideos,
+                'most_liked_pages_count' => $mostLikedPagesCount,
+                'newest' => $newestVideos,
+                'newest_pages_count' => $newestPagesCount
             ]);
         }
         catch (\Exception $e) {
@@ -80,6 +88,39 @@ class IndexController extends BaseController {
 
     public function showError() {
         $this->render('index/error');
+    }
+
+    public function loadVideosAction() {
+
+        $page = isset($_GET['pg']) ? $_GET['pg'] : 1;
+        $videoDao = VideoDao::getInstance();
+        if ($_GET['row'] == '1') {
+            $videosCount = $videoDao->getTotalLikedCount()['total_liked_count'];
+            $pagesCount = ceil($videosCount / 4);
+            if ($page > $pagesCount) {
+                $page = $pagesCount;
+            } elseif  ($page <= 0) {
+                $page = 1;
+            }
+            $offset = $page * 4 - 4;
+            $videos = $videoDao->getMostLiked(4, $offset);
+            $this->renderPartial('index/most-liked', [
+                'most_liked' => $videos
+            ]);
+        } else {
+            $videosCount = $videoDao->getTotalCount()['total_count'];
+            $pagesCount = ceil($videosCount / 4);
+            if ($page > $pagesCount) {
+                $page = $pagesCount;
+            } elseif  ($page <= 0) {
+                $page = 1;
+            }
+            $offset = $page * 4 - 4;
+            $videos = $videoDao->getNewest(4, $offset);
+            $this->renderPartial('index/newest', [
+                'newest' => $videos
+            ]);
+        }
     }
 }
 

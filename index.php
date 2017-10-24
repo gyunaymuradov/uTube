@@ -47,6 +47,15 @@ function __autoload($className) {
         } else if ($page === 'edit-profile') {
             $controller = new controller\UserController();
             $controller->editProfileAction();
+        } else if ($page === 'load-videos') {
+            $controller = new controller\UserController();
+            $controller->getVideosAction();
+        } else if ($page === 'index-videos') {
+            $controller = new controller\IndexController();
+            $controller->loadVideosAction();
+        } else if ($page === 'load-playlists') {
+            $controller = new controller\UserController();
+            $controller->getPlaylistsAction();
         } else if ($page === 'subscribe') {
             $controller = new controller\UserController();
             $controller->subscribeAction();

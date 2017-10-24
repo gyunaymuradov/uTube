@@ -18,7 +18,7 @@ class VideoDao {
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
                                     FROM videos WHERE id IN (SELECT video_id, hidden FROM tags_videos WHERE tag_id = ? AND hidden = 0) ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
-                                          FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
+                                          FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
     const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
     const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
@@ -39,9 +39,12 @@ class VideoDao {
     const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
     const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ? AND v.hidden = 0";
     const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
-                              GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT 4";
+                              GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT ? OFFSET ?";
     const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
-    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT 4";
+    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
+    const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ?";
+    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(*) as total_liked_count FROM videos v JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
+    const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos";
 
 
     private function __construct() {
@@ -54,9 +57,33 @@ class VideoDao {
         return self::$instance;
     }
 
-    public function getNewest() {
-        $statement = $this->pdo->prepare(self::GET_NEWEST);
+    public function getTotalLikedCount() {
+        $statement = $this->pdo->prepare(self::GET_TOTAL_COUNT_LIKED);
         $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    public function getTotalCount() {
+        $statement = $this->pdo->prepare(self::GET_TOTAL_COUNT);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    /**
+     * @param $uploaderId
+     * @return array
+     */
+    public function getCountByUploaderId($uploaderId) {
+        $statement = $this->pdo->prepare(self::GET_VIDEOS_COUNT);
+        $statement->execute(array($uploaderId));
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getNewest($limit, $offset) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $statement = $this->pdo->prepare(self::GET_NEWEST);
+        $statement->execute(array($limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
@@ -69,9 +96,10 @@ class VideoDao {
         return $result;
     }
 
-    public function getMostLiked() {
+    public function getMostLiked($limit, $offset) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_MOST_LIKED);
-        $statement->execute();
+        $statement->execute(array($limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
@@ -216,14 +244,15 @@ class VideoDao {
     }
     /**
      * Return array of N Videos by Uploader id
-     * @param int $numberOfVideos
-     * @param int $uploaderID
+     * @param int $uploaderId
+     * @param int $limit
+     * @param int $offset
      * @return array
      */
-    public function getNLatestByUploaderID($numberOfVideos, $uploaderID){
+    public function getNLatestByUploaderID($uploaderId, $limit = 4, $offset = 0){
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare( self::GET_N_LATEST_BY_UPLOADER_ID);
-        $statement->execute(array($uploaderID, $numberOfVideos));
+        $statement->execute(array($uploaderId, $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $this->sqlResultToVideoArray($result);
     }

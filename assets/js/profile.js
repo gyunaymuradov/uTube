@@ -106,8 +106,6 @@ function hideAddButton(Id) {
     document.getElementById("buttonContainer" + Id).innerHTML = "";
 }
 
-
-
 function deleteVideo(buttonId) {
     if (confirm("Are you sure you want to delete this video?")) {
         var videoId = buttonId.replace('delete', '');
@@ -321,4 +319,130 @@ function submitEditProfile() {
     request.open('POST', 'index.php?page=edit-profile', true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(params);
+}
+
+var currentPage = 1;
+
+function nextPage() {
+    var pagesCount = document.getElementById('video-pages-count').value;
+    if (currentPage < pagesCount) {
+        currentPage++;
+        loadVideos(currentPage);
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        loadVideos(currentPage);
+    }
+}
+
+function loadVideos(pageNumber) {
+    var request = new XMLHttpRequest();
+    var profileId = document.getElementById('current-profile').value;
+    var url = 'index.php?page=load-videos&pg=' + pageNumber + '&id=' + profileId;
+    var videosContainer = document.getElementById('videos-container');
+    videosContainer.innerHTML = '';
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            videosContainer.innerHTML = this.responseText;
+        }
+    };
+    request.open('GET', url);
+    request.send();
+}
+
+var currentPagePlaylists = 1;
+
+function nextPagePlaylists() {
+    var pagesCount = document.getElementById('playlist-pages-count').value;
+    if (currentPagePlaylists < pagesCount) {
+        currentPagePlaylists++;
+        loadPlaylists(currentPagePlaylists);
+    }
+}
+
+function previousPagePlaylist() {
+    if (currentPagePlaylists > 1) {
+        currentPagePlaylists--;
+        loadPlaylists(currentPagePlaylists);
+    }
+}
+
+function loadPlaylists(pageNumber) {
+    var request = new XMLHttpRequest();
+    var profileId = document.getElementById('current-profile').value;
+    var url = 'index.php?page=load-playlists&pg=' + pageNumber + '&id=' + profileId;
+    var playlistsContainer = document.getElementById('playlists-container');
+    playlistsContainer.innerHTML = '';
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            playlistsContainer.innerHTML = this.responseText;
+        }
+    };
+    request.open('GET', url);
+    request.send();
+}
+
+var currentPageMostLiked = 1;
+
+function nextMostLiked() {
+    var pagesCount = document.getElementById('liked-pages-count').value;
+    if (currentPageMostLiked < pagesCount) {
+        currentPageMostLiked++;
+        getMostLiked(currentPageMostLiked);
+    }
+}
+
+function previousMostLiked() {
+    if (currentPageMostLiked > 1) {
+        currentPageMostLiked--;
+        getMostLiked(currentPageMostLiked);
+    }
+}
+
+function getMostLiked(page) {
+    var request = new XMLHttpRequest();
+    var url = 'index.php?page=index-videos&pg=' + page + '&row=1';
+    var mostLikedContainer = document.getElementById('most-liked');
+    mostLikedContainer.innerHTML = '';
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            mostLikedContainer.innerHTML = this.responseText;
+        }
+    };
+    request.open('GET', url);
+    request.send();
+}
+
+var currentPageNewest = 1;
+
+function previousNewest(page) {
+    if (currentPageNewest > 1) {
+        currentPageNewest--;
+        getNewest(currentPageNewest);
+    }
+}
+
+function nextNewest(page) {
+    var pagesCount = document.getElementById('newest-pages-count').value;
+    if (currentPageNewest < pagesCount) {
+        currentPageNewest++;
+        getNewest(currentPageNewest);
+    }
+}
+
+function getNewest(page) {
+    var request = new XMLHttpRequest();
+    var url = 'index.php?page=index-videos&pg=' + page + '&row=2';
+    var newestVidContainer = document.getElementById('newest');
+    newestVidContainer.innerHTML = '';
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            newestVidContainer.innerHTML = this.responseText;
+        }
+    };
+    request.open('GET', url);
+    request.send();
 }

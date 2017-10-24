@@ -249,11 +249,19 @@ class VideoController extends BaseController {
     }
 
     public function deleteAction() {
-        if (isset($_GET['videoId'])) {
+        if (isset($_GET['videoId']) && isset($_SESSION['user'])) {
             try {
                 $videoDao = VideoDao::getInstance();
-                $videoDao->delete($_GET['videoId']);
-                $result = "Success";
+                $videoId = htmlspecialchars($_GET['videoId']);
+                $videoFromDb = $videoDao->getByID($videoId);
+                $userID = $_SESSION['user']->getId();
+                if ($userID == $videoFromDb->getUploaderID() && !is_null($videoFromDb)) {
+                    $videoDao->delete($videoId);
+                    $result = "Success";
+                }
+                else {
+                    $result = array("Result" => "Invalid action!");
+                }
             }
             catch (\Exception $e) {
                 $result = "An error occurred! Please Try Again Later!";

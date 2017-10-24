@@ -65,18 +65,18 @@
                         $thumbnail = $video->getThumbnailURL();
                         $videoId = $video->getId();
                         echo "
-                        <div class=\"col-md-3 margin-top\" id='$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
+                        <div class=\"col-md-3 margin-top\" id='video$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
                             <a href='index.php?page=watch&id=$videoId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
                             <a href='index.php?page=edit-video&id=$videoId'><button class='video-top-btn btn btn-info' id='edit$videoId'>Edit</button></a>
                             <button class='video-middle-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
-                            <button class='video-bottom-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
+                            <button class='video-bottom-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"profile\")'>Add To</button>
                             <div class='video-bottom-div well-sm' id='addToField$videoId'>
                                 <p>Choose Playlist:</p>
                                 <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                <div id='buttonContainer$videoId'></div>
+                                <div id='videoButtonContainer$videoId'></div>
                             </div>
                         </div>";
                     }
@@ -85,24 +85,26 @@
                 <div id="playlists" class="tab-pane fade">
                     <?php
                     /* @var $playlist \model\Playlist */
-                    foreach ($params['playlists'] as $playlist) {
-                        $title = $playlist->getTitle();
-                        $thumbnail = $playlist->getThumbnailURL();
-                        $playlistId = $playlist->getId();
-                        echo "
-                        <div class=\"col-md-3 margin-top\" id='$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
+                    if ($params['playlists'] != null) {
+                        foreach ($params['playlists'] as $playlist) {
+                            $title = $playlist->getTitle();
+                            $thumbnail = $playlist->getThumbnailURL();
+                            $playlistId = $playlist->getId();
+                            echo "
+                        <div class=\"col-md-3 margin-top\" id='playlist$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                             </a>
                             <button class='video-top-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>
                             <button class='video-middle-btn btn btn-info' id='removeVid$playlistId' onclick='showRemoveVid(this.id)'>Remove Video</button>
-                            <div class='video-middle-div well-sm' id='removeField$playlistId'>
+                            <div class='video-middle-div well-sm' id='removeField$playlistId' style='display: none'>
                                 <p>Choose Video:</p>
-                                <div id='buttonContainer$playlistId'></div>
+                                <div id='playlistButtonContainer$playlistId'></div>
                             </div>
                             
                         </div>";
+                        }
                     }
                     ?>
                 </div>

@@ -65,16 +65,16 @@
                     $thumbnail = $video->getThumbnailURL();
                     $videoId = $video->getId();
                     echo "
-                        <div class='col-md-3 margin-top' id='$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
+                        <div class='col-md-3 margin-top' id='video$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
                             <a href='index.php?page=watch&id=$videoId'>
                                 <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
                                 <h4 class='text-left text-muted'>$title</h4>
                             </a>
-                            <button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
+                            <button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"user\")'>Add To</button>
                             <div class='video-top-div well-sm' id='addToField$videoId'>
                                 <p>Choose Playlist:</p>
-                                <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                <div id='buttonContainer$videoId'></div>
+                                <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylistFromOther(this.id)'>Create New Playlist</button>
+                                <div id='videoButtonContainer$videoId'></div>
                             </div>
                         </div>";
                 }
@@ -83,17 +83,19 @@
             <div id="playlists" class="tab-pane fade">
                 <?php
                 /* @var $playlist \model\Playlist */
-                foreach ($params['playlists'] as $playlist) {
-                    $title = $playlist->getTitle();
-                    $thumbnail = $playlist->getThumbnailURL();
-                    $playlistId = $playlist->getId();
-                    echo "
-                        <div class=\"col-md-3 margin-top\" id='$playlistId'>
+                if ($params['playlists'] != null) {
+                    foreach ($params['playlists'] as $playlist) {
+                        $title = $playlist->getTitle();
+                        $thumbnail = $playlist->getThumbnailURL();
+                        $playlistId = $playlist->getId();
+                        echo "
+                        <div class=\"col-md-3 margin-top\" id='playlist$playlistId'>
                             <a href='index.php?page=watch&playlist-id=$playlistId'>
                                 <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                 <h4 class='text-center text-muted'>$title</h4>
                             </a>
                         </div>";
+                    }
                 }
                 ?>
             </div>

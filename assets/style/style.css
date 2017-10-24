@@ -206,6 +206,12 @@ body {
     right: 5px;
     display: none;
 }
+.watch-delete-button{
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    float: right;
+}
 .profile-tab-end {
     background-color: #cde4ee;
 }

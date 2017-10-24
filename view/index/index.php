@@ -1,7 +1,7 @@
 <div class="col-md-10 justify-content-center text-center no-padding-right">
     <div class="well-sm text-left bg-info video-container">
         <h3>Most liked</h3>
-        <div class="row text-center" id="most-liked">
+        <div class="row text-center row-height" id="most-liked">
 
             <?php
             $mostLikedPagesCount = $params['most_liked_pages_count'];
@@ -12,7 +12,7 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
-                            <img class='img-thumbnail display-block' src='$thumbnailUrl'>
+                            <img class='img-thumbnail display-block' width='600' height='400' src='$thumbnailUrl'>
                             <label class='display-block' '>$title</label>
                         </div>
                       </a>";
@@ -29,7 +29,7 @@
 
     <div class="well-sm text-left bg-info video-container">
         <h3>Newest</h3>
-        <div class="row text-center" id="newest">
+        <div class="row text-center row-height" id="newest">
 
             <?php
             $newestPagesCount = $params['newest_pages_count'];
@@ -40,7 +40,7 @@
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?page=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
-                            <img class='img-thumbnail display-block' src='$thumbnailUrl'>
+                            <img class='img-thumbnail display-block' width='600' height='400' src='$thumbnailUrl'>
                             <label class='display-block' '>$title</label>
                         </div>
                       </a>";
@@ -49,8 +49,8 @@
         </div>
         <div class="row text-center margin-top">
             <input type="hidden" id="newest-pages-count" value="<?= $newestPagesCount; ?>">
-            <button class="btn btn-group btn-lg btn-info" onclick="previousNewest(1)"><<</button>
-            <button class="btn btn-group btn-lg btn-info" onclick="nextNewest(1)">>></button>
+            <button class="btn btn-group btn-lg btn-info" onclick="previousNewest()"><<</button>
+            <button class="btn btn-group btn-lg btn-info" onclick="nextNewest()">>></button>
         </div>
         <h3></h3>
     </div>

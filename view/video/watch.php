@@ -28,7 +28,7 @@
                 <div class='watch-bottom-div well-sm' style="display:none;" id='addToField<?= $params['video_id']; ?>'>
                     <p>Choose Playlist:</p>
                     <button class='btn btn-info margin-bottom-5 width-100' id='create<?= $params['video_id']; ?>' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                    <div id='buttonContainer<?= $params['video_id']; ?>'></div>
+                    <div id='videoButtonContainer<?= $params['video_id']; ?>'></div>
                 </div>
             </div>
             <div class="col-md-4 well pre-scrollable watch-height">

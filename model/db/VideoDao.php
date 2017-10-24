@@ -43,7 +43,7 @@ class VideoDao {
     const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
     const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ?";
-    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(*) as total_liked_count FROM videos v JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
+    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
     const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos";
 
 

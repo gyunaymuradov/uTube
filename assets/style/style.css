@@ -267,3 +267,11 @@ textarea {
     right: 5px;
     display: none;
 }
+
+.row-height {
+    height: 200px;
+}
+
+#navbar {
+    height: 744px;
+}

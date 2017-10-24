@@ -80,35 +80,40 @@ function getAboutPage(userId, delay) {
     }
 }
 
-function showVideoButtons(Id) {
-    document.getElementById("edit" + Id).style.display = "block";
-    document.getElementById("delete" + Id).style.display = "block";
-    document.getElementById("addToBtn" + Id).style.display = "block";
+function showVideoButtons(videoId) {
+    var id = videoId.replace('video', '');
+    document.getElementById("edit" + id).style.display = "block";
+    document.getElementById("delete" + id).style.display = "block";
+    document.getElementById("addToBtn" + id).style.display = "block";
 }
 
-function hideVideoButtons(Id) {
-    document.getElementById("edit" + Id).style.display = "none";
-    document.getElementById("delete" + Id).style.display = "none";
-    document.getElementById("addToBtn" + Id).style.display = "none";
-    document.getElementById("addToBtn" + Id).disabled = false;
-    document.getElementById("addToField" + Id).style.display = "none";
-    document.getElementById("buttonContainer" + Id).innerHTML = "";
+function hideVideoButtons(videoId) {
+    var id = videoId.replace('video', '');
+    document.getElementById("edit" + id).style.display = "none";
+    document.getElementById("delete" + id).style.display = "none";
+    document.getElementById("addToBtn" + id).style.display = "none";
+    document.getElementById("addToBtn" + id).disabled = false;
+    document.getElementById("addToField" + id).style.display = "none";
+    document.getElementById("videoButtonContainer" + id).innerHTML = "";
 }
 
-function showAddButton(Id) {
-    document.getElementById("addToBtn" + Id).style.display = "block";
+function showAddButton(videoId) {
+    var id = videoId.replace('video', '');
+    document.getElementById("addToBtn" + id).style.display = "block";
 }
 
-function hideAddButton(Id) {
-    document.getElementById("addToBtn" + Id).style.display = "none";
-    document.getElementById("addToBtn" + Id).disabled = false;
-    document.getElementById("addToField" + Id).style.display = "none";
-    document.getElementById("buttonContainer" + Id).innerHTML = "";
+function hideAddButton(videoId) {
+    var id = videoId.replace('video', '');
+    document.getElementById("addToBtn" + id).style.display = "none";
+    document.getElementById("addToBtn" + id).disabled = false;
+    document.getElementById("addToField" + id).style.display = "none";
+    document.getElementById("videoButtonContainer" + id).innerHTML = "";
 }
 
 function deleteVideo(buttonId) {
     if (confirm("Are you sure you want to delete this video?")) {
-        var videoId = buttonId.replace('delete', '');
+        var id = buttonId.replace('delete', '');
+        var videoId = buttonId.replace('delete', 'video');
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -122,16 +127,26 @@ function deleteVideo(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=delete-video&videoId=' + videoId);
+        request.open('GET', 'index.php?page=delete-video&videoId=' + id);
         request.send();
     }
 }
 
-function showAddTo(buttonId) {
+function showAddTo(buttonId, page) {
+    var btnAction = "";
+    if (page === "user") {
+        btnAction = "insertVideoFromOther";
+    }
+    else if (page === "profile") {
+        btnAction = "insertVideo";
+    }
+    else {
+        return;
+    }
     document.getElementById(buttonId).disabled = true;
     var videoId = buttonId.replace('addToBtn', '');
     var divId = buttonId.replace('addToBtn', 'addToField');
-    var btnContId =  buttonId.replace('addToBtn', 'buttonContainer');
+    var btnContId =  buttonId.replace('addToBtn', 'videoButtonContainer');
     var addToDiv = document.getElementById(divId);
     var btnContainer = document.getElementById(btnContId);
     addToDiv.style.display = "block";
@@ -142,7 +157,7 @@ function showAddTo(buttonId) {
             var playlistId;
             for (var i in response) {
                 playlistId = response[i]['id'];
-                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5 white-space width-100' id='" + videoId + "|" + playlistId +"' onclick='insertVideo(this.id)'>" + response[i]['title'] + "</button>";
+                btnContainer.innerHTML += "<button class='btn btn-info margin-bottom-5 white-space width-100' id='" + videoId + "|" + playlistId +"' onclick='" + btnAction + "(this.id)'>" + response[i]['title'] + "</button>";
             }
         }
     };
@@ -156,7 +171,7 @@ function showHideAddTo(buttonId) {
     var divId = buttonId.replace('addToBtn', 'addToField');
     var addToDiv = document.getElementById(divId);
     if (addToDiv.style.display === "none") {
-        showAddTo(buttonId);
+        showAddTo(buttonId, "user");
         document.getElementById(buttonId).disabled = false;
     }
     else {
@@ -181,9 +196,33 @@ function createPlaylist(buttonId) {
                     var playlistsContainer = document.getElementById('playlists');
                     var containerContents = "";
                     for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=playlistId'> <img src='" + response[i]['thumbnailURL'] +"' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-edit-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-delete-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='playlist-remove-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='buttonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] +"' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     playlistsContainer.innerHTML = containerContents;
+                    alert("Playlist created successfully. The video has been added in it.");
+                }
+                else {
+                    alert(response['Result']);
+                }
+            }
+        };
+        request.open('GET', 'index.php?page=playlist-create&title=' + playlistTitle + '&videoID=' + videoId);
+        request.send();
+    }
+}
+
+function createPlaylistFromOther(buttonId) {
+    var videoId = buttonId.replace('create', '');
+    var playlistTitle = prompt("Please enter the new playlist's title:");
+    if (playlistTitle == "") {
+        alert("You can't leave an empty field!");
+    }
+    else if(playlistTitle != null){
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (!response['Result']) {
                     alert("Playlist created successfully. The video has been added in it.");
                 }
                 else {
@@ -204,24 +243,55 @@ function insertVideo(btnId) {
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             var response = JSON.parse(this.responseText);
-            alert(response['Result']);
+            if (!response['Result']) {
+                var playlistsContainer = document.getElementById('playlists');
+                var containerContents = "";
+                for (var i in response) {
+                    containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                }
+                playlistsContainer.innerHTML = containerContents;
+                alert("Video successfully added!");
+            }
+            else {
+                alert(response['Result']);
+            }
         }
     };
     request.open('GET', 'index.php?page=playlist-insert&playlistID=' + playlistId + '&videoID=' + videoId);
     request.send();
 }
-
-function showPlaylistButtons(Id) {
-    document.getElementById("rename" + Id).style.display = "block";
-    document.getElementById("removeVid" + Id).style.display = "block";
+function insertVideoFromOther(btnId) {
+    var arrOfIds = btnId.split("|");
+    var videoId = arrOfIds[0];
+    var playlistId = arrOfIds[1];
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var response = JSON.parse(this.responseText);
+            if (!response['Result']) {
+                alert("Video successfully added!");
+            }
+            else {
+                alert(response['Result']);
+            }
+        }
+    };
+    request.open('GET', 'index.php?page=playlist-insert&playlistID=' + playlistId + '&videoID=' + videoId);
+    request.send();
+}
+function showPlaylistButtons(playlistId) {
+    var id = playlistId.replace('playlist', '');
+    document.getElementById("rename" + id).style.display = "block";
+    document.getElementById("removeVid" + id).style.display = "block";
 }
 
-function hidePlaylistButtons(Id) {
-    document.getElementById("rename" + Id).style.display = "none";
-    document.getElementById("removeVid" + Id).style.display = "none";
-    document.getElementById("removeVid" + Id).disabled = false;
-    document.getElementById("removeField" + Id).style.display = "none";
-    document.getElementById("buttonContainer" + Id).innerHTML = "";
+function hidePlaylistButtons(playlistId) {
+    var id = playlistId.replace('playlist', '');
+    document.getElementById("rename" + id).style.display = "none";
+    document.getElementById("removeVid" + id).style.display = "none";
+    document.getElementById("removeVid" + id).disabled = false;
+    document.getElementById("removeField" + id).style.display = "none";
+    document.getElementById("playlistButtonContainer" + id).innerHTML = "";
 }
 
 function renamePlaylist(buttonId) {
@@ -254,7 +324,7 @@ function showRemoveVid(buttonId) {
     document.getElementById(buttonId).disabled = true;
     var playlistId = buttonId.replace('removeVid', '');
     var divId = buttonId.replace('removeVid', 'removeField');
-    var btnContId =  buttonId.replace('removeVid', 'buttonContainer');
+    var btnContId =  buttonId.replace('removeVid', 'playlistButtonContainer');
     var removeDiv = document.getElementById(divId);
     var btnContainer = document.getElementById(btnContId);
     removeDiv.style.display = "block";
@@ -282,10 +352,21 @@ function removeVideo(buttonId) {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
-                alert(response['Result']);
-                if (response['Result'] === 'Playlist deleted!') {
-                    var playlist = document.getElementById(playlistId);
+                if (!response['Result']) {
+                    var playlistsContainer = document.getElementById('playlists');
+                    var containerContents = "";
+                    for (var i in response) {
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                    }
+                    playlistsContainer.innerHTML = containerContents;
+                    alert("Successfully removed video from playlist!");
+                }
+                else if (response['Result'] === 'Playlist deleted!') {
+                    var playlist = document.getElementById('playlist' + playlistId);
                     playlist.parentNode.removeChild(playlist);
+                }
+                else {
+                    alert(response['Result']);
                 }
             }
         };
@@ -343,7 +424,6 @@ function loadVideos(pageNumber) {
     var profileId = document.getElementById('current-profile').value;
     var url = 'index.php?page=load-videos&pg=' + pageNumber + '&id=' + profileId;
     var videosContainer = document.getElementById('videos-container');
-    videosContainer.innerHTML = '';
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             videosContainer.innerHTML = this.responseText;
@@ -375,7 +455,6 @@ function loadPlaylists(pageNumber) {
     var profileId = document.getElementById('current-profile').value;
     var url = 'index.php?page=load-playlists&pg=' + pageNumber + '&id=' + profileId;
     var playlistsContainer = document.getElementById('playlists-container');
-    playlistsContainer.innerHTML = '';
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             playlistsContainer.innerHTML = this.responseText;
@@ -406,7 +485,6 @@ function getMostLiked(page) {
     var request = new XMLHttpRequest();
     var url = 'index.php?page=index-videos&pg=' + page + '&row=1';
     var mostLikedContainer = document.getElementById('most-liked');
-    mostLikedContainer.innerHTML = '';
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             mostLikedContainer.innerHTML = this.responseText;
@@ -437,7 +515,6 @@ function getNewest(page) {
     var request = new XMLHttpRequest();
     var url = 'index.php?page=index-videos&pg=' + page + '&row=2';
     var newestVidContainer = document.getElementById('newest');
-    newestVidContainer.innerHTML = '';
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             newestVidContainer.innerHTML = this.responseText;

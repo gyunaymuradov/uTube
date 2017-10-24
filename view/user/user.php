@@ -8,7 +8,6 @@
             <li class="profile-tab-end"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
         </ul>
         <div class="tab-content container-fluid bg-info">
-
             <div id="about" class="tab-pane fade in active">
                 <div class="row margin-top">
                     <div class="col-md-4 col-md-offset-1">
@@ -58,29 +57,29 @@
                     </div>
                 </div>
             </div>
-            <div id="videos" class="tab-pane fade">
+            <div id="videos" class="tab-pane fade row-height">
                 <div class="row" id="videos-container">
                     <?php
-                    $videoPagesCount = $params['video_pages_count'];
-                    /* @var $video \model\Video */
-                    foreach ($params['videos'] as $video) {
-                        $title = $video->getTitle();
-                        $thumbnail = $video->getThumbnailURL();
-                        $videoId = $video->getId();
-                        echo "
-                            <div class='col-md-3 margin-top' id='$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
+                        $videoPagesCount = $params['video_pages_count'];
+                        /* @var $video \model\Video */
+                        foreach ($params['videos'] as $video) {
+                            $title = $video->getTitle();
+                            $thumbnail = $video->getThumbnailURL();
+                            $videoId = $video->getId();
+                            echo "
+                            <div class='col-md-3 margin-top' id='video$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
                                 <a href='index.php?page=watch&id=$videoId'>
                                     <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
                                     <h4 class='text-left text-muted'>$title</h4>
                                 </a>
-                                <button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id)'>Add To</button>
+                                <button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"user\")'>Add To</button>
                                 <div class='video-top-div well-sm' id='addToField$videoId'>
                                     <p>Choose Playlist:</p>
-                                    <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                    <div id='buttonContainer$videoId'></div>
+                                    <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylistFromOther(this.id)'>Create New Playlist</button>
+                                    <div id='videoButtonContainer$videoId'></div>
                                 </div>
                             </div>";
-                    }
+                        }
                     ?>
                 </div>
                 <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
@@ -90,23 +89,23 @@
                 </div>
                 <h3></h3>
             </div>
-            <div id="playlists" class="tab-pane fade">
+            <div id="playlists" class="tab-pane fade row-height">
                 <div class="row" id="playlists-container">
                     <?php
                     $playlistPagesCount = $params['playlist_pages_count'];
+                    /* @var $playlist \model\Playlist */
                     if (!empty($params['playlists'])) {
-                        /* @var $playlist \model\Playlist */
                         foreach ($params['playlists'] as $playlist) {
                             $title = $playlist->getTitle();
                             $thumbnail = $playlist->getThumbnailURL();
                             $playlistId = $playlist->getId();
                             echo "
-                            <div class=\"col-md-3 margin-top\" id='$playlistId'>
-                                <a href='index.php?page=watch&playlist-id=$playlistId'>
-                                    <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
-                                    <h4 class='text-center text-muted'>$title</h4>
-                                </a>
-                            </div>";
+                        <div class=\"col-md-3 margin-top\" id='playlist$playlistId'>
+                            <a href='index.php?page=watch&playlist-id=$playlistId'>
+                                <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
+                                <h4 class='text-center text-muted'>$title</h4>
+                            </a>
+                        </div>";
                         }
                     }
                     ?>
@@ -117,10 +116,10 @@
                 <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists()">>></button>
             </div>
             <h3></h3>
-            </div>
+        </div>
         </div>
     </div>
-</div>
-<br>
+    </div>
+    <br>
 </div>
 

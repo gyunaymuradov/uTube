@@ -22,7 +22,7 @@ class PlaylistController extends BaseController
     public function getNames() {
         try {
             $playlistDao = PlaylistDao::getInstance();
-            $result = $playlistDao->getNLatestByCreatorID(100, $_SESSION['user']->getId());
+            $result = $playlistDao->getNLatestByCreatorID( $_SESSION['user']->getId(), 100);
         }
         catch (\Exception $e) {
             $result = array("Result" => "Error");
@@ -43,7 +43,7 @@ class PlaylistController extends BaseController
                 $thumbnailURL = $video->getThumbnailURL();
                 $playlist = new Playlist(null, $title, $date, $userID, $thumbnailURL, array($videoID));
                 $playlistDao->insert($playlist);
-                $result = $playlistDao->getNLatestByCreatorID(10, $userID);
+                $result = $playlistDao->getNLatestByCreatorID($userID, 10);
 //                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
             }
             else {
@@ -58,12 +58,23 @@ class PlaylistController extends BaseController
 
     public function insertVideo() {
         try {
-            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "") {
+            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "" && isset($_SESSION['user'])) {
                 $playlistDao = PlaylistDao::getInstance();
+                $videoDao = VideoDao::getInstance();
                 $playlistID = htmlspecialchars($_GET['playlistID']);
                 $videoID = htmlspecialchars($_GET['videoID']);
-                $playlistDao->insertVideo($playlistID, $videoID);
-                $result = array("Result" => "Video successfully added!");
+                $playlistFromDb = $playlistDao->getByID($playlistID);
+                $videoFromDb = $videoDao->getByID($videoID);
+                $userID = $_SESSION['user']->getId();
+                if (!is_null($playlistFromDb) && $_SESSION['user']->getId() == $playlistFromDb->getCreatorID() && !is_null($videoFromDb)) {
+                    $playlistDao->insertVideo($playlistID, $videoID);
+                    $playlistDao->changeThumbnail($playlistID, $videoFromDb->getThumbnailURL());
+                    $result = $playlistDao->getNLatestByCreatorID($userID, 10);
+//                    $result = array("Result" => "Video successfully added!");
+                }
+                else {
+                    $result = array("Result" => "Invalid action!");
+                }
             }
             else {
                 $result = array("Result" => "Error! You cant leave empty fields!");
@@ -77,12 +88,18 @@ class PlaylistController extends BaseController
 
     public function renamePlaylist() {
         try {
-            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['newTitle']) && $_GET['newTitle'] != "") {
+            if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['newTitle']) && $_GET['newTitle'] != "" && isset($_SESSION['user'])) {
                 $playlistDao = PlaylistDao::getInstance();
                 $playlistID = htmlspecialchars($_GET['playlistID']);
                 $newTitle = htmlspecialchars($_GET['newTitle']);
-                $playlistDao->changeTitle($playlistID, $newTitle);
-                $result = array("Result" => "Playlist successfully renamed!");
+                $playlistFromDb = $playlistDao->getByID($playlistID);
+                if (!is_null($playlistFromDb) && $_SESSION['user']->getId() == $playlistFromDb->getCreatorID()) {
+                    $playlistDao->changeTitle($playlistID, $newTitle);
+                    $result = array("Result" => "Playlist successfully renamed!");
+                }
+                else {
+                    $result = array("Result" => "Invalid action!");
+                }
             }
             else {
                 $result = array("Result" => "Error! You cant leave empty fields!");
@@ -110,15 +127,26 @@ class PlaylistController extends BaseController
     }
 
     public function removeVideo() {
-        if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "") {
+        if (isset($_GET['playlistID']) && $_GET['playlistID'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "" && isset($_SESSION['user'])) {
             try {
                 $playlistDao = PlaylistDao::getInstance();
-                $isPlaylistDeleted = $playlistDao->deleteVideo($_GET['playlistID'], $_GET['videoID']);
-                if ($isPlaylistDeleted) {
-                    $result = array("Result" => "Playlist deleted!");
+                $playlistID = htmlspecialchars($_GET['playlistID']);
+                $videoID = htmlspecialchars($_GET['videoID']);
+                $playlistFromDb = $playlistDao->getByID($playlistID);
+                $userID = $_SESSION['user']->getId();
+                if(!is_null($playlistFromDb) && $userID == $playlistFromDb->getCreatorID()) {
+                    $isPlaylistDeleted = $playlistDao->deleteVideo($playlistID, $videoID);
+                    if ($isPlaylistDeleted) {
+                        $result = array("Result" => "Playlist deleted!");
+                    } else {
+                        $videosInPlaylist = $playlistDao->getVideoById($playlistID);
+                        $playlistDao->changeThumbnail($playlistID, $videosInPlaylist[0]['thumbnail_url']);
+                        $result = $playlistDao->getNLatestByCreatorID($userID, 10);
+//                        $result = array("Result" => "Successfully removed video from playlist!");
+                    }
                 }
                 else {
-                    $result = array("Result" => "Successfully removed video from playlist!");
+                    $result = array("Result" => "Invalid action!");
                 }
 
             } catch (\Exception $e) {

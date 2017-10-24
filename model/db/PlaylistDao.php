@@ -12,6 +12,7 @@ class PlaylistDao {
     const INSERT_PLAYLIST = "INSERT INTO playlists (title, date_added, creator_id, thumbnail_url) VALUES (?, ?, ?, ?)";
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
     const UPDATE_TITLE = "UPDATE playlists SET title=? WHERE id=?";
+    const UPDATE_THUMBNAIL = "UPDATE playlists SET thumbnail_url=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
     const DELETE_PLAYLIST = "DELETE FROM playlists WHERE id = ?";
     const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
@@ -25,7 +26,7 @@ class PlaylistDao {
     const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count FROM playlists p 
                             JOIN users u ON p.creator_id = u.id JOIN playlists_videos pv ON p.id = pv.playlist_id WHERE p.title LIKE ? GROUP BY pv.playlist_id";
     const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username FROM videos v JOIN users u ON u.id = v.uploader_id 
-                              JOIN playlists_videos pv ON pv.video_id = v.id JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ?";
+                              JOIN playlists_videos pv ON pv.video_id = v.id JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ? AND v.hidden = 0";
     const GET_PLAYLISTS_COUNT = "SELECT COUNT(*) as playlist_count FROM playlists WHERE creator_id = ?";
 
     private function __construct() {
@@ -121,6 +122,10 @@ class PlaylistDao {
     public function changeTitle($playlistId, $newTitle) {
         $statement = $this->pdo->prepare(self::UPDATE_TITLE);
         $statement->execute(array($newTitle, $playlistId));
+    }
+    public function changeThumbnail($playlistId, $newThumbnailURL) {
+        $statement = $this->pdo->prepare(self::UPDATE_THUMBNAIL);
+        $statement->execute(array($newThumbnailURL, $playlistId));
     }
     /**
      * Inserts video in playlist by IDs

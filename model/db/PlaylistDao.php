@@ -44,7 +44,7 @@ class PlaylistDao {
      * @param array $sqlResultSet
      * @return array|Playlist
      */
-    private function sqlResultToPlaylistArray(Array $sqlResultSet) {
+    private function sqlResultToPlaylistArray($sqlResultSet) {
         if(isset($sqlResultSet[0])) {
             $playlistsArray = array();
             foreach ($sqlResultSet as $key=>$value) {
@@ -73,7 +73,7 @@ class PlaylistDao {
             return $playlist;
         }
         else {
-            return array();
+            return null;
         }
     }
 
@@ -230,9 +230,6 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::GET_VIDEOS_BY_ID);
         $statement->execute(array($playlistId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        if (!$result) {
-            return null;
-        }
         return $result;
     }
 }

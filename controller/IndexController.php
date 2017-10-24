@@ -24,7 +24,7 @@ class IndexController extends BaseController {
                 'newest' => $newestVideos
             ]);
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }
@@ -73,7 +73,7 @@ class IndexController extends BaseController {
                 ]);
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $this->render('index/error');
         }
     }

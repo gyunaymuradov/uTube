@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onmouseout="validateDescription()" class="form-control" maxlength="350" required rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onmouseout="validateDescription()" class="form-control" required rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {
@@ -77,5 +77,5 @@
         </form>
         <script src="assets/js/validations.js"></script>
     </div>
-    <br>
 </div>
+<h3>&nbsp;</h3>

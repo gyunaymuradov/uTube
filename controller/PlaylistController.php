@@ -24,7 +24,7 @@ class PlaylistController extends BaseController
             $playlistDao = PlaylistDao::getInstance();
             $result = $playlistDao->getNLatestByCreatorID(100, $_SESSION['user']->getId());
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $result = array("Result" => "Error");
         }
         $this->jsonEncodeParams($result);
@@ -50,7 +50,7 @@ class PlaylistController extends BaseController
                 $result = array("Result" => "Error! You cant leave empty fields!");
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $result = array("Result" => "Error! Please try again later!");
         }
         $this->jsonEncodeParams($result);
@@ -69,7 +69,7 @@ class PlaylistController extends BaseController
                 $result = array("Result" => "Error! You cant leave empty fields!");
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $result = array("Result" => "Error! Please try again later!");
         }
         $this->jsonEncodeParams($result);
@@ -88,7 +88,7 @@ class PlaylistController extends BaseController
                 $result = array("Result" => "Error! You cant leave empty fields!");
             }
         }
-        catch (\PDOException $e) {
+        catch (\Exception $e) {
             $result = array("Result" => "Error! Please try again later!");
         }
         $this->jsonEncodeParams($result);
@@ -99,7 +99,7 @@ class PlaylistController extends BaseController
             try {
                 $playlistDao = PlaylistDao::getInstance();
                 $result = $playlistDao->getVideoById($_GET['playlistID']);
-            } catch (\PDOException $e) {
+            } catch (\Exception $e) {
                 $result = array("Result" => "Error");
             }
         }
@@ -121,7 +121,7 @@ class PlaylistController extends BaseController
                     $result = array("Result" => "Successfully removed video from playlist!");
                 }
 
-            } catch (\PDOException $e) {
+            } catch (\Exception $e) {
                 $result = array("Result" => "Error");
             }
         }

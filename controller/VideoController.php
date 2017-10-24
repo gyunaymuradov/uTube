@@ -187,11 +187,17 @@ class VideoController extends BaseController {
                     header('Location:index.php');
                 }
                 $videoId = $playlistContent[0]['id'];
+                if (!isset($playlistContent[0])) {
+                    header('Location:index.php');
+                }
                 $sideBarTitle = 'Playlist ' . $playlistDao->getByID($playlistId)->getTitle();
                 if (isset($_GET['vid-id'])) {
                     $videoId = $_GET['vid-id'];
                 }
                 $video = $videoDao->getByID($videoId);
+                if (is_null($video)) {
+                    header('Location:index.php');
+                }
                 $videoUrl = $video->getVideoURL();
                 $videoTitle = $video->getTitle();
                 $videoDescription = $video->getDescription();

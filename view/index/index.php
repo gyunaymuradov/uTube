@@ -1,6 +1,6 @@
-<div class="col-md-10 justify-content-center text-center no-padding-right">
+<div class="col-md-10 justify-content-center text-center no-padding-right ">
     <div class="well-sm text-left bg-info video-container">
-        <h3>Most liked</h3>
+        <h3 class="remove-margin-top">Most liked</h3>
         <div class="row text-center row-height" id="most-liked">
 
             <?php
@@ -24,11 +24,11 @@
             <button class="btn btn-group btn-lg btn-info" onclick="previousMostLiked()"><<</button>
             <button class="btn btn-group btn-lg btn-info" onclick="nextMostLiked()">>></button>
         </div>
-        <h3></h3>
+        <h5></h5>
     </div>
 
     <div class="well-sm text-left bg-info video-container">
-        <h3>Newest</h3>
+        <h3 class="remove-margin-top">Newest</h3>
         <div class="row text-center row-height" id="newest">
 
             <?php
@@ -52,6 +52,6 @@
             <button class="btn btn-group btn-lg btn-info" onclick="previousNewest()"><<</button>
             <button class="btn btn-group btn-lg btn-info" onclick="nextNewest()">>></button>
         </div>
-        <h3></h3>
+        <h5></h5>
     </div>
 </div>

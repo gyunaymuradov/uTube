@@ -120,6 +120,7 @@ body {
 .video-container {
     margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: -10px;
 }
 
 .width-100 {
@@ -269,9 +270,17 @@ textarea {
 }
 
 .row-height {
-    height: 200px;
+    height: 202px;
 }
 
-#navbar {
-    height: 744px;
-}
+/*#navbar {*/
+    /*height: 676px;*/
+/*}*/
+
+/*#footer {*/
+    /*margin-top: -15px;*/
+/*}*/
+
+/*.remove-margin-top {*/
+    /*margin-top: -5px;*/
+/*}*/

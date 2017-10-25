@@ -15,6 +15,7 @@ class PlaylistDao {
     const UPDATE_THUMBNAIL = "UPDATE playlists SET thumbnail_url=? WHERE id=?";
     const DELETE_VIDEO = "DELETE FROM playlists_videos WHERE playlist_id = ? AND video_id = ?";
     const DELETE_PLAYLIST = "DELETE FROM playlists WHERE id = ?";
+    const DELETE_ALL_VIDEOS = "DELETE FROM playlists_videos WHERE playlist_id = ?";
     const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
     const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
@@ -104,6 +105,23 @@ class PlaylistDao {
                 $statement = $this->pdo->prepare(self::INSERT_VIDEO);
                 $statement->execute(array($playlist->getId(), $videoID));
             }
+            $this->pdo->commit();
+        }
+        catch (PDOException $e) {
+            if($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            throw $e;
+        }
+    }
+
+    public function delete($playlistId) {
+        try {
+            $this->pdo->beginTransaction();
+            $statement = $this->pdo->prepare(self::DELETE_ALL_VIDEOS);
+            $statement->execute(array($playlistId));
+            $statement = $this->pdo->prepare(self::DELETE_PLAYLIST);
+            $statement->execute(array($playlistId));
             $this->pdo->commit();
         }
         catch (PDOException $e) {

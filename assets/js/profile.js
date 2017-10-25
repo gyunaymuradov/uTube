@@ -177,7 +177,7 @@ function showHideAddTo(buttonId) {
     else {
         document.getElementById("addToBtn" + videoId).disabled = false;
         document.getElementById("addToField" + videoId).style.display = "none";
-        document.getElementById("buttonContainer" + videoId).innerHTML = "";
+        document.getElementById("videoButtonContainer" + videoId).innerHTML = "";
     }
 }
 
@@ -196,7 +196,7 @@ function createPlaylist(buttonId) {
                     var playlistsContainer = document.getElementById('playlists');
                     var containerContents = "";
                     for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] +"' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     playlistsContainer.innerHTML = containerContents;
                     alert("Playlist created successfully. The video has been added in it.");
@@ -247,7 +247,7 @@ function insertVideo(btnId) {
                 var playlistsContainer = document.getElementById('playlists');
                 var containerContents = "";
                 for (var i in response) {
-                    containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                    containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                 }
                 playlistsContainer.innerHTML = containerContents;
                 alert("Video successfully added!");
@@ -282,12 +282,14 @@ function insertVideoFromOther(btnId) {
 function showPlaylistButtons(playlistId) {
     var id = playlistId.replace('playlist', '');
     document.getElementById("rename" + id).style.display = "block";
+    document.getElementById("deletePlaylist" + id).style.display = "block";
     document.getElementById("removeVid" + id).style.display = "block";
 }
 
 function hidePlaylistButtons(playlistId) {
     var id = playlistId.replace('playlist', '');
     document.getElementById("rename" + id).style.display = "none";
+    document.getElementById("deletePlaylist" + id).style.display = "none";
     document.getElementById("removeVid" + id).style.display = "none";
     document.getElementById("removeVid" + id).disabled = false;
     document.getElementById("removeField" + id).style.display = "none";
@@ -356,7 +358,7 @@ function removeVideo(buttonId) {
                     var playlistsContainer = document.getElementById('playlists');
                     var containerContents = "";
                     for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button> <button class='video-middle-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-middle-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     playlistsContainer.innerHTML = containerContents;
                     alert("Successfully removed video from playlist!");
@@ -371,6 +373,58 @@ function removeVideo(buttonId) {
             }
         };
         request.open('GET', 'index.php?page=playlist-delete&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.send();
+    }
+}
+
+function removeVideoInWatch(buttonId) {
+    if (confirm("Are you sure you want to remove this video from the playlist?")) {
+        var arrOfIds = buttonId.split("|");
+        var playlistId = arrOfIds[0];
+        var videoId = arrOfIds[1];
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (!response['Result']) {
+                    alert("Successfully removed video from playlist!");
+                    var video = document.getElementById("video" + videoId);
+                    video.parentNode.removeChild(video);
+                }
+                else if (response['Result'] === 'Playlist deleted!') {
+                    alert("Playlist deleted!");
+                    setTimeout(function () {
+                        window.location.href = "index.php";
+                    }, 100);
+                }
+                else {
+                    alert(response['Result']);
+                }
+            }
+        };
+        request.open('GET', 'index.php?page=playlist-delete&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.send();
+    }
+}
+
+function deletePlaylist(buttonId) {
+    if (confirm("Are you sure you want to delete this playlist?")) {
+        var id = buttonId.replace('deletePlaylist', '');
+        var playlistId = buttonId.replace('deletePlaylist', 'playlist');
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response['Result'] === 'Success'){
+                    var playlist = document.getElementById(playlistId);
+                    playlist.parentNode.removeChild(playlist);
+                }
+                else {
+                    alert(response['Result']);
+                }
+            }
+        };
+        request.open('GET', 'index.php?page=delete-playlist&playlistId=' + id);
         request.send();
     }
 }

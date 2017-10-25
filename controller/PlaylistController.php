@@ -158,4 +158,26 @@ class PlaylistController extends BaseController
         }
         $this->jsonEncodeParams($result);
     }
+
+    public function deletePlaylist() {
+        if (isset($_GET['playlistId']) && isset($_SESSION['user'])) {
+            try {
+                $playlistDao = PlaylistDao::getInstance();
+                $playlistId = htmlspecialchars($_GET['playlistId']);
+                $playlistFromDb = $playlistDao->getByID($playlistId);
+                $userID = $_SESSION['user']->getId();
+                if ($userID == $playlistFromDb->getCreatorID() && !is_null($playlistFromDb)) {
+                    $playlistDao->delete($playlistId);
+                    $result = "Success";
+                }
+                else {
+                    $result = array("Result" => "Invalid action!");
+                }
+            }
+            catch (\Exception $e) {
+                $result = "An error occurred! Please Try Again Later!";
+            }
+            $this->jsonEncodeParams(["Result" => $result]);
+        }
+    }
 }

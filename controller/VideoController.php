@@ -179,6 +179,7 @@ class VideoController extends BaseController {
                 $similarVideos = $videoDao->getWithSameTags($tagId, $videoId);
                 $sideBarTitle = 'Suggestions';
                 $playlistId = null;
+                $playistCreatorId = null;
 
             } else {
                 $playlistId = $_GET['playlist-id'];
@@ -198,6 +199,7 @@ class VideoController extends BaseController {
                 if (is_null($video)) {
                     header('Location:index.php');
                 }
+                $playistCreatorId = $playlistDao->getByID($playlistId)->getCreatorID();
                 $videoUrl = $video->getVideoURL();
                 $videoTitle = $video->getTitle();
                 $videoDescription = $video->getDescription();
@@ -240,7 +242,8 @@ class VideoController extends BaseController {
                 'comments' => $comments,
                 'suggested_videos' => $similarVideos,
                 'sidebar_title' => $sideBarTitle,
-                'playlist_id' => $playlistId
+                'playlist_id' => $playlistId,
+                'playlistCreatorId' => $playistCreatorId
             ]);
         }
         catch (\Exception $e) {

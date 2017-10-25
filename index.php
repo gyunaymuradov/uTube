@@ -114,6 +114,9 @@ function __autoload($className) {
         } else if ($page === 'playlist-delete') {
             $controller = new controller\PlaylistController();
             $controller->removeVideo();
+        } else if ($page === 'delete-playlist') {
+            $controller = new controller\PlaylistController();
+            $controller->deletePlaylist();
         } else if ($page === 'error') {
             $controller = new controller\IndexController();
             $controller->showError();

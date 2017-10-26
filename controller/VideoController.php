@@ -166,6 +166,7 @@ class VideoController extends BaseController {
                 $dateAdded = $video->getDateAdded();
                 $uploaderId = $video->getUploaderID();
                 $tagId = $video->getTagId();
+                $thumbnailUrl = $video->getThumbnailURL();
                 $uploader = $userDao->getById($uploaderId)->getUsername();
 
                 $likes = $videoDao->getLikesCountById($videoId);
@@ -201,6 +202,7 @@ class VideoController extends BaseController {
                 }
                 $playistCreatorId = $playlistDao->getByID($playlistId)->getCreatorID();
                 $videoUrl = $video->getVideoURL();
+                $thumbnailUrl = $video->getThumbnailURL();
                 $videoTitle = $video->getTitle();
                 $videoDescription = $video->getDescription();
                 $dateAdded = $video->getDateAdded();
@@ -231,6 +233,7 @@ class VideoController extends BaseController {
                 'uploader_id' => $uploaderId,
                 'video_id' => $videoId,
                 'video_url' => $videoUrl,
+                'thumbnail_url' => $thumbnailUrl,
                 'video_title' => $videoTitle,
                 'video_description' => $videoDescription,
                 'date_added' => $dateAdded,

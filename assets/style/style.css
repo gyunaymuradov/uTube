@@ -39,11 +39,6 @@ body {
 .no-padding {
     padding: 0;
 }
-.video-style {
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-}
 .margin-comment-buttons {
     margin-top: 10px;
     margin-bottom: 10px;

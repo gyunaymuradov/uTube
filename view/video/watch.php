@@ -1,9 +1,20 @@
 <div class="col-md-10 text-left margin-5">
     <div class="row">
         <div class="col-md-8 thumbnail watch-height" id="<?= $params['video_id']; ?>">
-            <video width="600" height="400" controls class="video-style">
-                <source src="<?= $params['video_url']; ?>" type="video/mp4">
+
+            <video id="videoPlayer" class="video-js vjs-big-play-centered" controls preload="auto" width="600" height="400" poster="<?= $params['thumbnail_url'] ?>" data-setup='{"aspectRatio":"600:400", "fluid": true, "playbackRates": [0.5, 1, 1.5, 2] }'>
+                <source src="<?= $params['video_url']; ?>" type='video/mp4'>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                    <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
             </video>
+
+
+<!--            <video width="600" height="400" controls class="video-style">-->
+<!--                <source src="--><?//= $params['video_url']; ?><!--" type="video/mp4">-->
+<!--            </video>-->
+
             <input type="hidden" id="share-url" value="<?= $params['video_url']; ?>">
             <div class="row margin-left">
                 <div class="col-md-8">
@@ -26,12 +37,18 @@
                     <div><label>Added On:&nbsp;&nbsp;</label><?= $params['date_added']; ?></div>
                 </div>
             </div>
-            <button class='watch-bottom-btn btn btn-info' id='addToBtn<?= $params['video_id']; ?>' onclick='showHideAddTo(this.id)'>Add To</button>
-            <div class='watch-bottom-div well-sm' style="display:none;" id='addToField<?= $params['video_id']; ?>'>
-                <p>Choose Playlist:</p>
-                <button class='btn btn-info margin-bottom-5 width-100' id='create<?= $params['video_id']; ?>' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                <div id='videoButtonContainer<?= $params['video_id']; ?>'></div>
-            </div>
+            <?php if (isset($_SESSION['user'])) {
+                $watchedVideoId = $params['video_id'];
+                echo "
+                <button class='watch-bottom-btn btn btn-info' id='addToBtn$watchedVideoId' onclick='showHideAddTo(this.id)' onmouseleave='showHideAddTo(this.id)'>Add To</button>
+                    <div class='watch-bottom-div well-sm' style=\"display:none;\" id='addToField$watchedVideoId'>
+                    <p>Choose Playlist:</p>
+                    <button class='btn btn-info margin-bottom-5 width-100' id='create$watchedVideoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
+                    <div id='videoButtonContainer$watchedVideoId'></div>
+                </div>";
+            }
+
+            ?>
         </div>
         <div class="col-md-4 well pre-scrollable watch-height">
             <h4 class="remove-margin-top"><?= $params['sidebar_title']; ?></h4>
@@ -129,4 +146,5 @@
 
         </div>
     </div>
+    <script src="http://vjs.zencdn.net/6.2.8/video.js"></script>
 </div>

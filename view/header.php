@@ -18,6 +18,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
         <script src="assets/js/video_preview.js"></script>
 
+<!--        For video.js player-->
+        <link href="http://vjs.zencdn.net/6.2.8/video-js.css" rel="stylesheet">
+        <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <link rel="stylesheet" href="assets/style/player-skin.css">
+
         <title>uTube</title>
     </head>
 <body onload="clickListener(); respondToSize();">

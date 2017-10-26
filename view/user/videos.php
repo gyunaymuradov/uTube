@@ -16,7 +16,7 @@ foreach ($params['videos'] as $video) {
                             <div class='video-bottom-div well-sm' id='addToField$videoId'>
                                 <p>Choose Playlist:</p>
                                 <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                <div id='buttonContainer$videoId'></div>
+                                <div id='videoButtonContainer$videoId'></div>
                             </div>
                         </div>";
 }

@@ -53,8 +53,9 @@ body {
 }
 
 .navbar {
-    height: 100vh;
+    /*height: 100vh;*/
     margin-top: 5px;
+    margin-bottom: 5px;
 }
 .suggestions-video-text {}
 
@@ -276,7 +277,11 @@ textarea {
 }
 
 .row-height {
-    height: 202px;
+    height: 200px;
+}
+
+.profile-row-height {
+    height: 237px;
 }
 
 /*#navbar {*/
@@ -287,6 +292,23 @@ textarea {
     /*margin-top: -15px;*/
 /*}*/
 
-/*.remove-margin-top {*/
-    /*margin-top: -5px;*/
-/*}*/
+.remove-margin-top {
+    margin-top: 0px;
+}
+
+.flex {
+    display: flex;
+}
+
+.search {
+    margin-left: 3px;
+}
+
+#main {
+
+}
+
+.watch-margin {
+    margin-top: 6px;
+    margin-left: 0px
+}

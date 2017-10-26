@@ -57,8 +57,8 @@ function getAboutPage(userId, delay) {
                 var subscriptions = response['subscriptions'];
                 var aboutHtmlContent = "<div class='row margin-top'><div class='col-md-4 col-md-offset-1'>";
                 aboutHtmlContent += "<img src='"+ userPhoto +"' alt='' width='100%' class='img-rounded' height='auto'></div>";
-                aboutHtmlContent += "<div class='col-md-4 col-md-offset-2'><h3 class='text-muted' id='username-old'>" + username + "</h3></div>";
-                aboutHtmlContent += "<div class='col-md-4 col-md-offset-2'>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'><h3 class='text-muted' id='username-old'>" + username + "</h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'>";
                 aboutHtmlContent += "<h3 class='text-muted'>" + subscribers + "<small> subscribers</small></h3></div></div>";
                 aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Name: </h3></div>";
                 aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + name + "</h3></div></div>";
@@ -447,7 +447,6 @@ function submitEditProfile() {
             formContainer.innerHTML = this.responseText;
         } else if (this.readyState === 4 && this.status === 304) {
             formContainer.innerHTML = getAboutPage(userId, 0);
-            document.getElementById('username-old').innerHTML = username;
             }
         };
 

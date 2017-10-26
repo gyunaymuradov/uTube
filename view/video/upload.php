@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onmouseout="validateTitle()" maxlength="90" required placeholder="Video Title" class="form-control">
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onblur="validateTitle()" onchange="validateTitle()" onmouseout="validateTitle()" maxlength="90" required placeholder="Video Title" class="form-control">
                 <div id="title-errors">
                     <?php
                     if (!empty($params['errors']['title'])) {
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onmouseout="validateDescription()" class="form-control" required rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onblur="validateDescription()" onchange="validateDescription()" onmouseout="validateDescription()" class="form-control" required rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {
@@ -74,8 +74,8 @@
             <div class="form-group margin-center col-md-12">
                 <input type="submit" name="Submit" value="Upload" class="btn btn-info btn-md">
             </div>
+            <div class="col-md-4 margin-top"></div>
         </form>
         <script src="assets/js/validations.js"></script>
     </div>
 </div>
-<h3>&nbsp;</h3>

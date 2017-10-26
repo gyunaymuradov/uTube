@@ -1,4 +1,4 @@
-<div class="row">
+<div id="main" class="row flex">
     <div id="navbar" class="col-md-2 bg-info justify-content-center text-center navbar">
         <a href="index.php"><button class="btn btn-info btn-md col-lg-12 margin-5"><span class="glyphicon glyphicon-home"></span> <span class="hiding">Home</span></button></a>
         <div id="subscribes-section">

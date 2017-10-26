@@ -1,4 +1,4 @@
-<div class="col-md-10 margin-5 no-padding-right">
+<div class="col-md-10 no-padding-right" id="search">
     <?php
 
     if (empty($params['result'])) {
@@ -7,9 +7,9 @@
                     <h3>Sorry, but nothing matched your search criteria. Please try again with different keyword.</h3>
                   </div>";
     } else {
-        echo   "<div class='row margin-5 width-100 text-center'>
-                    <h2>Search Results:</h2>
-                    </div>";
+        echo   "<div class='row margin-left no-padding-right remove-margin-top'>
+                    <h3 class=''>Search Results:</h3>
+                </div>";
         if ($params['type'] == 'video') {
             $videos = $params['result'];
 

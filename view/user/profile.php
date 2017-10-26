@@ -1,23 +1,23 @@
 <div class="col-md-10 no-padding-right">
-    <h2 class="text-center">Your Profile:</h2>
-    <div class="row margin-top">
-        <div class="col-md-11 col-md-offset-1">
+    <h3 class="text-left">Your Profile:</h3>
+    <div class="row">
+        <div class="col-md-12">
             <ul class="nav nav-tabs nav-justified">
                 <li class="active profile-tab-end"><a class="black" data-toggle="tab" href="#about"><h4>About</h4></a></li>
                 <li class="profile-tab-middle" onclick="getAboutPage(<?= $params['userId'] ?>, 500)"><a class="black" data-toggle="tab" href="#videos"><h4>Videos</h4></a></li>
                 <li class="profile-tab-end" onclick="getAboutPage(<?= $params['userId'] ?>, 500)"><a class="black" data-toggle="tab" href="#playlists"><h4>Playlists</h4></a></li>
-
             </ul>
+            <br>
             <div class="tab-content container-fluid bg-info">
                 <div id="about" class="tab-pane fade in active">
                     <div class="row margin-top">
                         <div class="col-md-4 col-md-offset-1">
                             <img src="<?= $params['userPhoto']; ?>" alt="" width="100%" class="img-rounded" height="auto">
                         </div>
-                        <div class="col-md-4 col-md-offset-2">
+                        <div class="col-md-4 col-md-offset-1">
                             <h3 class="text-muted" id="username-old"><?= $params['username']; ?></h3>
                         </div>
-                        <div class="col-md-4 col-md-offset-2">
+                        <div class="col-md-4 col-md-offset-1">
                             <h3 class="text-muted"><?= $params['subscribersCount']; ?> <small> subscribers</small></h3>
                         </div>
                     </div>
@@ -57,8 +57,9 @@
                         <button class="btn btn-info" onclick="getEditForm(<?= $params['userId'] ?>)">Edit profile</button>
                     </div>
                 </div>
-                <div id="videos" class="tab-pane fade row-height">
-                    <div class="row" id="videos-container">
+                <br>
+                <div id="videos" class="tab-pane fade">
+                    <div class="row profile-row-height" id="videos-container">
                         <?php
                             $videoPagesCount = $params['video_pages_count'];
                             /* @var $video \model\Video */
@@ -90,9 +91,9 @@
                         <button class="btn btn-group btn-lg btn-info" onclick="previousPage()"><<</button>
                         <button class="btn btn-group btn-lg btn-info" onclick="nextPage()">>></button>
                     </div>
-                    <h3></h3>
+                    <h4></h4>
                 </div>
-                <div id="playlists" class="tab-pane fade row-height">
+                <div id="playlists" class="tab-pane fade">
                     <div class="row" id="playlists-container">
 
                         <?php
@@ -136,4 +137,3 @@
     <br>
 </div>
 
-<!-- onclick="getAboutPage(<?= $params['userId'] ?>)"

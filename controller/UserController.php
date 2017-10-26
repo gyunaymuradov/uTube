@@ -549,6 +549,7 @@ class UserController extends BaseController {
             $userArr['email'] = $userObj->getEmail();
             $userArr['date_joined'] = $userObj->getDateJoined();
             $userArr['subscriptions'] = $userDao->getSubscriptionsCount($userId);
+
             $this->jsonEncodeParams($userArr);
         }
         catch (\Exception $e) {

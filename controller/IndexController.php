@@ -66,6 +66,9 @@ class IndexController extends BaseController {
                 ]);
             } else {
                 $searchOption = $_GET['search-option'];
+                if (is_null($searchOption)) {
+                    header('Location:index.php');
+                }
                 $searchValue = $_GET['value'];
 
                 if ($searchOption == 'video') {

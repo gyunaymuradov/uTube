@@ -14,7 +14,7 @@ class UserController extends BaseController {
 
     }
 
-    public function registerAction()
+    public function register()
     {
         try {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -153,7 +153,7 @@ class UserController extends BaseController {
             }
     }
 
-    public function loginAction() {
+    public function login() {
         try {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
             if ($requestMethod == 'GET') {
@@ -193,13 +193,13 @@ class UserController extends BaseController {
         }
     }
 
-    public function logoutAction() {
+    public function logout() {
         session_start();
         session_destroy();
         header('Location:index.php');
     }
 
-    public function subscribeAction() {
+    public function subscribe() {
         try {
             $loggedUserId = $_GET['loggedId'];
             $profileId = $_GET['profileId'];
@@ -230,7 +230,7 @@ class UserController extends BaseController {
         }
     }
 
-    public function viewUserAction() {
+    public function user() {
         try {
             $profileId = $_GET['id'];
             $logged = 'false';
@@ -243,7 +243,7 @@ class UserController extends BaseController {
             }
 
             if ($profileId == $loggedUserId) {
-                header('Location:index.php?page=profile&id=' . $loggedUserId);
+                header('Location:index.php?page=user&action=profile&id=' . $loggedUserId);
             }
 
             /* @var $userDao \model\db\UserDao */
@@ -317,7 +317,7 @@ class UserController extends BaseController {
         }
     }
 
-    public function editProfileAction()
+    public function edit()
     {
         try {
             $userDao = UserDao::getInstance();
@@ -474,7 +474,7 @@ class UserController extends BaseController {
             }
     }
 
-    public function viewProfileAction() {
+    public function profile() {
         try {
             /* @var $userDao UserDao */
             $userDao = UserDao::getInstance();
@@ -535,7 +535,7 @@ class UserController extends BaseController {
         }
     }
 
-    public function getAboutPage() {
+    public function about() {
         try {
             $userId = $_GET['id'];
             $userDao = UserDao::getInstance();
@@ -557,7 +557,7 @@ class UserController extends BaseController {
         }
     }
 
-    public function getVideosAction() {
+    public function getVideos() {
         /* @var $videoDao VideoDao */
         $videoDao = VideoDao::getInstance();
         $userId = $_GET['id'];
@@ -582,7 +582,7 @@ class UserController extends BaseController {
         ]);
     }
 
-    public function getPlaylistsAction() {
+    public function getPlaylists() {
         /* @var $playlistDao PlaylistDao */
         $playlistDao = PlaylistDao::getInstance();
         $userId = $_GET['id'];

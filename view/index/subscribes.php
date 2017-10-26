@@ -9,7 +9,7 @@ foreach ($users as $user) {
     $userId = $user->getId();
     $userPhoto = $user->getUserPhotoUrl();
 
-    echo "<a href='index.php?page=user&id=$userId' id='$userId'><div class='margin-5 width-100 text-left'><img src='$userPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$username</label></div></a>";
+    echo "<a href='index.php?page=video&action=user&id=$userId' id='$userId'><div class='margin-5 width-100 text-left'><img src='$userPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$username</label></div></a>";
 }
 
 ?>

@@ -13,7 +13,7 @@ class IndexController extends BaseController {
 
     }
 
-    public function indexAction() {
+    public function index() {
         try {
             $videoDao = VideoDao::getInstance();
 
@@ -37,7 +37,7 @@ class IndexController extends BaseController {
         }
     }
 
-    public function searchAction() {
+    public function search() {
 
         try {
             $videoDao = VideoDao::getInstance();
@@ -89,11 +89,11 @@ class IndexController extends BaseController {
         }
     }
 
-    public function showError() {
+    public function error() {
         $this->render('index/error');
     }
 
-    public function loadVideosAction() {
+    public function loadVideos() {
 
         $page = isset($_GET['pg']) ? $_GET['pg'] : 1;
         $videoDao = VideoDao::getInstance();

@@ -21,14 +21,14 @@
         <title>uTube</title>
     </head>
 <body onload="clickListener(); respondToSize();">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1340131456099155';
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+<!--<div id="fb-root"></div>-->
+<!--<script>(function(d, s, id) {-->
+<!--        var js, fjs = d.getElementsByTagName(s)[0];-->
+<!--        if (d.getElementById(id)) return;-->
+<!--        js = d.createElement(s); js.id = id;-->
+<!--        js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1340131456099155';-->
+<!--        fjs.parentNode.insertBefore(js, fjs);-->
+<!--    }(document, 'script', 'facebook-jssdk'));</script>-->
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">
@@ -38,7 +38,7 @@
                </div>
                 <div id="searchBarContainerLarge">
                     <div class="col-md-6 margin-top margin-bottom-5" id="searchBar">
-                        <form action="index.php?page=search" method="post">
+                        <form action="index.php?page=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-info" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="col-md-2 col-xs-5 margin-top">
                 <?php if($logged) {
-                    echo "<a href='index.php?page=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
+                    echo "<a href='index.php?page=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
                 } ?>
                 </div>
                 <div class="col-md-1 col-xs-4 margin-top">
@@ -68,12 +68,12 @@
                         <img src='$userPhotoSrc' width='50px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
                                 id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
-                            <li class='dropdown-item'><a href='index.php?page=profile&id=$userId'>Profile</a></li>
-                            <li class='dropdown-item'><a href='index.php?page=logout'>Logout</a></li>
+                            <li class='dropdown-item'><a href='index.php?page=user&action=profile&id=$userId'>Profile</a></li>
+                            <li class='dropdown-item'><a href='index.php?page=user&action=logout'>Logout</a></li>
                         </ul>
                     </div>";
                     } else {
-                        echo "<a href='index.php?page=login' class='btn btn-default'>Sign in</a>";
+                        echo "<a href='index.php?page=user&action=login' class='btn btn-default'>Sign in</a>";
                     } ?>
                 </div>
         </div>

@@ -32,7 +32,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form id="register-form" action="index.php?page=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
+                                    <form id="register-form" action="index.php?page=user&action=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
                                         <div class="form-group">
                                             <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" required placeholder="Username" value="<?= htmlentities($params['username']); ?>" maxlength="20">
                                             <div id="username-errors">
@@ -122,7 +122,7 @@
                                                     <input type="submit" name="register" tabindex="4" class="form-control btn btn-register" value="Register">
                                                 </div>
                                                 <div class="col-sm-6 col-sm-offset-3"><br>
-                                                    <a href="index.php?page=login" class="btn form-control btn-register">Sign in</a>
+                                                    <a href="index.php?page=user&action=login" class="btn form-control btn-register">Sign in</a>
                                                 </div>
                                             </div>
                                         </div>

@@ -21,10 +21,10 @@
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
                         <div class='col-md-3'>
-                            <a href='index.php?page=watch&id=$id'><img src='$thumbnail' width='100%' height='auto'></a>
+                            <a href='index.php?page=video&action=watch&id=$id'><img src='$thumbnail' width='100%' height='auto'></a>
                         </div>
                         <div class='col-md-9'>
-                                <a href='index.php?page=watch&id=$id'><h3 class='text-left'>$title</h3></a>
+                                <a href='index.php?page=video&action=watch&id=$id'><h3 class='text-left'>$title</h3></a>
                                 <h4>$description</h4>
                         </div>
                     </div>";
@@ -39,10 +39,10 @@
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
                     <div class='col-md-3'>
-                        <a href='index.php?page=user&id=$id'><img src='$photo' width='100%' height='auto'></a>
+                        <a href='index.php?page=user&action=user&id=$id'><img src='$photo' width='100%' height='auto'></a>
                     </div>
                     <div class='col-md-8'>
-                            <a href='index.php?page=user&id=$id'><h3 class='text-left'>$username</h3></a>
+                            <a href='index.php?page=user&action=&user&id=$id'><h3 class='text-left'>$username</h3></a>
                             <h3>$name</h3>
                     </div>
                   </div>";
@@ -61,13 +61,13 @@
 
                 echo "<div class='row margin-5 width-100 well-sm bg-info'>
                         <div class='col-md-3'>
-                            <a href='index.php?page=watch&playlist-id=$playlistId'><img src='$playlistThumbnail' width='100%' height='auto'></a>
+                            <a href='index.php?page=video&action=watch&playlist-id=$playlistId'><img src='$playlistThumbnail' width='100%' height='auto'></a>
                         </div>
                         <div class='col-md-9'>
-                            <a href='index.php?page=watch&playlist-id=$playlistId'><h4 class='text-left'>$playlistTitle</h4></a>
+                            <a href='index.php?page=video&action=watch&playlist-id=$playlistId'><h4 class='text-left'>$playlistTitle</h4></a>
                             <h4>Date created: $dateCreated</h4>
                             <h4>Videos count: $videoCount</h4>
-                            <h4>Author: <a href='index.php?page=user&id=$authorId'><img src='$authorPhotoUrl' class='img-rounded' width='30' height='auto'>&nbsp;$authorName</a></h4>
+                            <h4>Author: <a href='index.php?page=user&action=user&id=$authorId'><img src='$authorPhotoUrl' class='img-rounded' width='30' height='auto'>&nbsp;$authorName</a></h4>
                         </div>
                     </div>";
             }

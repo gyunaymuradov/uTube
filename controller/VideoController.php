@@ -16,7 +16,7 @@ class VideoController extends BaseController {
     public function __construct() {
     }
 
-    public function uploadAction() {
+    public function upload() {
         try {
             $videoDao = VideoDao::getInstance();
             $tagDao = TagDao::getInstance();
@@ -148,7 +148,7 @@ class VideoController extends BaseController {
         }
     }
     
-    public function watchAction() {
+    public function watch() {
         try {
             $videoDao = VideoDao::getInstance();
             $playlistDao = PlaylistDao::getInstance();
@@ -251,7 +251,7 @@ class VideoController extends BaseController {
         }
     }
 
-    public function deleteAction() {
+    public function delete() {
         if (isset($_GET['videoId']) && isset($_SESSION['user'])) {
             try {
                 $videoDao = VideoDao::getInstance();
@@ -273,7 +273,7 @@ class VideoController extends BaseController {
         }
     }
 
-    public function likeDislikeVideoAction() {
+    public function likeDislikeVideo() {
         try {
             $videoId = $_GET['video-id'];
             $userId = $_GET['user-id'];
@@ -298,7 +298,7 @@ class VideoController extends BaseController {
         }
     }
 
-    public function likeDislikeCommentAction() {
+    public function likeDislikeComment() {
         try {
             $commentId = $_GET['comment-id'];
             $userId = $_GET['user-id'];
@@ -323,7 +323,7 @@ class VideoController extends BaseController {
         }
     }
 
-    public function commentAction() {
+    public function comment() {
         try {
             $commentText = $_POST['comment'];
             $videoId = $_POST['video-id'];
@@ -344,7 +344,7 @@ class VideoController extends BaseController {
         }
     }
 
-    public function editAction() {
+    public function edit() {
         try {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
             $videoDao = VideoDao::getInstance();

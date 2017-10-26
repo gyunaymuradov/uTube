@@ -22,7 +22,7 @@
             <div class="row margin-left">
                 <div class="col-md-12">
                     <div><h4><?= htmlentities($params['video_description']); ?></h4></div>
-                    <div><label>Uploaded by:&nbsp;&nbsp;</label><a href="index.php?page=user&id=<?= $params['uploader_id']; ?>"><?= htmlentities($params['uploader']); ?></a></div>
+                    <div><label>Uploaded by:&nbsp;&nbsp;</label><a href="index.php?page=user&action=user&id=<?= $params['uploader_id']; ?>"><?= htmlentities($params['uploader']); ?></a></div>
                     <div><label>Added On:&nbsp;&nbsp;</label><?= $params['date_added']; ?></div>
                 </div>
             </div>
@@ -54,11 +54,11 @@
                     }
                     echo "<div class='well-sm row bg-info text-center' id='video$videoId'>
                                 <div class='col-md-7'>
-                                    <a href='index.php?page=watch&playlist-id=$playlistId&vid-id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
+                                    <a href='index.php?page=video&action=watch&playlist-id=$playlistId&vid-id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
                                 <div class='col-md-5 text-left no-padding suggestions-video-text'>
-                                    <a href='index.php?page=watch&playlist-id=$playlistId&vid-id=$videoId'><small>$title</small></a><br>
-                                    <a href='index.php?page=user&id=$uploaderId'><p><strong> $uploader</strong></p></a>
+                                    <a href='index.php?page=video&action=watch&playlist-id=$playlistId&vid-id=$videoId'><small>$title</small></a><br>
+                                    <a href='index.php?page=user&action=user&id=$uploaderId'><p><strong> $uploader</strong></p></a>
                                 </div>
                                 $deleteButton
                               </div>";
@@ -72,11 +72,11 @@
                     $uploaderId = $suggestedVideo['uploader_id'];
                     echo "<div class='well-sm row bg-info'>
                                 <div class='col-md-7'>
-                                    <a href='index.php?page=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
+                                    <a href='index.php?page=video&action=watch&id=$videoId'><img class='thumbnail-scrollbar' src='$videoThumbnail'></a>
                                 </div> 
                                 <div class='col-md-5 text-left no-padding suggestions-video-text'>
-                                    <a href='index.php?page=watch&id=$videoId'><small>$title</small></a><br>
-                                    <a href='index.php?page=user&id=$uploaderId'><p><strong>by $uploader</strong></p></a>
+                                    <a href='index.php?page=video&action=watch&id=$videoId'><small>$title</small></a><br>
+                                    <a href='index.php?page=user&action=user&id=$uploaderId'><p><strong>by $uploader</strong></p></a>
                                 </div>
                             </div>";
                 }
@@ -112,7 +112,7 @@
                     $userPhoto = $comment->getCreatorPhoto();
                     echo "<div class='row bg-info margin-5 width-100'>
                                         <div class='col-md-8'>
-                                            <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&id=$userId'>$username</a></label>
+                                            <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&action=user&id=$userId'>$username</a></label>
                                             <div class='well-sm width-100'>
                                                <p class='break-word'><strong>$commentText</strong></p>
                                                <small class='date_style'>$dateAdded</small>

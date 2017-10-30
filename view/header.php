@@ -13,6 +13,7 @@
         <script src="assets/js/index.js"></script>
         <script src="assets/js/video.js"></script>
         <link rel="stylesheet" href="assets/style/style.css" type="text/css">
+        <script src="assets/js/tooltip.js"></script>
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
@@ -46,9 +47,9 @@
                         <form action="index.php?controller=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-info" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
-                                    <button type="button" class="btn btn-info" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
-                                    <button type="button" class="btn btn-info" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Playlists" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Users" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Videos" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                                 </div>
                                 <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['search_placeholder']; ?>" autocomplete="off">
                                 <div id="search-autocomplete"></div>
@@ -70,13 +71,16 @@
                         $userPhotoSrc = $params['user_photo_src'];
                         $firstName = $params['first_name'];
                         $userId = $params['user_id'];
-                        echo "<div class='dropdown'>
-                        <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
+
+                        $username = $_SESSION['user']->getUsername();
+                        echo "<div class='dropdown'data-toggle='tooltip' title='Your Profile'>
+                            <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
                                 id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>&nbsp;<span><small id='first-name-header'>Welcome, $firstName!</small></span>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=logout'>Logout</a></li>
                         </ul>
+                        
                     </div>";
                     } else {
                         echo "<a href='index.php?controller=user&action=login' class='btn btn-default'>Sign in</a>";

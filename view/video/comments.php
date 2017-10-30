@@ -15,7 +15,7 @@ if (!empty($commentsArr)) {
 
         echo "<div class='row bg-info margin-5 width-100'>
                                         <div class='col-md-8'>
-                                            <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?page=user&action=user&id=$userId'>$username</a></label>
+                                            <img src='$userPhoto' class='img-circle margin-5' width='50' height='auto'>&nbsp;&nbsp;<label class='margin-5'><a href='index.php?controller=user&action=user&id=$userId'>$username</a></label>
                                             <div class='well-sm width-100'>
                                                <p class='break-word'><strong>$commentText</strong></p>
                                                <small class='date_style'>$dateAdded</small>

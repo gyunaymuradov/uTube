@@ -29,24 +29,30 @@ class BaseController {
         $userPhotoSrc = null;
         $userId = null;
         $logged = false;
+        $firstName = null;
+        $subscribers = null;
+        $userDao = UserDao::getInstance();
         if (isset($_SESSION['user'])) {
             /* @var $user User */
             $user = $_SESSION['user'];
             $userPhotoSrc = $user->getUserPhotoUrl();
             $userId = $user->getId();
+            $firstName = $user->getFirstName();
             $logged = true;
+            $subscribers = $userDao->getSubscribers($userId);
         }
 
-        $navTitle = 'Subscriptions:';
+        $navTitle = 'Your subscriptions:';
 
-        $userDao = UserDao::getInstance();
         $suggestions = $userDao->getSubscriptions($userId);
         if (count($suggestions) == 0) {
             $navTitle = 'Most subscribed users:';
             $suggestions = $userDao->getMostSubscribed();
 
         }
+        $params['subscribers'] = $subscribers;
         $params['user_photo_src'] = $userPhotoSrc;
+        $params['first_name'] = $firstName;
         $params['user_id'] = $userId;
         $params['nav_suggestions'] = $suggestions;
         $params['nav_title'] = $navTitle;

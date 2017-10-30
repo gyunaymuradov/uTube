@@ -79,11 +79,10 @@ class Validator
 
     private function hasValidPassword($pass) {
         /*
-         * checks for at least 1 digit, lowercase and uppercase letter; also for length of minimum 8
+         * checks for at least 1 digit, lowercase and uppercase letter; also for length of minimum 6
          */
-        $passRegex = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+        $passRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{6,}$/';
         return preg_match($passRegex, $pass) === 1;
-
     }
 
     private function hasValidFileSize($file, $allowedSize) {

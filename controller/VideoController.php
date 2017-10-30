@@ -437,4 +437,5 @@ class VideoController extends BaseController {
             $this->render('index/error');
         }
     }
+
 }

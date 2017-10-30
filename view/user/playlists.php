@@ -7,7 +7,7 @@ if (!empty($params['playlists'])) {
         $playlistId = $playlist->getId();
         echo "
                             <div class=\"col-md-3 margin-top\" id='playlist$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
-                                <a href='index.php?page=video&action=watch&playlist-id=$playlistId'>
+                                <a href='index.php?controller=video&action=watch&playlist-id=$playlistId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                     <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                                 </a>

@@ -214,15 +214,19 @@ class UserController extends BaseController {
             }
 
             $suggestions = $userDao->getSubscriptions($loggedUserId);
+
             if (count($suggestions) == 0) {
                 $navTitle = 'Most subscribed users:';
                 $suggestions = $userDao->getMostSubscribed();
             } else {
-                $navTitle = 'Subscriptions:';
+                $navTitle = 'Your subscriptions:';
             }
+            $subscribers = $userDao->getSubscribers($loggedUserId);
             $this->renderPartial('index/subscribes', [
                 'nav_title' => $navTitle,
-                'nav_suggestions' => $suggestions
+                'nav_suggestions' => $suggestions,
+                'subscribers' => $subscribers
+
             ]);
         }
         catch (\Exception $e) {
@@ -398,6 +402,7 @@ class UserController extends BaseController {
                         }
                     }
                 }
+
 
                 if (empty($errors) && strlen($newPass) == 0) {
                     $user = new User();

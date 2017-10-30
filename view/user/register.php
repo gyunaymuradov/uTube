@@ -15,12 +15,12 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="jumbotron" id="jumbo">
-                        <h3 class="text-center">Please sign up to get all the benefits from the website</h3>
+                        <h3 class="text-center">Sign up to get all the benefits from the website</h3>
                         <div class="text-center">
                             <a href="index.php"><img src="assets/images/logo.png" width="130" height="auto"></a>
                         </div>
                     </div>
-                    <div class="panel panel-login">
+                    <div class="panel-login">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-12">
@@ -32,7 +32,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form id="register-form" action="index.php?page=user&action=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
+                                    <form id="register-form" action="index.php?controller=user&action=register" method="post" role="form" enctype="multipart/form-data" onsubmit="return submitRegister(this)">
                                         <div class="form-group">
                                             <input type="text" name="username" tabindex="1" id="username" onblur="validateUsername()" class="form-control" required placeholder="Username" value="<?= htmlentities($params['username']); ?>" maxlength="20">
                                             <div id="username-errors">
@@ -122,15 +122,15 @@
                                                     <input type="submit" name="register" tabindex="4" class="form-control btn btn-register" value="Register">
                                                 </div>
                                                 <div class="col-sm-6 col-sm-offset-3"><br>
-                                                    <a href="index.php?page=user&action=login" class="btn form-control btn-register">Sign in</a>
+                                                    <a href="index.php?controller=user&action=login" class="btn form-control btn-register">Sign in</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
+                            <div class="text-center">&copy; 2017 <strong>uTube</strong> | By <strong>Gyunay Muradov</strong> and <strong>Alexandar Markov</strong></div>
                         </div>
-                        <div class="text-center">&copy; 2017 <strong>uTube</strong> | By <strong>Gyunay Muradov</strong> and <strong>Alexandar Markov</strong></div>
                     </div>
                 </div>
             </div>

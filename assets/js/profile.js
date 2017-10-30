@@ -6,7 +6,7 @@ function getEditForm(userId) {
             formDiv.innerHTML = this.responseText;
         }
     };
-    request.open('GET', 'index.php?page=user&action=edit&id=' + userId);
+    request.open('GET', 'index.php?controller=user&action=edit&id=' + userId);
     request.send();
 }
 
@@ -33,7 +33,7 @@ function subscribe(profileId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=user&action=subscribe&loggedId=' + loggedUserId + '&profileId=' + profileId);
+        request.open('GET', 'index.php?controller=user&action=subscribe&loggedId=' + loggedUserId + '&profileId=' + profileId);
         request.send();
     }
 }
@@ -41,7 +41,7 @@ function subscribe(profileId) {
 function getAboutPage(userId, delay) {
     var aboutPage = document.getElementById('about-page');
     if (aboutPage) {
-        var url = 'index.php?page=user&action=about&id=' + userId;
+        var url = 'index.php?controller=user&action=about&id=' + userId;
         var request = new XMLHttpRequest();
         var aboutHtml = document.getElementById('about');
 
@@ -59,7 +59,7 @@ function getAboutPage(userId, delay) {
                 aboutHtmlContent += "<img src='"+ userPhoto +"' alt='' width='100%' class='img-rounded' height='auto'></div>";
                 aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'><h3 class='text-muted' id='username-old'>" + username + "</h3></div>";
                 aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + subscribers + "<small> subscribers</small></h3></div></div>";
+                aboutHtmlContent += "<h3 class='text-muted'>" + subscribers + " subscribers</h3></div></div>";
                 aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Name: </h3></div>";
                 aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + name + "</h3></div></div>";
                 aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Email: </h3></div><div class='col-md-4'>";
@@ -127,7 +127,7 @@ function deleteVideo(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=video&action=delete&videoId=' + id);
+        request.open('GET', 'index.php?controller=video&action=delete&videoId=' + id);
         request.send();
     }
 }
@@ -161,7 +161,7 @@ function showAddTo(buttonId, page) {
             }
         }
     };
-    request.open('GET', 'index.php?page=playlist&action=getNames');
+    request.open('GET', 'index.php?controller=playlist&action=getNames');
     request.send();
 
 }
@@ -196,7 +196,7 @@ function createPlaylist(buttonId) {
                     var playlistsContainer = document.getElementById('playlists');
                     var containerContents = "";
                     for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     if (playlistsContainer) {
                         playlistsContainer.innerHTML = containerContents;
@@ -208,7 +208,7 @@ function createPlaylist(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
+        request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -232,7 +232,7 @@ function createPlaylistFromOther(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
+        request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -249,7 +249,7 @@ function insertVideo(btnId) {
                 var playlistsContainer = document.getElementById('playlists');
                 var containerContents = "";
                 for (var i in response) {
-                    containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                    containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                 }
                 playlistsContainer.innerHTML = containerContents;
                 alert("Video successfully added!");
@@ -259,9 +259,10 @@ function insertVideo(btnId) {
             }
         }
     };
-    request.open('GET', 'index.php?page=playlist&action=insertVideo&playlistID=' + playlistId + '&videoID=' + videoId);
+    request.open('GET', 'index.php?controller=playlist&action=insertVideo&playlistID=' + playlistId + '&videoID=' + videoId);
     request.send();
 }
+
 function insertVideoFromOther(btnId) {
     var arrOfIds = btnId.split("|");
     var videoId = arrOfIds[0];
@@ -278,9 +279,10 @@ function insertVideoFromOther(btnId) {
             }
         }
     };
-    request.open('GET', 'index.php?page=playlist&action=insertVideo&playlistID=' + playlistId + '&videoID=' + videoId);
+    request.open('GET', 'index.php?controller=playlist&action=insertVideo&playlistID=' + playlistId + '&videoID=' + videoId);
     request.send();
 }
+
 function showPlaylistButtons(playlistId) {
     var id = playlistId.replace('playlist', '');
     document.getElementById("rename" + id).style.display = "block";
@@ -319,7 +321,7 @@ function renamePlaylist(buttonId) {
 
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=renamePlaylist&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
+        request.open('GET', 'index.php?controller=playlist&action=renamePlaylist&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
         request.send();
     }
 }
@@ -343,7 +345,7 @@ function showRemoveVid(buttonId) {
             }
         }
     };
-    request.open('GET', 'index.php?page=playlist&action=getVideos&playlistID=' + playlistId);
+    request.open('GET', 'index.php?controller=playlist&action=getVideos&playlistID=' + playlistId);
     request.send();
 }
 
@@ -360,7 +362,7 @@ function removeVideo(buttonId) {
                     var playlistsContainer = document.getElementById('playlists');
                     var containerContents = "";
                     for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?page=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     playlistsContainer.innerHTML = containerContents;
                     alert("Successfully removed video from playlist!");
@@ -374,7 +376,7 @@ function removeVideo(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.open('GET', 'index.php?controller=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -404,7 +406,7 @@ function removeVideoInWatch(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
+        request.open('GET', 'index.php?controller=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
         request.send();
     }
 }
@@ -426,7 +428,7 @@ function deletePlaylist(buttonId) {
                 }
             }
         };
-        request.open('GET', 'index.php?page=playlist&action=deletePlaylist&playlistId=' + id);
+        request.open('GET', 'index.php?controller=playlist&action=deletePlaylist&playlistId=' + id);
         request.send();
     }
 }
@@ -448,11 +450,12 @@ function submitEditProfile() {
         if (this.readyState === 4 && this.status === 200) {
             formContainer.innerHTML = this.responseText;
         } else if (this.readyState === 4 && this.status === 304) {
+            document.getElementById('first-name-header').innerHTML = "Welcome, " + firstName + "!";
             formContainer.innerHTML = getAboutPage(userId, 0);
             }
         };
 
-    request.open('POST', 'index.php?page=user&action=edit', true);
+    request.open('POST', 'index.php?controller=user&action=edit', true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(params);
 }
@@ -477,7 +480,7 @@ function previousPage() {
 function loadVideos(pageNumber) {
     var request = new XMLHttpRequest();
     var profileId = document.getElementById('current-profile').value;
-    var url = 'index.php?page=user&action=getVideos&pg=' + pageNumber + '&id=' + profileId;
+    var url = 'index.php?controller=user&action=getVideos&pg=' + pageNumber + '&id=' + profileId;
     var videosContainer = document.getElementById('videos-container');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -508,7 +511,7 @@ function previousPagePlaylist() {
 function loadPlaylists(pageNumber) {
     var request = new XMLHttpRequest();
     var profileId = document.getElementById('current-profile').value;
-    var url = 'index.php?page=user&action=getPlaylists&pg=' + pageNumber + '&id=' + profileId;
+    var url = 'index.php?controller=user&action=getPlaylists&pg=' + pageNumber + '&id=' + profileId;
     var playlistsContainer = document.getElementById('playlists-container');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -538,7 +541,7 @@ function previousMostLiked() {
 
 function getMostLiked(page) {
     var request = new XMLHttpRequest();
-    var url = 'index.php?page=index&action=loadVideos&pg=' + page + '&row=1';
+    var url = 'index.php?controller=index&action=loadVideos&pg=' + page + '&row=1';
     var mostLikedContainer = document.getElementById('most-liked');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -568,7 +571,7 @@ function nextNewest(page) {
 
 function getNewest(page) {
     var request = new XMLHttpRequest();
-    var url = 'index.php?page=index&action=loadVideos&pg=' + page + '&row=2';
+    var url = 'index.php?controller=index&action=loadVideos&pg=' + page + '&row=2';
     var newestVidContainer = document.getElementById('newest');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {

@@ -15,7 +15,7 @@
 
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
-        <form enctype="multipart/form-data" method="POST" action="index.php?page=video&action=upload" id="upload-form" onsubmit="return submitUpload(this)">
+        <form enctype="multipart/form-data" method="POST" action="index.php?controller=video&action=upload" id="upload-form" onsubmit="return submitUpload(this)">
             <input type="hidden" name="thumbnail" id="thumbnailSRC">
             <input type="hidden" name="video-id" value="<?= $params['video_id'] ?>">
             <input type="hidden" name="old-thumbnail-url" value="<?= $params['thumbnail_url'] ?>">

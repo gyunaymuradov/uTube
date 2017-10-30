@@ -18,7 +18,7 @@
                             <h3 class="text-muted" id="username-old"><?= $params['username']; ?></h3>
                         </div>
                         <div class="col-md-4 col-md-offset-1">
-                            <h3 class="text-muted"><?= $params['subscribersCount']; ?> <small> subscribers</small></h3>
+                            <h3 class="text-muted"><?= $params['subscribersCount']; ?> subscribers</h3>
                         </div>
                     </div>
                     <div class="row">
@@ -69,11 +69,11 @@
                                 $videoId = $video->getId();
                                 echo "
                             <div class=\"col-md-3 margin-top\" id='video$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
-                                <a href='index.php?page=video&action=watch&id=$videoId'>
+                                <a href='index.php?controller=video&action=watch&id=$videoId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                     <h4 class='text-center text-muted'>$title</h4>
                                 </a>
-                                <a href='index.php?page=video&action=edit&id=$videoId'><button class='video-top-btn btn btn-info' id='edit$videoId'>Edit</button></a>
+                                <a href='index.php?controller=video&action=edit&id=$videoId'><button class='video-top-btn btn btn-info' id='edit$videoId'>Edit</button></a>
                                 <button class='video-middle-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
                                 <button class='video-bottom-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"profile\")'>Add To</button>
                                 <div class='video-bottom-div well-sm' id='addToField$videoId'>
@@ -106,7 +106,7 @@
                                     $playlistId = $playlist->getId();
                                     echo "
                             <div class=\"col-md-3 margin-top\" id='playlist$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
-                                <a href='index.php?page=video&action=watch&playlist-id=$playlistId'>
+                                <a href='index.php?controller=video&action=watch&playlist-id=$playlistId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                     <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
                                 </a>

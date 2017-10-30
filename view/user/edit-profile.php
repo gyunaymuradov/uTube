@@ -1,4 +1,4 @@
-<form method="post" action="index.php?page=user&action=edit" id="edit-profile" onsubmit="event.preventDefault()">
+<form method="post" action="index.php?controller=user&action=edit" id="edit-profile" onsubmit="event.preventDefault()">
     <div class="form-group row margin-top" id="about-page">
         <label for="username" class="col-sm-4 col-form-label col-sm-offset-2">Username</label>
         <div class="col-sm-4">
@@ -17,7 +17,7 @@
     <div class="form-group row">
         <label for="firstName" class="col-sm-4 col-form-label  col-sm-offset-2">First name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="first-name" id="first-name" value="<?= htmlentities($params['first-name']); ?>">
+            <input type="text" class="form-control" name="first-name" id="first-name" value="<?= htmlentities($params['first-name']); ?>" maxlength="20">
             <div id="first-name-errors">
                 <?php
                 if (!empty($params['errors']['first_name'])) {
@@ -32,7 +32,7 @@
     <div class="form-group row">
         <label for="lastName" class="col-sm-4 col-form-label  col-sm-offset-2">Last name</label>
         <div class="col-sm-4">
-            <input type="text" class="form-control" name="last-name" id="last-name" value="<?= htmlentities($params['last-name']); ?>" maxlength="15">
+            <input type="text" class="form-control" name="last-name" id="last-name" value="<?= htmlentities($params['last-name']); ?>" maxlength="20">
             <div id="last-name-errors">
                 <?php
                 if (!empty($params['errors']['last_name'])) {
@@ -47,7 +47,7 @@
     <div class="form-group row">
         <label for="email" class="col-sm-4 col-form-label col-sm-offset-2">Email</label>
         <div class="col-sm-4">
-            <input type="email" class="form-control" name="email" id="email" value="<?= htmlentities($params['email']); ?>" maxlength="15">
+            <input type="email" class="form-control" name="email" id="email" value="<?= htmlentities($params['email']); ?>">
             <div id="email-errors">
                 <?php
                 if (!empty($params['errors']['email'])) {
@@ -62,7 +62,7 @@
     <div class="form-group row">
         <label for="oldPass" class="col-sm-4 col-form-label  col-sm-offset-2">Old password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="15">
+            <input type="password" class="form-control" id="old-pass" name="old-pass" maxlength="20">
             <?php /* $msg = $params['msg']; echo "<span class='help-block'><p class='text-danger'>$msg</p></span>"; */
             if(!empty($params['errors']['old-password'])) {
                 $error = $params['errors']['old-password'];
@@ -90,7 +90,7 @@
     <div class="form-group row">
         <label for="confirmNewPass" class="col-sm-4 col-form-label  col-sm-offset-2">Confirm new password</label>
         <div class="col-sm-4">
-            <input type="password" class="form-control" id="confirm-password" name="confirm-new-pass">
+            <input type="password" class="form-control" id="confirm-password" maxlength="20" name="confirm-new-pass">
             <div id="confirm-password-errors">
                 <?php
                 if (!empty($params['errors']['confirm-pass'])) {

@@ -41,9 +41,9 @@
                <div class="col-md-2 col-xs-2 logo-container">
                    <a href="index.php"><img src="assets/images/logo.png" class="logo"></a>
                </div>
-                <div id="searchBarContainerLarge">
-                    <div class="col-md-6 margin-top margin-bottom-5" id="searchBar">
-                        <form action="index.php?page=index&action=search" method="post">
+               <div id="searchBarContainerLarge">
+                    <div class="col-md-5 margin-top margin-bottom-5" id="searchBar">
+                        <form action="index.php?controller=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-info" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
@@ -59,26 +59,27 @@
                             </div>
                         </form>
                     </div>
-                </div>
+               </div>
                 <div class="col-md-2 col-xs-5 margin-top">
                 <?php if($logged) {
-                    echo "<a href='index.php?page=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
+                    echo "<a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
                 } ?>
                 </div>
-                <div class="col-md-1 col-xs-4 margin-top">
+                <div class="col-md-2 col-xs-4 margin-top no-padding-right">
                     <?php if ($logged) {
                         $userPhotoSrc = $params['user_photo_src'];
+                        $firstName = $params['first_name'];
                         $userId = $params['user_id'];
                         echo "<div class='dropdown'>
-                        <img src='$userPhotoSrc' width='50px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
-                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                        <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
+                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>&nbsp;<span><small id='first-name-header'>Welcome, $firstName!</small></span>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
-                            <li class='dropdown-item'><a href='index.php?page=user&action=profile&id=$userId'>Profile</a></li>
-                            <li class='dropdown-item'><a href='index.php?page=user&action=logout'>Logout</a></li>
+                            <li class='dropdown-item'><a href='index.php?controller=user&action=profile&id=$userId'>Profile</a></li>
+                            <li class='dropdown-item'><a href='index.php?controller=user&action=logout'>Logout</a></li>
                         </ul>
                     </div>";
                     } else {
-                        echo "<a href='index.php?page=user&action=login' class='btn btn-default'>Sign in</a>";
+                        echo "<a href='index.php?controller=user&action=login' class='btn btn-default'>Sign in</a>";
                     } ?>
                 </div>
         </div>

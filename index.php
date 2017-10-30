@@ -1,49 +1,42 @@
 <?php
 
 session_start();
-
 function __autoload($className) {
     $className = str_replace("\\", "/", $className);
     require_once $className . '.php';
 }
 
-    $controller = isset($_GET['page']) ? $_GET['page'] : null;
-    $restrictedPages = ['profile',
-                        'edit-profile',
-                        'subscribe',
-                        'logout',
-                        'like-video',
-                        'like-comment',
-                        'delete-video',
-                        'edit-video',
-                        'upload',
-                        'comment',
-                        'get-playlist-names',
-                        'playlist-create',
-                        'playlist-rename',
-                        'playlist-delete'
-                        ];
 
-    if (!isset($_SESSION['user']) && in_array($controller, $restrictedPages)) {
-        $controller = new controller\UserController();
-        $controller->login();
-    }
-    else {
-        $controllerName = isset($_GET['page']) ? $_GET['page'] : 'index';
-        $action = isset($_GET['action']) ? $_GET['action'] : 'index';
-        $className = '\\controller\\' . ucfirst($controllerName) . 'Controller';
-        if (class_exists($className)) {
-            $controller = new $className;
-            if (method_exists($controller, $action)) {
-                $controller->$action();
-            } else {
-                $controller = new controller\IndexController();
-                $controller->index();
-            }
+$action = isset($_GET['action']) ? $_GET['action'] : null;
+$restrictedActions = [
+    'edit',
+    'profile',
+    'upload',
+];
+
+if (!isset($_SESSION['user']) && in_array($action, $restrictedActions)) {
+    $controller = new controller\UserController();
+    $controller->login();
+}
+else {
+    $controllerName = isset($_GET['controller']) ? $_GET['controller'] : 'index';
+    $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+    $className = '\\controller\\' . ucfirst($controllerName) . 'Controller';
+
+    if (class_exists($className)) {
+        $controller = new $className;
+        if (method_exists($controller, $action)) {
+            $controller->$action();
         } else {
             $controller = new controller\IndexController();
             $controller->index();
         }
+    } else {
+        $controller = new controller\IndexController();
+        $controller->index();
+    }
+}
+
 
 //            if ($page === 'profile' && !empty($_GET['id'])) {
 //                $controller = new controller\UserController();
@@ -131,4 +124,3 @@ function __autoload($className) {
 //                $controller = new controller\IndexController();
 //                $controller->indexAction();
 //            }
-    }

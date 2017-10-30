@@ -70,7 +70,7 @@
                                 $videoId = $video->getId();
                                 echo "
                                 <div class='col-md-3 margin-top' id='video$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
-                                    <a href='index.php?page=video&action=watch&id=$videoId'>
+                                    <a href='index.php?controller=video&action=watch&id=$videoId'>
                                         <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
                                         <h4 class='text-left text-muted'>$title</h4>
                                     </a>
@@ -103,7 +103,7 @@
                                 $playlistId = $playlist->getId();
                                 echo "
                             <div class=\"col-md-3 margin-top\" id='playlist$playlistId'>
-                                <a href='index.php?page=video&action=watch&playlist-id=$playlistId'>
+                                <a href='index.php?controller=video&action=watch&playlist-id=$playlistId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
                                     <h4 class='text-center text-muted'>$title</h4>
                                 </a>

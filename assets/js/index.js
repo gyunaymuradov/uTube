@@ -41,7 +41,7 @@ function getSuggestions() {
                                 a.className = 'autocomplete-item';
                                 a.style.display = 'block';
                                 a.innerHTML = title;
-                                a.href = 'index.php?page=video&action=watch&id=' + id;
+                                a.href = 'index.php?controller=video&action=watch&id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
                         } else if (searchOption === 'user') {
@@ -52,7 +52,7 @@ function getSuggestions() {
                                 a.className = 'autocomplete-item';
                                 a.style.display = 'block';
                                 a.innerHTML = username;
-                                a.href = 'index.php?page=user&action=user&id=' + id;
+                                a.href = 'index.php?controller=user&action=user&id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
                         } else {
@@ -63,14 +63,14 @@ function getSuggestions() {
                                 a.className = 'autocomplete-item';
                                 a.style.display = 'block';
                                 a.innerHTML = title;
-                                a.href = 'index.php?page=video&action=watch&playlist-id=' + id;
+                                a.href = 'index.php?controller=video&action=watch&playlist-id=' + id;
                                 autocompleteDiv.appendChild(a);
                             });
                         }
                     }
                 }
             };
-            request.open('GET', 'index.php?page=index&action=search&search-option=' + searchOption + '&value=' + searchValue);
+            request.open('GET', 'index.php?controller=index&action=search&search-option=' + searchOption + '&value=' + searchValue);
             request.send();
         }
         autocompleteDiv.style.display = 'none';

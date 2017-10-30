@@ -286,7 +286,7 @@ function hasValidEmail(email) {
 }
 
 function hasValidPassword(pass) {
-    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(pass);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{6,}$/.test(pass);
 }
 
 function manipulateInputField(errorContainer, array, inputField) {

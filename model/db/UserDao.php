@@ -19,7 +19,7 @@ class UserDao {
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
     const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
     const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
-    const GET_SUBSCRIBERS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
+    const GET_SUBSCRIBERS = "SELECT u.id, u.username, u.user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
     const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
     const GET_SUBSCRIPTIONS_COUNT = "SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";

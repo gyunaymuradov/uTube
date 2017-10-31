@@ -61,21 +61,19 @@
                         </form>
                     </div>
                </div>
-                <div class="col-md-2 col-xs-5 margin-top">
+                <div class="col-md-2 col-xs-4 margin-top">
                 <?php if($logged) {
-                    echo "<a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
+                    echo "<a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload <span class='hiding'>Video </span><span class='glyphicon glyphicon-facetime-video'></span></a>";
                 } ?>
                 </div>
-                <div class="col-md-2 col-xs-4 margin-top no-padding-right">
+                <div class="col-md-2 col-xs-5 margin-top no-padding-right">
                     <?php if ($logged) {
                         $userPhotoSrc = $params['user_photo_src'];
                         $firstName = $params['first_name'];
                         $userId = $params['user_id'];
-
-                        $username = $_SESSION['user']->getUsername();
-                        echo "<div class='dropdown'data-toggle='tooltip' title='Your Profile'>
+                        echo "<div class='dropdown' data-toggle='tooltip' title='Your Profile'>
                             <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle cursor-pointer avatar'
-                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>&nbsp;<span><small id='first-name-header'>Welcome, $firstName!</small></span>
+                                id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>&nbsp;<span><small id='first-name-header'>Hello, $firstName!</small></span>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=logout'>Logout</a></li>

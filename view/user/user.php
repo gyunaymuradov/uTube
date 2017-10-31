@@ -68,18 +68,27 @@
                                 $title = $video->getTitle();
                                 $thumbnail = $video->getThumbnailURL();
                                 $videoId = $video->getId();
-                                echo "
-                                <div class='col-md-3 margin-top' id='video$videoId' onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'>
-                                    <a href='index.php?controller=video&action=watch&id=$videoId'>
-                                        <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
-                                        <h4 class='text-left text-muted'>$title</h4>
-                                    </a>
-                                    <button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"user\")'>Add To</button>
+                                if (isset($_SESSION['user'])) {
+                                    $addTo = "<button class='video-top-btn btn btn-info' id='addToBtn$videoId' onclick='showAddTo(this.id, \"user\")'>Add To</button>
                                     <div class='video-top-div well-sm' id='addToField$videoId'>
                                         <p>Choose Playlist:</p>
                                         <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylistFromOther(this.id)'>Create New Playlist</button>
                                         <div id='videoButtonContainer$videoId'></div>
-                                    </div>
+                                    </div>";
+
+                                    $videoJsFunctions = "onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'";
+                                }
+                                else {
+                                    $addTo = "";
+                                    $videoJsFunctions = "";
+                                }
+                                echo "
+                                <div class='col-md-3 margin-top' id='video$videoId' $videoJsFunctions>
+                                    <a href='index.php?controller=video&action=watch&id=$videoId'>
+                                        <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
+                                        <h4 class='text-left text-muted'>$title</h4>
+                                    </a>
+                                    $addTo
                                 </div>";
                             }
                         ?>

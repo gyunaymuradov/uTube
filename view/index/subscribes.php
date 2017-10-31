@@ -12,7 +12,7 @@ foreach ($users as $user) {
     echo "<a href='index.php?controller=video&action=user&id=$userId' id='$userId'><div class='margin-5 width-100 text-left'><img src='$userPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$username</label></div></a>";
 }
 
-if (is_array($params['subscribers'])) {
+if (count($params['subscribers']) > 0) {
     echo "<h3></h3><label class='hiding margin-top'>Your subscribers:</label>";
     foreach ($params['subscribers'] as  $subscriber) {
         $subscriberId = $subscriber['id'];

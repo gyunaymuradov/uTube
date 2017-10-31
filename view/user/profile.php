@@ -94,7 +94,7 @@
                     <h4></h4>
                 </div>
                 <div id="playlists" class="tab-pane fade">
-                    <div class="row" id="playlists-container">
+                    <div class="row profile-row-height" id="playlists-container">
 
                         <?php
                             $playlistPagesCount = $params['playlist_pages_count'];
@@ -129,7 +129,7 @@
                         <button class="btn btn-group btn-lg btn-info" onclick="previousPagePlaylist()"><<</button>
                         <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists()">>></button>
                     </div>
-                    <h3></h3>
+                    <h4></h4>
                 </div>
             </div>
         </div>

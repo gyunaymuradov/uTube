@@ -462,25 +462,37 @@ function submitEditProfile() {
 
 var currentPage = 1;
 
-function nextPage() {
+function nextPage(param) {
     var pagesCount = document.getElementById('video-pages-count').value;
     if (currentPage < pagesCount) {
         currentPage++;
-        loadVideos(currentPage);
+        if (param) {
+            loadVideos(currentPage, 'user');
+        } else {
+            loadVideos(currentPage);
+
+        }
     }
 }
 
-function previousPage() {
+function previousPage(param) {
     if (currentPage > 1) {
         currentPage--;
-        loadVideos(currentPage);
+        if (param) {
+            loadVideos(currentPage, 'user');
+        } else {
+            loadVideos(currentPage);
+        }
     }
 }
 
-function loadVideos(pageNumber) {
+function loadVideos(pageNumber, param) {
     var request = new XMLHttpRequest();
     var profileId = document.getElementById('current-profile').value;
     var url = 'index.php?controller=user&action=getVideos&pg=' + pageNumber + '&id=' + profileId;
+    if (param) {
+        url = 'index.php?controller=user&action=getVideos&param=user&pg=' + pageNumber + '&id=' + profileId;
+    }
     var videosContainer = document.getElementById('videos-container');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -493,25 +505,32 @@ function loadVideos(pageNumber) {
 
 var currentPagePlaylists = 1;
 
-function nextPagePlaylists() {
+function nextPagePlaylists(param) {
     var pagesCount = document.getElementById('playlist-pages-count').value;
     if (currentPagePlaylists < pagesCount) {
         currentPagePlaylists++;
-        loadPlaylists(currentPagePlaylists);
+        if (param) {
+            loadPlaylists(currentPagePlaylists, 'user');
+        }
     }
 }
 
-function previousPagePlaylist() {
+function previousPagePlaylist(param) {
     if (currentPagePlaylists > 1) {
         currentPagePlaylists--;
-        loadPlaylists(currentPagePlaylists);
+        if (param) {
+            loadPlaylists(currentPagePlaylists, 'user');
+        }
     }
 }
 
-function loadPlaylists(pageNumber) {
+function loadPlaylists(pageNumber, param) {
     var request = new XMLHttpRequest();
     var profileId = document.getElementById('current-profile').value;
     var url = 'index.php?controller=user&action=getPlaylists&pg=' + pageNumber + '&id=' + profileId;
+    if (param) {
+        url = 'index.php?controller=user&action=getPlaylists&param=user&pg=' + pageNumber + '&id=' + profileId;
+    }
     var playlistsContainer = document.getElementById('playlists-container');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {

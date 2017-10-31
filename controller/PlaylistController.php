@@ -81,7 +81,7 @@ class PlaylistController extends BaseController
             }
         }
         catch (\Exception $e) {
-            $result = array("Result" => "Error! Please try again later!");
+            $result = array("Result" => "This video is already in the playlist!");
         }
         $this->jsonEncodeParams($result);
     }

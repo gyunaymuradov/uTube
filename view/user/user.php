@@ -86,13 +86,13 @@
                     </div>
                     <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
                     <div class="row text-center margin-top" style="display: <?= $params['video_btns_vsblty']; ?>">
-                        <button class="btn btn-group btn-lg btn-info" onclick="previousPage()"><<</button>
-                        <button class="btn btn-group btn-lg btn-info" onclick="nextPage()">>></button>
+                        <button class="btn btn-group btn-lg btn-info" onclick="previousPage('user')"><<</button>
+                        <button class="btn btn-group btn-lg btn-info" onclick="nextPage('user')">>></button>
                     </div>
                     <h4></h4>
                 </div>
                 <div id="playlists" class="tab-pane fade">
-                    <div class="row" id="playlists-container">
+                    <div class="row profile-row-height" id="playlists-container">
                         <?php
                         $playlistPagesCount = $params['playlist_pages_count'];
                         /* @var $playlist \model\Playlist */
@@ -114,10 +114,10 @@
                     </div>
                 <input type="hidden" id="playlist-pages-count" value="<?= $playlistPagesCount; ?>">
                 <div class="row text-center margin-top" style="display: <?= $params['playlist_btns_vsblty']; ?>">
-                    <button class="btn btn-group btn-lg btn-info" onclick="previousPagePlaylist()"><<</button>
-                    <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists()">>></button>
+                    <button class="btn btn-group btn-lg btn-info" onclick="previousPagePlaylist('user')"><<</button>
+                    <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists('user')">>></button>
                 </div>
-                <h3></h3>
+                <h4></h4>
             </div>
         </div>
     </div>

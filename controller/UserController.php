@@ -581,9 +581,13 @@ class UserController extends BaseController {
 
         /* @var $videos \model\Video */
         $videos = $videoDao->getNLatestByUploaderID($userId, 4, $offset);
-
+        $page = 'profile';
+        if  (isset($_GET['param'])) {
+            $page = 'user';
+        }
         $this->renderPartial('user/videos', [
-            'videos' => $videos,
+            'page' => $page,
+            'videos' => $videos
         ]);
     }
 
@@ -606,9 +610,14 @@ class UserController extends BaseController {
 
         /* @var $videos \model\Video */
         $playlists = $playlistDao->getNLatestByCreatorID($userId, 4, $offset);
+        $page = 'profile';
+        if  (isset($_GET['param'])) {
+            $page = 'user';
+        }
 
         $this->renderPartial('user/playlists', [
-            'playlists' => $playlists,
+            'page' => $page,
+            'playlists' => $playlists
         ]);
     }
 

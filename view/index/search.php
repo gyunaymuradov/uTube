@@ -42,7 +42,7 @@
                         <a href='index.php?controller=user&action=user&id=$id'><img src='$photo' width='100%' height='auto'></a>
                     </div>
                     <div class='col-md-8'>
-                            <a href='index.php?controller=user&action=&user&id=$id'><h3 class='text-left'>$username</h3></a>
+                            <a href='index.php?controller=user&action=user&id=$id'><h3 class='text-left'>$username</h3></a>
                             <h3>$name</h3>
                     </div>
                   </div>";

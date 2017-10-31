@@ -127,7 +127,7 @@ body {
     position: absolute;
     top: 34px;
     background: transparent;
-    width: 352px;
+    width: 342px;
     z-index: 100;
 }
 #search-autocomplete a {

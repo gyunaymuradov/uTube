@@ -27,14 +27,14 @@
         <title>uTube</title>
     </head>
 <body onload="clickListener(); respondToSize();">
-<!--<div id="fb-root"></div>-->
-<!--<script>(function(d, s, id) {-->
-<!--        var js, fjs = d.getElementsByTagName(s)[0];-->
-<!--        if (d.getElementById(id)) return;-->
-<!--        js = d.createElement(s); js.id = id;-->
-<!--        js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1340131456099155';-->
-<!--        fjs.parentNode.insertBefore(js, fjs);-->
-<!--    }(document, 'script', 'facebook-jssdk'));</script>-->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1340131456099155';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">
@@ -47,9 +47,9 @@
                         <form action="index.php?controller=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Playlists" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
-                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Users" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
-                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search For Videos" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search playlists" onclick="searchOption('playlist')"><span class="glyphicon glyphicon-play-circle"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search users" onclick="searchOption('user')"><span class="glyphicon glyphicon-user"></span></button>
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Search videos" onclick="searchOption('video')"><span class="glyphicon glyphicon-facetime-video"></span></button>
                                 </div>
                                 <input type="text" name="value" id="search" class="form-control autocomplete-item" onkeyup="getSuggestions()" placeholder="<?= $params['search_placeholder']; ?>" autocomplete="off">
                                 <div id="search-autocomplete"></div>
@@ -62,9 +62,7 @@
                     </div>
                </div>
                 <div class="col-md-2 col-xs-5 margin-top">
-                <?php if($logged) {
-                    echo "<a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>";
-                } ?>
+                <a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload Video <span class='glyphicon glyphicon-facetime-video'></span></a>
                 </div>
                 <div class="col-md-2 col-xs-4 margin-top no-padding-right">
                     <?php if ($logged) {

@@ -60,7 +60,7 @@
                     <br>
                 </div>
                 <div id="videos" class="tab-pane fade">
-                    <div class="row" id="videos-container">
+                    <div class="row profile-row-height" id="videos-container">
                         <?php
                             $videoPagesCount = $params['video_pages_count'];
                             /* @var $video \model\Video */

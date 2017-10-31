@@ -1,7 +1,7 @@
 <div class="col-md-10 justify-content-center text-center no-padding-right ">
     <div class="well-sm text-left bg-info video-container">
         <h3 class="remove-margin-top">Most liked</h3>
-        <div class="row text-center" id="most-liked">
+        <div class="row text-center row-height" id="most-liked">
 
             <?php
             $mostLikedPagesCount = $params['most_liked_pages_count'];
@@ -29,7 +29,7 @@
 
     <div class="well-sm text-left bg-info video-container">
         <h3 class="remove-margin-top">Newest</h3>
-        <div class="row text-center" id="newest">
+        <div class="row text-center row row-height" id="newest">
 
             <?php
             $newestPagesCount = $params['newest_pages_count'];

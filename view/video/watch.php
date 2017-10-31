@@ -63,11 +63,11 @@
                     $videoThumbnail = $suggestedVideo['thumbnail_url'];
                     $uploader = htmlentities($suggestedVideo['username']);
                     $uploaderId = $suggestedVideo['uploader_id'];
-                    if ($params['playlistCreatorId'] == $_SESSION['user']->getId()){
-                        $deleteButton = "<button class='btn btn-info watch-delete-button' id='$playlistId|$videoId' onclick='removeVideoInWatch(this.id)'><span class='glyphicon glyphicon-remove'></span></button>";
-                    }
-                    else {
-                        $deleteButton = "";
+                    $deleteButton = "";
+                    if (isset($_SESSION['user'])) {
+                        if ($params['playlistCreatorId'] == $_SESSION['user']->getId()){
+                            $deleteButton = "<button class='btn btn-info watch-delete-button' id='$playlistId|$videoId' onclick='removeVideoInWatch(this.id)'><span class='glyphicon glyphicon-remove'></span></button>";
+                        }
                     }
                     echo "<div class='well-sm row bg-info text-center' id='video$videoId'>
                                 <div class='col-md-7'>

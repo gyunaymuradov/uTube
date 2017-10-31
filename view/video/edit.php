@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onblur="validateTitle()" onmousemove="validateTitle()" onchange="validateTitle()" onmouseout="validateTitle()"  placeholder="Video Title" class="form-control">
+                <input type="text" name="title" id="title" value="<?= htmlentities($params['title']); ?>" onblur="validateTitle()" onmousemove="validateTitle()" onmouseover="validateTitle()" onmouseout="validateTitle()"  placeholder="Video Title" class="form-control">
                 <div id="title-errors">
                     <?php
                     if (!empty($params['errors']['title'])) {
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <textarea name="description" placeholder="Video Description" id="description" onblur="validateDescription()" onmousemove="validateDescription()" onchange="validateDescription()" onmouseout="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
+                <textarea name="description" placeholder="Video Description" id="description" onblur="validateDescription()" onmousemove="validateDescription()" onmouseover="validateDescription()" onmouseout="validateDescription()" class="form-control"  rows="4"><?= htmlentities($params['description']); ?></textarea>
                 <div id="description-errors">
                     <?php
                     if (!empty($params['errors']['description'])) {

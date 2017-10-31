@@ -88,8 +88,8 @@
                     <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
                     <input type="hidden" id="current-profile" value="<?= $params['userId']; ?>">
                     <div class="row text-center margin-top" style="display: <?= $params['video_btns_vsblty']; ?>">
-                        <button class="btn btn-group btn-lg btn-info" onclick="previousPage()"><<</button>
-                        <button class="btn btn-group btn-lg btn-info" onclick="nextPage()">>></button>
+                        <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPage()"><<</button>
+                        <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPage()">>></button>
                     </div>
                     <h4></h4>
                 </div>
@@ -126,8 +126,8 @@
                     </div>
                     <input type="hidden" id="playlist-pages-count" value="<?= $playlistPagesCount; ?>">
                     <div class="row text-center margin-top" style="display: <?= $params['playlist_btns_vsblty']; ?>">
-                        <button class="btn btn-group btn-lg btn-info" onclick="previousPagePlaylist()"><<</button>
-                        <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists()">>></button>
+                        <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPagePlaylist()"><<</button>
+                        <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPagePlaylists()">>></button>
                     </div>
                     <h4></h4>
                 </div>

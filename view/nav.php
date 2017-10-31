@@ -13,7 +13,7 @@
                 $userId = $user->getId();
                 $userPhoto = $user->getUserPhotoUrl();
 
-                echo "<a href='index.php?controller=user&action=user&id=$userId' id='$userId'><div class='margin-5 width-100 text-left'><img src='$userPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$username</label></div></a>";
+                echo "<a href='index.php?controller=user&action=user&id=$userId' id='$userId' data-toggle='tooltip' title='The profile of $username'><div class='margin-5 width-100 text-left'><img src='$userPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$username</label></div></a>";
             }
 
             if (count($params['subscribers']) > 0) {
@@ -22,7 +22,7 @@
                     $subscriberId = $subscriber['id'];
                     $subscriberUsername = $subscriber['username'];
                     $subscriberPhoto = $subscriber['user_photo_url'];
-                    echo "<a href='index.php?controller=user&action=user&id=$subscriberId' id='$subscriberId'><div class='margin-5 width-100 text-left'><img src='$subscriberPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$subscriberUsername</label></div></a>";
+                    echo "<a href='index.php?controller=user&action=user&id=$subscriberId' id='$subscriberId' data-toggle='tooltip' title='The profile of $subscriberUsername'><div class='margin-5 width-100 text-left'><img src='$subscriberPhoto' class='img-circle subImg'> <label class='hiding'>&nbsp;&nbsp;$subscriberUsername</label></div></a>";
                 }
             }
             ?>

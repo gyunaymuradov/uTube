@@ -60,7 +60,7 @@
                     <br>
                 </div>
                 <div id="videos" class="tab-pane fade">
-                    <div class="row profile-row-height" id="videos-container">
+                    <div class="row" id="videos-container">
                         <?php
                             $videoPagesCount = $params['video_pages_count'];
                             /* @var $video \model\Video */
@@ -86,8 +86,8 @@
                     </div>
                     <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
                     <div class="row text-center margin-top" style="display: <?= $params['video_btns_vsblty']; ?>">
-                        <button class="btn btn-group btn-lg btn-info" onclick="previousPage('user')"><<</button>
-                        <button class="btn btn-group btn-lg btn-info" onclick="nextPage('user')">>></button>
+                        <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPage('user')"><<</button>
+                        <button class="btn btn-group btn-lg btn-info"  data-toggle="tooltip" title="Next" onclick="nextPage('user')">>></button>
                     </div>
                     <h4></h4>
                 </div>
@@ -114,8 +114,8 @@
                     </div>
                 <input type="hidden" id="playlist-pages-count" value="<?= $playlistPagesCount; ?>">
                 <div class="row text-center margin-top" style="display: <?= $params['playlist_btns_vsblty']; ?>">
-                    <button class="btn btn-group btn-lg btn-info" onclick="previousPagePlaylist('user')"><<</button>
-                    <button class="btn btn-group btn-lg btn-info" onclick="nextPagePlaylists('user')">>></button>
+                    <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPagePlaylist('user')"><<</button>
+                    <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPagePlaylists('user')">>></button>
                 </div>
                 <h4></h4>
             </div>

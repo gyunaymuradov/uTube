@@ -1,6 +1,7 @@
 <?php
 namespace model\db;
 use model\db\DBManager;
+use model\FTPManager;
 use model\Playlist;
 use \PDO;
 use \PDOException;
@@ -9,6 +10,7 @@ class PlaylistDao {
     private static $instance;
     private $pdo;
     private $videoDao;
+    private $ftpStream;
     const INSERT_PLAYLIST = "INSERT INTO playlists (title, date_added, creator_id, thumbnail_url) VALUES (?, ?, ?, ?)";
     const INSERT_VIDEO = "INSERT INTO playlists_videos (playlist_id, video_id) VALUES (?, ?)";
     const UPDATE_TITLE = "UPDATE playlists SET title=? WHERE id=?";
@@ -33,6 +35,7 @@ class PlaylistDao {
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
         $this->videoDao = VideoDao::getInstance();
+        $this->ftpStream = FTPManager::getInstance()->getStream();
     }
 
     public static function getInstance() {
@@ -71,6 +74,9 @@ class PlaylistDao {
                     $sqlResultSet[$key]['thumbnail_url'],
                     $videosArray
                 );
+                if (!file_exists($sqlResultSet[$key]['thumbnail_url'])) {
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], $sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
+                }
             }
             return $playlistsArray;
         }
@@ -84,6 +90,9 @@ class PlaylistDao {
                 $sqlResultSet['thumbnail_url'],
                 $videosArray
             );
+            if (!file_exists($sqlResultSet['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], $sqlResultSet['thumbnail_url'], FTP_BINARY);
+            }
             return $playlist;
         }
         else {
@@ -259,6 +268,11 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::SEARCH_BY_NAME);
         $statement->execute(array("%$playlistName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
 
@@ -266,6 +280,11 @@ class PlaylistDao {
         $statement = $this->pdo->prepare(self::GET_VIDEOS_BY_ID);
         $statement->execute(array($playlistId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
 }

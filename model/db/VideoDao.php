@@ -1,6 +1,7 @@
 <?php
 namespace model\db;
 use model\db\DBManager;
+use model\FTPManager;
 use model\Video;
 use \PDO;
 use \PDOException;
@@ -8,6 +9,7 @@ use \PDOException;
 class VideoDao {
     private static $instance;
     private $pdo;
+    private $ftpStream;
     const INSERT = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE = "UPDATE videos SET hidden=1 WHERE id = ?";
@@ -49,6 +51,7 @@ class VideoDao {
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
+        $this->ftpStream = FTPManager::getInstance()->getStream();
     }
     public static function getInstance() {
         if (self::$instance === null) {
@@ -85,6 +88,11 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_NEWEST);
         $statement->execute(array($limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
 
@@ -101,6 +109,14 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_MOST_LIKED);
         $statement->execute(array($limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['video_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+            }
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
 
@@ -137,6 +153,8 @@ class VideoDao {
                 $video->getTagId(),
                 $video->getHidden()
             ));
+            ftp_put($this->ftpStream, $video->getVideoURL(), $video->getVideoURL(), FTP_BINARY);
+            ftp_put($this->ftpStream, $video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
             return $this->pdo->lastInsertId();
     }
     /**
@@ -160,6 +178,12 @@ class VideoDao {
                     $sqlResultSet[$key]['tag_id'],
                     0
                 );
+                if (!file_exists($sqlResultSet[$key]['video_url'])) {
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['video_url'], $sqlResultSet[$key]['video_url'], FTP_BINARY);
+                }
+                if (!file_exists($sqlResultSet[$key]['thumbnail_url'])) {
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], $sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
+                }
             }
             return $videosArray;
         }
@@ -177,6 +201,12 @@ class VideoDao {
                 0
             );
             $video->setHidden($sqlResultSet['hidden']);
+            if (!file_exists($sqlResultSet['video_url'])) {
+                ftp_get($this->ftpStream, $sqlResultSet['video_url'], $sqlResultSet['video_url'], FTP_BINARY);
+            }
+            if (!file_exists($sqlResultSet['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], $sqlResultSet['thumbnail_url'], FTP_BINARY);
+            }
             return $video;
         }
         else {
@@ -200,6 +230,8 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::EDIT);
         $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getTagId(), $video->getId()));
         $rowsAffected = $statement->rowCount();
+        ftp_delete($this->ftpStream, $video->getThumbnailURL());
+        ftp_put($this->ftpStream, $video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
         return $rowsAffected;
 
     }
@@ -227,6 +259,14 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_N_RANDOM);
         $statement->execute(array($numberOfVideos, $videoId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['video_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+            }
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
     /**
@@ -273,6 +313,14 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_VIDEO_SUGGESTIONS);
         $statement->execute(array("%$name%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['video_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+            }
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
     /**
@@ -403,6 +451,14 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::GET_WITH_SAME_TAGS);
         $statement->execute(array($tagId[0], $videoId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $key => $value) {
+            if (!file_exists($result[$key]['video_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+            }
+            if (!file_exists($result[$key]['thumbnail_url'])) {
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+            }
+        }
         if (count($result) < 10) {
             $limit = 10 - count($result);
             $moreVideos = $this->getNRandom($videoId, $limit);

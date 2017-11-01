@@ -2,6 +2,7 @@
 
 namespace model\db;
 
+use model\FTPManager;
 use model\User;
 use PDO;
 
@@ -9,6 +10,7 @@ class UserDao {
 
     private static $instance;
     private $pdo;
+    private $ftpStream;
 
     const LOGIN = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE username = ?";
     const GET_INFO = "SELECT id, username, email, first_name, last_name, user_photo_url, date_joined FROM users WHERE id = ?";
@@ -30,6 +32,7 @@ class UserDao {
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
+        $this->ftpStream = FTPManager::getInstance()->getStream();
     }
 
     public static function getInstance() {
@@ -78,6 +81,9 @@ class UserDao {
             $userFromDb->setDateJoined($result['date_joined']);
             $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
             $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
+            if (!file_exists($result['user_photo_url'])) {
+                ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+            }
             return $userFromDb;
         }
         return false;
@@ -98,6 +104,9 @@ class UserDao {
             $userFromDb->setDateJoined($result['date_joined']);
             $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
             $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
+            if (!file_exists($result['user_photo_url'])) {
+                ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+            }
             return $userFromDb;
         }
         return $result;
@@ -113,6 +122,7 @@ class UserDao {
             $user->getUsername(), $user->getPassword(), $user->getEmail(),
             $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl(),
             $user->getDateJoined()));
+        ftp_put($this->ftpStream, $user->getUserPhotoUrl(), $user->getUserPhotoUrl(), FTP_BINARY);
         return $result;
     }
 
@@ -167,7 +177,9 @@ class UserDao {
         $user->setEmail($result['email']);
         $user->setUserPhotoUrl($result['user_photo_url']);
         $user->setDateJoined($result['date_joined']);
-
+        if (!file_exists($result['user_photo_url'])) {
+            ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+        }
         return $user;
     }
 
@@ -230,6 +242,9 @@ class UserDao {
             $user->setId($userArr['id']);
             $user->setUserPhotoUrl($userArr['user_photo_url']);
             $user->setUsername($userArr['username']);
+            if (!file_exists($userArr['user_photo_url'])) {
+                ftp_get($this->ftpStream, $userArr['user_photo_url'], $userArr['user_photo_url'], FTP_BINARY);
+            }
             $users[] = $user;
         }
         return $users;
@@ -272,6 +287,11 @@ class UserDao {
         $statement = $this->pdo->prepare(self::SEARCH);
         $statement->execute(array("%$username%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $user) {
+            if (!file_exists($user['user_photo_url'])) {
+                ftp_get($this->ftpStream, $user['user_photo_url'], $user['user_photo_url'], FTP_BINARY);
+            }
+        }
         return $result;
     }
 }

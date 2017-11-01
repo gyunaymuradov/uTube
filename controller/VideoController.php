@@ -402,7 +402,7 @@ class VideoController extends BaseController {
                         unlink($thumbnailURL);
                         file_put_contents($thumbnailURL, file_get_contents('data://' . $_POST['thumbnail']));
                     }
-                    $editedVideo = new Video($_POST['video-id'], $_POST['title'], $_POST['description'], null, null, null, null, $_POST['tags'], '0');
+                    $editedVideo = new Video($_POST['video-id'], $_POST['title'], $_POST['description'], null, null, null, $thumbnailURL, $_POST['tags'], '0');
                     try {
                         $videoDao->edit($editedVideo);
                         $resultMsg = 'Video edited successfully!';

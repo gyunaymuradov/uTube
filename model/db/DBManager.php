@@ -5,11 +5,12 @@ namespace model\db;
 class DBManager {
     private static $instance;
     private $pdo;
-    const DB_IP = "127.0.0.1";
+    const DB_IP = "sql11.freemysqlhosting.net";
     const DB_PORT = "3306";
-    const DB_NAME = "utube";
-    const DB_USER = "root";
-    const DB_PASS = "";
+    const DB_NAME = "sql11202452";
+    const DB_USER = "sql11202452";
+    const DB_PASS = "aKVaANdHcS";
+
 
     private function __construct() {
         try {

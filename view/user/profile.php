@@ -79,7 +79,7 @@
                                 <div class='video-bottom-div well-sm' id='addToField$videoId'>
                                     <p>Choose Playlist:</p>
                                     <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                                    <div id='videoButtonContainer$videoId'></div>
+                                    <div class='pre-scrollable playlist-div' id='videoButtonContainer$videoId'></div>
                                 </div>
                             </div>";
                             }
@@ -115,7 +115,7 @@
                                 <button class='video-bottom-btn btn btn-info' id='removeVid$playlistId' onclick='showRemoveVid(this.id)'>Remove Video</button>
                                 <div class='video-bottom-div well-sm' id='removeField$playlistId' style='display: none'>
                                     <p>Choose Video:</p>
-                                    <div id='playlistButtonContainer$playlistId'></div>
+                                    <div class='pre-scrollable playlist-div' id='playlistButtonContainer$playlistId'></div>
                                 </div>
                                 
                             </div>";

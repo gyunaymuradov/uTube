@@ -73,7 +73,7 @@
                                     <div class='video-top-div well-sm' id='addToField$videoId'>
                                         <p>Choose Playlist:</p>
                                         <button class='btn btn-info margin-bottom-5 width-100' id='create$videoId' onclick='createPlaylistFromOther(this.id)'>Create New Playlist</button>
-                                        <div id='videoButtonContainer$videoId'></div>
+                                        <div class='pre-scrollable playlist-div' id='videoButtonContainer$videoId'></div>
                                     </div>";
 
                                     $videoJsFunctions = "onmouseenter='showAddButton(this.id)' onmouseleave='hideAddButton(this.id)'";

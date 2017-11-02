@@ -307,3 +307,7 @@ textarea {
     margin-top: 6px;
     margin-left: 0px
 }
+
+.playlist-div {
+    height: 150px;
+}

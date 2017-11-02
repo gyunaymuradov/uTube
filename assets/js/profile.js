@@ -181,6 +181,12 @@ function showHideAddTo(buttonId) {
     }
 }
 
+function hideAddTo(divId) {
+    document.getElementById(divId).style.display = "none";
+    var btnContainerId = divId.replace('addToField', "videoButtonContainer");
+    document.getElementById(btnContainerId).innerHTML = "";
+}
+
 function createPlaylist(buttonId) {
     var videoId = buttonId.replace('create', '');
     var playlistTitle = prompt("Please enter the new playlist's title:");

@@ -34,6 +34,7 @@ class PlaylistDao {
                               JOIN playlists_videos pv ON pv.video_id = v.id 
                               JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ? AND v.hidden = 0";
     const GET_PLAYLISTS_COUNT = "SELECT COUNT(*) as playlist_count FROM playlists WHERE creator_id = ?";
+    const TITLE_EXISTS = "SELECT id, title, creator_id FROM playlists WHERE title = ? AND creator_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -272,5 +273,17 @@ class PlaylistDao {
         $statement->execute(array($playlistId));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    public function checkTitleExists($title, $creatorId) {
+        $statement = $this->pdo->prepare(self::TITLE_EXISTS);
+        $statement->execute(array($title, $creatorId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

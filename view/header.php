@@ -65,7 +65,9 @@
                     </div>
                </div>
                 <div class="col-md-2 col-xs-4 margin-top">
-                    <a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload <span class='hiding'>Video </span><span class='glyphicon glyphicon-facetime-video'></span></a>
+                    <?php if (isset($_SESSION['user'])) {
+                        echo " <a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload <span class='hiding'>Video </span><span class='glyphicon glyphicon-facetime-video'></span></a>";
+                    } ?>
                 </div>
                 <div class="col-md-2 col-xs-5 margin-top no-padding-right">
                     <?php if ($logged) {

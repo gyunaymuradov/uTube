@@ -8,15 +8,21 @@ use \PDOException;
 class VideoDao {
     private static $instance;
     private $pdo;
-    const INSERT = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const INSERT = "INSERT INTO videos 
+                    (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE = "UPDATE videos SET hidden=1 WHERE id = ?";
     const EDIT = "UPDATE videos SET title=?, description=?, tag_id = ? WHERE id=?";
     const EDIT_TAGS = "UPDATE tags_videos SET tag_id = ? WHERE video_id = ?";
-    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, v.tag_id, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
+    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
+                      FROM videos WHERE id=? AND hidden = 0";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, v.tag_id, u.username as uploader_name, u.id as uploader_id 
+                          FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                                    FROM videos WHERE id IN (SELECT video_id, hidden FROM tags_videos WHERE tag_id = ? AND hidden = 0) ORDER BY RAND() LIMIT ?";
+                                    FROM videos WHERE id IN (SELECT video_id, hidden 
+                                    FROM tags_videos WHERE tag_id = ? AND hidden = 0) 
+                                    ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
                                           FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
@@ -34,17 +40,25 @@ class VideoDao {
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
     const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden, tag_id
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
-    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.tag_id, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v 
-                               JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
-    const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
-    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ? AND v.hidden = 0";
-    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
-                              GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT ? OFFSET ?";
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.tag_id, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id 
+                                FROM videos v JOIN users u ON v.uploader_id = u.id 
+                                WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
+    const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (
+                                        SELECT video_id FROM video_likes_dislikes 
+                                        WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1
+                                        )";
+    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden 
+                                          FROM videos v JOIN tags_videos t ON v.id = t.video_id 
+                                          WHERE t.tag_id = ? AND v.hidden = 0";
+    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes 
+                            FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
+                            GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT ? OFFSET ?";
     const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
     const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
-    const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ?";
-    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
-    const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos";
+    const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ? AND hidden = 0";
+    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v 
+                                  JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
+    const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos WHERE hidden = 0";
 
 
     private function __construct() {

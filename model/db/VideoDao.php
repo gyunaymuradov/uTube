@@ -10,19 +10,26 @@ class VideoDao {
     private static $instance;
     private $pdo;
     private $ftpStream;
-    const INSERT = "INSERT INTO videos (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    const INSERT = "INSERT INTO videos 
+                    (title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const INSERT_TAGS = "INSERT INTO tags_videos (tag_id, video_id) VALUES (?, ?)";
     const DELETE = "UPDATE videos SET hidden=1 WHERE id = ?";
     const EDIT = "UPDATE videos SET title=?, description=?, tag_id = ? WHERE id=?";
     const EDIT_TAGS = "UPDATE tags_videos SET tag_id = ? WHERE video_id = ?";
-    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden FROM videos WHERE id=?";
-    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden, v.tag_id, u.username as uploader_name, u.id as uploader_id FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
+    const GET_BY_ID ="SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
+                      FROM videos WHERE id=? AND hidden = 0";
+    const GET_N_RANDOM = "SELECT v.id as video_id, v.title, v.video_url, v.thumbnail_url, v.hidden, v.tag_id, u.username as uploader_name, u.id as uploader_id 
+                          FROM videos v JOIN users u ON v.uploader_id = u.id WHERE v.id != ? AND v.hidden = 0 LIMIT ?";
     const GET_N_RANDOM_BY_TAG_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url 
-                                    FROM videos WHERE id IN (SELECT video_id, hidden FROM tags_videos WHERE tag_id = ? AND hidden = 0) ORDER BY RAND() LIMIT ?";
+                                    FROM videos WHERE id IN (SELECT video_id, hidden 
+                                    FROM tags_videos WHERE tag_id = ? AND hidden = 0) 
+                                    ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
                                           FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
-    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
+    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, video_url, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
     const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
                             FROM videos WHERE title LIKE ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
@@ -36,18 +43,26 @@ class VideoDao {
     const GET_TAGS = "SELECT tag_id FROM tags_videos WHERE video_id = ?";
     const GET_BY_PLAYLIST = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden, tag_id
                             FROM videos WHERE id IN (SELECT video_id FROM playlists_videos WHERE playlist_id = ?) AND hidden = 0";
-    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.tag_id, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id FROM videos v 
-                               JOIN users u ON v.uploader_id = u.id WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
-    const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (SELECT video_id FROM video_likes_dislikes WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1)";
-    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.thumbnail_url, v.hidden FROM videos v JOIN tags_videos t ON v.id = t.video_id WHERE t.tag_id = ? AND v.hidden = 0";
-    const GET_MOST_LIKED = "SELECT v.id, v.title, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
-                              GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT ? OFFSET ?";
-    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
-    const GET_NEWEST = "SELECT id, title, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
-    const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ?";
-    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
-    const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos";
-
+    const GET_WITH_SAME_TAGS = "SELECT v.id as video_id, v.title, v.tag_id, v.video_url, v.thumbnail_url, v.hidden, u.username as uploader_name, u.id as uploader_id 
+                                FROM videos v JOIN users u ON v.uploader_id = u.id 
+                                WHERE tag_id = ? AND v.id != ? AND v.hidden = 0 LIMIT 10";
+    const GET_TAG_OF_LAST_LIKED_VIDEO = "SELECT tag_id FROM tags_videos WHERE video_id = (
+                                        SELECT video_id FROM video_likes_dislikes 
+                                        WHERE user_id = ? AND likes = 1 ORDER BY id DESC LIMIT 1
+                                        )";
+    const GET_VIDEOS_OF_LAST_LIKED_TAG = "SELECT v.id as video_id, v.title, v.video_url, v.thumbnail_url, v.hidden 
+                                          FROM videos v JOIN tags_videos t ON v.id = t.video_id 
+                                          WHERE t.tag_id = ? AND v.hidden = 0";
+    const GET_MOST_LIKED = "SELECT v.id, v.title, v.video_url, v.thumbnail_url, v.hidden, count(l.likes) AS likes_count, l. likes 
+                            FROM videos v JOIN video_likes_dislikes l ON (v.id = l.video_id) 
+                            GROUP BY (l.video_id) HAVING l.likes = 1 AND v.hidden = 0 ORDER BY likes_count DESC LIMIT ? OFFSET ?";
+    const GET_RANDOM_TO_FILL_GAPS = "SELECT id, title, video_url, thumbnail_url, tag_id, hidden FROM videos WHERE hidden = 0 LIMIT ?";
+    const GET_NEWEST = "SELECT id, title, video_url, thumbnail_url, hidden FROM videos WHERE hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
+    const GET_VIDEOS_COUNT = "SELECT COUNT(*) as video_count FROM videos WHERE uploader_id = ? AND hidden = 0";
+    const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v 
+                                  JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
+    const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos WHERE hidden = 0";
+    const TITLE_EXISTS = "SELECT id, title, uploader_id FROM videos WHERE title = ? AND uploader_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -90,7 +105,7 @@ class VideoDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
@@ -111,10 +126,10 @@ class VideoDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['video_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['video_url'], "/htdocs/".$result[$key]['video_url'], FTP_BINARY);
             }
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
@@ -153,8 +168,8 @@ class VideoDao {
                 $video->getTagId(),
                 $video->getHidden()
             ));
-            ftp_put($this->ftpStream, $video->getVideoURL(), $video->getVideoURL(), FTP_BINARY);
-            ftp_put($this->ftpStream, $video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
+            ftp_put($this->ftpStream, "/htdocs/".$video->getVideoURL(), $video->getVideoURL(), FTP_BINARY);
+            ftp_put($this->ftpStream, "/htdocs/".$video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
             return $this->pdo->lastInsertId();
     }
     /**
@@ -179,10 +194,10 @@ class VideoDao {
                     0
                 );
                 if (!file_exists($sqlResultSet[$key]['video_url'])) {
-                    ftp_get($this->ftpStream, $sqlResultSet[$key]['video_url'], $sqlResultSet[$key]['video_url'], FTP_BINARY);
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['video_url'], "/htdocs/".$sqlResultSet[$key]['video_url'], FTP_BINARY);
                 }
                 if (!file_exists($sqlResultSet[$key]['thumbnail_url'])) {
-                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], $sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], "/htdocs/".$sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
                 }
             }
             return $videosArray;
@@ -202,10 +217,10 @@ class VideoDao {
             );
             $video->setHidden($sqlResultSet['hidden']);
             if (!file_exists($sqlResultSet['video_url'])) {
-                ftp_get($this->ftpStream, $sqlResultSet['video_url'], $sqlResultSet['video_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $sqlResultSet['video_url'], "/htdocs/".$sqlResultSet['video_url'], FTP_BINARY);
             }
             if (!file_exists($sqlResultSet['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], $sqlResultSet['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], "/htdocs/".$sqlResultSet['thumbnail_url'], FTP_BINARY);
             }
             return $video;
         }
@@ -230,8 +245,8 @@ class VideoDao {
         $statement = $this->pdo->prepare(self::EDIT);
         $statement->execute(array($video->getTitle(), $video->getDescription(), $video->getTagId(), $video->getId()));
         $rowsAffected = $statement->rowCount();
-        ftp_delete($this->ftpStream, $video->getThumbnailURL());
-        ftp_put($this->ftpStream, $video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
+        ftp_delete($this->ftpStream, "/htdocs/".$video->getThumbnailURL());
+        ftp_put($this->ftpStream, "/htdocs/".$video->getThumbnailURL(), $video->getThumbnailURL(), FTP_BINARY);
         return $rowsAffected;
 
     }
@@ -261,10 +276,10 @@ class VideoDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['video_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['video_url'], "/htdocs/".$result[$key]['video_url'], FTP_BINARY);
             }
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
@@ -315,10 +330,10 @@ class VideoDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['video_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['video_url'], "/htdocs/".$result[$key]['video_url'], FTP_BINARY);
             }
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
@@ -453,10 +468,10 @@ class VideoDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['video_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['video_url'], $result[$key]['video_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['video_url'], "/htdocs/".$result[$key]['video_url'], FTP_BINARY);
             }
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         if (count($result) < 10) {
@@ -467,5 +482,17 @@ class VideoDao {
             }
         }
         return $result;
+    }
+
+    public function checkTitleExists($title, $creatorId) {
+        $statement = $this->pdo->prepare(self::TITLE_EXISTS);
+        $statement->execute(array($title, $creatorId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

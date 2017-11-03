@@ -21,14 +21,20 @@ class UserDao {
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
     const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
     const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
-    const GET_SUBSCRIBERS = "SELECT u.id, u.username, u.user_photo_url FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
-    const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
-    const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
-    const GET_SUBSCRIPTIONS_COUNT = "SELECT COUNT(*) as followed_count FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
+    const GET_SUBSCRIBERS = "SELECT u.id, u.username, u.user_photo_url 
+                            FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
+    const GET_SUBSCRIBERS_COUNT = "SELECT COUNT(*) as follower_count 
+                                  FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
+    const GET_SUBSCRIPTIONS = "SELECT u.id, u.username, user_photo_url 
+                                FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
+    const GET_SUBSCRIPTIONS_COUNT = "SELECT COUNT(*) as followed_count 
+                                    FROM users u JOIN follows f ON u.id = f.followed_id WHERE f.follower_id = ?";
     const FOLLOW = "INSERT INTO follows (follower_id, followed_id) VALUES (?, ?)";
     const UNFOLLOW = "DELETE FROM follows WHERE follower_id = ? AND followed_id = ?";
     const CHECK_IF_FOLLOWED = "SELECT COUNT(*) as number FROM follows WHERE followed_id = ? AND follower_id = ?";
-    const GET_MOST_SUBSCRIBED = "SELECT u.username, u.id, u.user_photo_url FROM users u JOIN follows f ON  u.id = f.followed_id GROUP BY followed_id ORDER BY COUNT(f.follower_id) DESC LIMIT 10";
+    const GET_MOST_SUBSCRIBED = "SELECT u.username, u.id, u.user_photo_url 
+                                FROM users u JOIN follows f ON  u.id = f.followed_id 
+                                GROUP BY followed_id ORDER BY COUNT(f.follower_id) DESC LIMIT 10";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -82,7 +88,7 @@ class UserDao {
             $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
             $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
             if (!file_exists($result['user_photo_url'])) {
-                ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result['user_photo_url'], "/htdocs/".$result['user_photo_url'], FTP_BINARY);
             }
             return $userFromDb;
         }
@@ -105,7 +111,7 @@ class UserDao {
             $userFromDb->setSubscribers(self::getSubscribersCount($result['id']));
             $userFromDb->setSubscriptions(self::getSubscriptionsCount($result['id']));
             if (!file_exists($result['user_photo_url'])) {
-                ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result['user_photo_url'], "/htdocs/".$result['user_photo_url'], FTP_BINARY);
             }
             return $userFromDb;
         }
@@ -122,7 +128,7 @@ class UserDao {
             $user->getUsername(), $user->getPassword(), $user->getEmail(),
             $user->getFirstName(), $user->getLastName(), $user->getUserPhotoUrl(),
             $user->getDateJoined()));
-        ftp_put($this->ftpStream, $user->getUserPhotoUrl(), $user->getUserPhotoUrl(), FTP_BINARY);
+        ftp_put($this->ftpStream, "/htdocs/".$user->getUserPhotoUrl(), $user->getUserPhotoUrl(), FTP_BINARY);
         return $result;
     }
 
@@ -178,7 +184,7 @@ class UserDao {
         $user->setUserPhotoUrl($result['user_photo_url']);
         $user->setDateJoined($result['date_joined']);
         if (!file_exists($result['user_photo_url'])) {
-            ftp_get($this->ftpStream, $result['user_photo_url'], $result['user_photo_url'], FTP_BINARY);
+            ftp_get($this->ftpStream, $result['user_photo_url'], "/htdocs/".$result['user_photo_url'], FTP_BINARY);
         }
         return $user;
     }
@@ -243,7 +249,7 @@ class UserDao {
             $user->setUserPhotoUrl($userArr['user_photo_url']);
             $user->setUsername($userArr['username']);
             if (!file_exists($userArr['user_photo_url'])) {
-                ftp_get($this->ftpStream, $userArr['user_photo_url'], $userArr['user_photo_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $userArr['user_photo_url'], "/htdocs/".$userArr['user_photo_url'], FTP_BINARY);
             }
             $users[] = $user;
         }
@@ -289,7 +295,7 @@ class UserDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $user) {
             if (!file_exists($user['user_photo_url'])) {
-                ftp_get($this->ftpStream, $user['user_photo_url'], $user['user_photo_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $user['user_photo_url'], "/htdocs/".$user['user_photo_url'], FTP_BINARY);
             }
         }
         return $result;

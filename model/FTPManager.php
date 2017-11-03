@@ -4,9 +4,9 @@ namespace model;
 class FTPManager {
     private static $instance;
     private $ftpStream;
-    const FTP_HOST = "66.220.9.50";
-    const FTP_USER = "ittutube";
-    const FTP_PASS = "Gyunay1Sasho";
+    const FTP_HOST = "ftp.byethost17.com";
+    const FTP_USER = "b17_20966145";
+    const FTP_PASS = "@Lexandar123";
 
     private function __construct() {
         $this->ftpStream = ftp_connect(self::FTP_HOST);

@@ -51,14 +51,17 @@ class VideoController extends BaseController {
 
                     $resultMsg = 'Your video was successfully uploaded!';
                     $videoId = '';
+                    $errors = array();
 
                     $validator = Validator::getInstance();
                     $validTitle = $validator->validateTitle($title);
+                    if ($videoDao->checkTitleExists($title, $userId)) {
+                        $errors['title'][] = "A video with this title already exists.";
+                    }
                     $validDescription = $validator->validateDescription($description);
                     $extensions = ['mp4', 'webm', 'ogg'];
                     $validVideo = $validator->validateUploadedVideo($realFileName, $tmpFileName, 52428800, 'video', $extensions);
 
-                    $errors = array();
                     if (is_array($validTitle)) {
                         foreach ($validTitle as $error) {
                             $errors['title'][] = $error;
@@ -173,7 +176,7 @@ class VideoController extends BaseController {
                 $dislikes = $videoDao->getDislikesCountById($videoId);
 
                 $commentDao = CommentDao::getInstance();
-                $comments = $commentDao->getByVideoId($videoId);
+                $comments = $commentDao->getByVideoId($videoId, 4, 0);
 
 
                 $similarVideos = array();
@@ -214,7 +217,7 @@ class VideoController extends BaseController {
                 $dislikes = $videoDao->getDislikesCountById($videoId);
 
                 $commentDao = CommentDao::getInstance();
-                $comments = $commentDao->getByVideoId($videoId);
+                $comments = $commentDao->getByVideoId($videoId, 4, 0);
 
                 $similarVideos = $playlistContent;
             }
@@ -337,7 +340,7 @@ class VideoController extends BaseController {
             $commentDao = CommentDao::getInstance();
             $lastInsertId = $commentDao->add($comment);
 
-            $comments = $commentDao->getByVideoId($videoId);
+            $comments = $commentDao->getByVideoId($videoId, 4, 0);
             $this->renderPartial('video/comments',[
                'comments' => $comments
             ]);
@@ -436,6 +439,16 @@ class VideoController extends BaseController {
         catch (\Exception $e) {
             $this->render('index/error');
         }
+    }
+
+    public function loadComments() {
+        $offset = $_GET['start'];
+        $videoId = $_GET['video-id'];
+        $commentDao = CommentDao::getInstance();
+        $comments = $commentDao->getByVideoId($videoId, 4, $offset);
+        $this->renderPartial('video/comments', [
+            'comments' => $comments
+        ]);
     }
 
 }

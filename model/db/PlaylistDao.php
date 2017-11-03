@@ -19,18 +19,24 @@ class PlaylistDao {
     const DELETE_PLAYLIST = "DELETE FROM playlists WHERE id = ?";
     const DELETE_ALL_VIDEOS = "DELETE FROM playlists_videos WHERE playlist_id = ?";
     const GET_BY_ID = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE id = ?";
-    const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url FROM playlists WHERE creator_id=? ORDER BY id DESC LIMIT ? OFFSET ?";
+    const GET_N_LATEST_BY_CREATOR = "SELECT id, title, date_added, creator_id, thumbnail_url 
+                                    FROM playlists WHERE creator_id=? ORDER BY id DESC LIMIT ? OFFSET ?";
     const GET_N_BY_VIDEO_ID = "SELECT id, title, date_added, creator_id, thumbnail_url 
                             FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos WHERE video_id=?) LIMIT ?";
     const GET_N_BY_VIDEO_NAME = "SELECT id, title, date_added, creator_id, thumbnail_url
                                   FROM playlists WHERE id IN (SELECT playlist_id FROM playlists_videos 
                                   WHERE video_id IN (SELECT id FROM videos WHERE title LIKE ?)) LIMIT ?";
     const GET_NAME_SUGGESTIONS = "SELECT id, title FROM playlists WHERE title LIKE ?";
-    const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count FROM playlists p 
-                            JOIN users u ON p.creator_id = u.id JOIN playlists_videos pv ON p.id = pv.playlist_id WHERE p.title LIKE ? GROUP BY pv.playlist_id";
-    const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username FROM videos v JOIN users u ON u.id = v.uploader_id 
-                              JOIN playlists_videos pv ON pv.video_id = v.id JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ? AND v.hidden = 0";
+    const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count 
+                            FROM playlists p JOIN users u ON p.creator_id = u.id 
+                            JOIN playlists_videos pv ON p.id = pv.playlist_id 
+                            WHERE p.title LIKE ? GROUP BY pv.playlist_id";
+    const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username 
+                              FROM videos v JOIN users u ON u.id = v.uploader_id 
+                              JOIN playlists_videos pv ON pv.video_id = v.id 
+                              JOIN playlists p ON p.id = pv.playlist_id WHERE p.id = ? AND v.hidden = 0";
     const GET_PLAYLISTS_COUNT = "SELECT COUNT(*) as playlist_count FROM playlists WHERE creator_id = ?";
+    const TITLE_EXISTS = "SELECT id, title, creator_id FROM playlists WHERE title = ? AND creator_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -75,7 +81,7 @@ class PlaylistDao {
                     $videosArray
                 );
                 if (!file_exists($sqlResultSet[$key]['thumbnail_url'])) {
-                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], $sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
+                    ftp_get($this->ftpStream, $sqlResultSet[$key]['thumbnail_url'], "/htdocs/".$sqlResultSet[$key]['thumbnail_url'], FTP_BINARY);
                 }
             }
             return $playlistsArray;
@@ -91,7 +97,7 @@ class PlaylistDao {
                 $videosArray
             );
             if (!file_exists($sqlResultSet['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], $sqlResultSet['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $sqlResultSet['thumbnail_url'], "/htdocs/".$sqlResultSet['thumbnail_url'], FTP_BINARY);
             }
             return $playlist;
         }
@@ -270,7 +276,7 @@ class PlaylistDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
@@ -282,9 +288,21 @@ class PlaylistDao {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['thumbnail_url'])) {
-                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], $result[$key]['thumbnail_url'], FTP_BINARY);
+                ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
         return $result;
+    }
+
+    public function checkTitleExists($title, $creatorId) {
+        $statement = $this->pdo->prepare(self::TITLE_EXISTS);
+        $statement->execute(array($title, $creatorId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

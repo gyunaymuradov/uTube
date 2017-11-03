@@ -32,18 +32,23 @@ class PlaylistController extends BaseController
 
     public function createPlaylist() {
         try {
-            if (isset($_GET['title']) && $_GET['title'] != "" && isset($_GET['videoID']) && $_GET['videoID'] != "" && isset($_SESSION['user'])) {
+            if (isset($_GET['title']) && trim($_GET['title']) != "" && isset($_GET['videoID']) && trim($_GET['videoID']) != "" && isset($_SESSION['user'])) {
                 $playlistDao = PlaylistDao::getInstance();
                 $videoDao = VideoDao::getInstance();
                 $title = htmlspecialchars($_GET['title']);
-                $date = date("Y-m-d");
                 $userID = $_SESSION['user']->getId();
-                $videoID = htmlspecialchars($_GET['videoID']);
-                $video = $videoDao->getByID($videoID);
-                $thumbnailURL = $video->getThumbnailURL();
-                $playlist = new Playlist(null, $title, $date, $userID, $thumbnailURL, array($videoID));
-                $playlistDao->insert($playlist);
-                $result = $playlistDao->getNLatestByCreatorID($userID, 10);
+                if (!$playlistDao->checkTitleExists($title, $userID)) {
+                    $date = date("Y-m-d");
+                    $videoID = htmlspecialchars($_GET['videoID']);
+                    $video = $videoDao->getByID($videoID);
+                    $thumbnailURL = $video->getThumbnailURL();
+                    $playlist = new Playlist(null, $title, $date, $userID, $thumbnailURL, array($videoID));
+                    $playlistDao->insert($playlist);
+                    $result = $playlistDao->getNLatestByCreatorID($userID, 10);
+                }
+                else {
+                    $result = array("Result" => "Error! An Playlist with this title already exists!");
+                }
 //                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
             }
             else {

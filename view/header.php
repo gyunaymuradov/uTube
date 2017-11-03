@@ -28,13 +28,16 @@
     </head>
 <body onload="clickListener(); respondToSize();">
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+<script>
+    (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
         js = d.createElement(s); js.id = id;
         js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1340131456099155';
         fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
     <button class="btn btn-info btn-md sidenav-btn" onclick="toggleSidebar()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
     <div class="container">
         <div class="row bg-info">
@@ -43,7 +46,7 @@
                    <a href="index.php"><img src="assets/images/logo.png" class="logo"></a>
                </div>
                <div id="searchBarContainerLarge">
-                    <div class="col-md-5 margin-top margin-bottom-5" id="searchBar">
+                    <div class="col-md-5 margin-top margin-bottom-5" id="searchBar" style="display: none">
                         <form action="index.php?controller=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
@@ -62,9 +65,7 @@
                     </div>
                </div>
                 <div class="col-md-2 col-xs-4 margin-top">
-                    <?php if (isset($_SESSION['user'])) {
-                        echo " <a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload <span class='hiding'>Video </span><span class='glyphicon glyphicon-facetime-video'></span></a>";
-                    } ?>
+                      <a href='index.php?controller=video&action=upload' class='btn btn-info btn-md'>Upload <span class='hiding'>Video </span><span class='glyphicon glyphicon-facetime-video'></span></a>
                 </div>
                 <div class="col-md-2 col-xs-5 margin-top no-padding-right">
                     <?php if ($logged) {
@@ -72,8 +73,10 @@
                         $firstName = $params['first_name'];
                         $userId = $params['user_id'];
                         echo "<div class='dropdown' data-toggle='tooltip' title='Your Profile'>
+                            <div data-toggle='dropdown' class='cursor-pointer'>
                             <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle'
-                                id='dropdownMenu1' aria-haspopup='true' aria-expanded='false'>&nbsp;<span data-toggle='dropdown' class='cursor-pointer avatar'><small  id='first-name-header'>Hello, $firstName!</small></span>
+                                id='dropdownMenu1' aria-haspopup='true' aria-expanded='false'>&nbsp;<span class='avatar'><small  id='first-name-header'>Hello, $firstName!</small></span>
+                            </div>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=logout'>Logout</a></li>

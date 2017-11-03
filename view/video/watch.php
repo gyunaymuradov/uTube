@@ -1,6 +1,7 @@
-<div class="col-md-10 text-left margin-5">
+<div class="col-md-10 text-left margin-5 margin-center">
     <div class="row">
         <div class="col-md-8 thumbnail watch-height" id="<?= $params['video_id']; ?>">
+        <input type="hidden" value="<?= $params['video_id']; ?>" id="vid-id">
 
             <video id="videoPlayer" class="video-js vjs-big-play-centered" controls preload="auto" width="600" height="400" poster="<?= $params['thumbnail_url'] ?>" data-setup='{"aspectRatio":"600:400", "fluid": true, "playbackRates": [0.5, 1, 1.5, 2] }'>
                 <source src="<?= $params['video_url']; ?>" type='video/mp4'>
@@ -40,17 +41,17 @@
             <?php if (isset($_SESSION['user'])) {
                 $watchedVideoId = $params['video_id'];
                 echo "
-                <button class='watch-bottom-btn btn btn-info' id='addToBtn$watchedVideoId' onclick='showHideAddTo(this.id)' onmouseleave='showHideAddTo(this.id)'>Add To</button>
-                    <div class='watch-bottom-div well-sm' style=\"display:none;\" id='addToField$watchedVideoId'>
+                <button class='watch-bottom-btn btn btn-info' id='addToBtn$watchedVideoId' onclick='showHideAddTo(this.id)'>Add To</button>
+                    <div class='watch-bottom-div well-sm' style=\"display:none;\" id='addToField$watchedVideoId' onmouseleave='hideAddTo(this.id)'>
                     <p>Choose Playlist:</p>
                     <button class='btn btn-info margin-bottom-5 width-100' id='create$watchedVideoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                    <div id='videoButtonContainer$watchedVideoId'></div>
+                    <div class='pre-scrollable playlist-div' id='videoButtonContainer$watchedVideoId'></div>
                 </div>";
             }
 
             ?>
         </div>
-        <div class="col-md-4 well pre-scrollable watch-height">
+        <div class="col-md-4 well pre-scrollable suggestions-height text-center">
             <h4 class="remove-margin-top"><?= $params['sidebar_title']; ?></h4>
 
             <?php
@@ -102,7 +103,8 @@
 
         </div>
     </div>
-    <div class="col-md-10 row">
+    <div class="row">
+    <div class="width-100 text-center padding-lr-15">
         <h3 class="remove-margin-top">Comments</h3>
         <div class="form-group row">
             <div class="col-md-9">
@@ -112,8 +114,8 @@
                 <button class="btn btn-info btn-md form-control" onclick="comment(<?= $params['video_id']; ?>)">Comment</button>
             </div>
         </div>
+        <input type="hidden" id="start" value="3">
         <div class="well-sm text-left col-md-12 row" id="comment-section">
-
             <?php
             $commentsArr = $params['comments'];
             /* @var $comment \model\Comment */
@@ -146,5 +148,52 @@
 
         </div>
     </div>
+    </div>
     <script src="http://vjs.zencdn.net/6.2.8/video.js"></script>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+//    var offsetHolder = document.getElementById('start');
+//    var offset = parseInt(offsetHolder.value);
+    var working = false;
+    var videoId = document.getElementById('vid-id').value;
+//    $(document).ready(function() {
+//        $.ajax({
+//            type: "GET",
+//            url: "index.php?controller=video&action=loadComments&start=" + offset + "&video-id=" + videoId,
+//            processData: false,
+//            contentType: "application/json",
+//            data: '',
+//            success: function(result) {
+//               document.getElementById('comment-section').innerHTML += result;
+//               offset = document.getElementById('start');
+//               document.getElementById('start').value = parseInt(offset.value) + 3;
+//            }
+//        })
+//    });
+    $(window).scroll(function() {
+        if ($(this).scrollTop() + 1 >= $('body').height() - $(window).height()) {
+            if (working == false) {
+                working = true;
+                var offsetHolder = document.getElementById('start');
+                var offset = parseInt(offsetHolder.value);
+                $.ajax({
+                    type: "GET",
+                    url: "index.php?controller=video&action=loadComments&start=" + offset + "&video-id=" + videoId,
+                    processData: false,
+                    contentType: "application/json",
+                    data: '',
+                    success: function(result) {
+                       document.getElementById('comment-section').innerHTML += result;
+                        offset = document.getElementById('start');
+                        document.getElementById('start').value = parseInt(offset.value) + 4;
+                        setTimeout(function() {
+                            working = false;
+                        }, 500)
+                    }
+                });
+            }
+        }
+    })
+</script>

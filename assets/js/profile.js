@@ -56,19 +56,30 @@ function getAboutPage(userId, delay) {
                 var dateJoined = response['date_joined'];
                 var subscriptions = response['subscriptions'];
                 var aboutHtmlContent = "<div class='row margin-top'><div class='col-md-4 col-md-offset-1'>";
-                aboutHtmlContent += "<img src='"+ userPhoto +"' alt='' width='100%' class='img-rounded' height='auto'></div>";
-                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'><h3 class='text-muted' id='username-old'>" + username + "</h3></div>";
-                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + subscribers + " subscribers</h3></div></div>";
-                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Name: </h3></div>";
-                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + name + "</h3></div></div>";
-                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Email: </h3></div><div class='col-md-4'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + email + "</h3></div></div>";
-                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Member since: </h3></div><div class='col-md-4'>";
-                aboutHtmlContent += "<h3 class='text-muted'>" + dateJoined + "</h3></div></div>";
-                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2'><h3 class='text-muted'>Subscriptions: </h3></div>";
-                aboutHtmlContent += "<div class='col-md-4'><h3 class='text-muted'>" + subscriptions + "</h3></div></div>";
-                aboutHtmlContent += "<div class='row text-center margin-bottom-5'><button class='btn btn-info' onclick='getEditForm(" + userId + ")'>Edit profile</button></div>";
+                aboutHtmlContent += "<img src='"+ userPhoto +"' class='img-rounded profile-img' height='auto'></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1 col-xs-4 col-xs-offset-1'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw' id='username-old'>" + username + "</h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-md-offset-1 col-xs-4'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>" + subscribers + " subscribers</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-1'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>Name: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-xs-6'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>" + name + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-1'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>Email: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-xs-6'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>" + email + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-1'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>Member since: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-xs-6'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>" + dateJoined + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row'><div class='col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-1'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>Subscriptions: </h3></div>";
+                aboutHtmlContent += "<div class='col-md-4 col-xs-6'>";
+                aboutHtmlContent += "<h3 class='text-muted text-4vw'>" + subscriptions + "</h3></div></div>";
+                aboutHtmlContent += "<div class='row text-center margin-bottom-5'>";
+                aboutHtmlContent += "<button class='btn btn-info' onclick='getEditForm(" + userId + ")'>Edit profile</button>";
+                aboutHtmlContent += "</div></div>";
 
                 setTimeout(function () {
                     aboutHtml.innerHTML = aboutHtmlContent;
@@ -179,6 +190,12 @@ function showHideAddTo(buttonId) {
         document.getElementById("addToField" + videoId).style.display = "none";
         document.getElementById("videoButtonContainer" + videoId).innerHTML = "";
     }
+}
+
+function hideAddTo(divId) {
+    document.getElementById(divId).style.display = "none";
+    var btnContainerId = divId.replace('addToField', "videoButtonContainer");
+    document.getElementById(btnContainerId).innerHTML = "";
 }
 
 function createPlaylist(buttonId) {

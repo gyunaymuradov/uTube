@@ -307,3 +307,7 @@ textarea {
     margin-top: 6px;
     margin-left: 0px
 }
+
+#subscribes-section {
+    /*overflow: scroll;*/
+}

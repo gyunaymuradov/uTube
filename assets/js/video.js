@@ -55,6 +55,7 @@ function comment(videoId) {
                 if (this.readyState === 4 && this.status === 200) {
                     document.getElementById('comment-field').value = '';
                     commentField.innerHTML = this.responseText;
+                    document.getElementById('start').value = '4';
                 }
             };
             request.open('POST', 'index.php?controller=video&action=comment', true);

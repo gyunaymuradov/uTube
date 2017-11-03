@@ -173,7 +173,7 @@ class VideoController extends BaseController {
                 $dislikes = $videoDao->getDislikesCountById($videoId);
 
                 $commentDao = CommentDao::getInstance();
-                $comments = $commentDao->getByVideoId($videoId);
+                $comments = $commentDao->getByVideoId($videoId, 4, 0);
 
 
                 $similarVideos = array();
@@ -214,7 +214,7 @@ class VideoController extends BaseController {
                 $dislikes = $videoDao->getDislikesCountById($videoId);
 
                 $commentDao = CommentDao::getInstance();
-                $comments = $commentDao->getByVideoId($videoId);
+                $comments = $commentDao->getByVideoId($videoId, 4, 0);
 
                 $similarVideos = $playlistContent;
             }
@@ -337,7 +337,7 @@ class VideoController extends BaseController {
             $commentDao = CommentDao::getInstance();
             $lastInsertId = $commentDao->add($comment);
 
-            $comments = $commentDao->getByVideoId($videoId);
+            $comments = $commentDao->getByVideoId($videoId, 4, 0);
             $this->renderPartial('video/comments',[
                'comments' => $comments
             ]);
@@ -436,6 +436,16 @@ class VideoController extends BaseController {
         catch (\Exception $e) {
             $this->render('index/error');
         }
+    }
+
+    public function loadComments() {
+        $offset = $_GET['start'];
+        $videoId = $_GET['video-id'];
+        $commentDao = CommentDao::getInstance();
+        $comments = $commentDao->getByVideoId($videoId, 4, $offset);
+        $this->renderPartial('video/comments', [
+            'comments' => $comments
+        ]);
     }
 
 }

@@ -14,7 +14,7 @@ class CommentDao {
     const ADD = "INSERT INTO video_comments (video_id, user_id, text, date_added) VALUES (?, ?, ?, ?)";
     const GET_BY_VIDEO_ID = "SELECT u.username, u.id as user_id, u.user_photo_url, c.id, c.text, c.date_added 
                               FROM users u JOIN video_comments c ON u.id = c.user_id 
-                              WHERE c.video_id = ? ORDER BY c.id DESC";
+                              WHERE c.video_id = ? ORDER BY c.id DESC LIMIT ? OFFSET ?";
     const CHECK_IF_LIKED_OR_DISLIKED = "SELECT likes FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
     const LIKE = "INSERT INTO comments_likes_dislikes (comment_id, user_id, likes) VALUES (?, ?, 1)";
     const UNLIKE = "DELETE FROM comments_likes_dislikes WHERE comment_id = ? AND user_id = ?";
@@ -50,9 +50,10 @@ class CommentDao {
      * @param int $id
      * @return array of Comment objects
      */
-    public function getByVideoId($videoId) {
+    public function getByVideoId($videoId, $limit, $offset) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_BY_VIDEO_ID);
-        $statement->execute(array($videoId));
+        $statement->execute(array($videoId, $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         // check if there are any comments returned and if so add them to array of objects

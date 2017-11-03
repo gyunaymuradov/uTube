@@ -1,4 +1,4 @@
-<div class="col-md-10 text-left margin-5">
+<div class="col-md-10 text-left margin-5 margin-center">
     <div class="row">
         <div class="col-md-8 thumbnail watch-height" id="<?= $params['video_id']; ?>">
 
@@ -50,7 +50,7 @@
 
             ?>
         </div>
-        <div class="col-md-4 well pre-scrollable watch-height">
+        <div class="col-md-4 well pre-scrollable suggestions-height text-center">
             <h4 class="remove-margin-top"><?= $params['sidebar_title']; ?></h4>
 
             <?php
@@ -102,7 +102,8 @@
 
         </div>
     </div>
-    <div class="col-md-10 row">
+    <div class="row">
+    <div class="width-100 text-center padding-lr-15">
         <h3 class="remove-margin-top">Comments</h3>
         <div class="form-group row">
             <div class="col-md-9">
@@ -145,6 +146,7 @@
             ?>
 
         </div>
+    </div>
     </div>
     <script src="http://vjs.zencdn.net/6.2.8/video.js"></script>
 </div>

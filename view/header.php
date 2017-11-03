@@ -46,7 +46,7 @@
                    <a href="index.php"><img src="assets/images/logo.png" class="logo"></a>
                </div>
                <div id="searchBarContainerLarge">
-                    <div class="col-md-5 margin-top margin-bottom-5" id="searchBar">
+                    <div class="col-md-5 margin-top margin-bottom-5" id="searchBar" style="display: none">
                         <form action="index.php?controller=index&action=search" method="post">
                             <div class="input-group ">
                                 <div class="input-group-btn">
@@ -73,8 +73,10 @@
                         $firstName = $params['first_name'];
                         $userId = $params['user_id'];
                         echo "<div class='dropdown' data-toggle='tooltip' title='Your Profile'>
+                            <div data-toggle='dropdown' class='cursor-pointer'>
                             <img src='$userPhotoSrc' width='45px' height='auto' class='img-rounded dropdown-toggle'
-                                id='dropdownMenu1' aria-haspopup='true' aria-expanded='false'>&nbsp;<span data-toggle='dropdown' class='cursor-pointer avatar'><small  id='first-name-header'>Hello, $firstName!</small></span>
+                                id='dropdownMenu1' aria-haspopup='true' aria-expanded='false'>&nbsp;<span class='avatar'><small  id='first-name-header'>Hello, $firstName!</small></span>
+                            </div>
                         <ul class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=profile&id=$userId'>Profile</a></li>
                             <li class='dropdown-item'><a href='index.php?controller=user&action=logout'>Logout</a></li>

@@ -1,4 +1,4 @@
-<div class="col-md-10 justify-content-center text-center">
+<div class="col-md-10 justify-content-center text-center no-padding-right margin-center">
     <h2>Upload video</h2>
 
     <div class="row text-center margin-5" id="preview" style="display:none">

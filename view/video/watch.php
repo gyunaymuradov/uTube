@@ -41,11 +41,11 @@
             <?php if (isset($_SESSION['user'])) {
                 $watchedVideoId = $params['video_id'];
                 echo "
-                <button class='watch-bottom-btn btn btn-info' id='addToBtn$watchedVideoId' onclick='showHideAddTo(this.id)' onmouseleave='showHideAddTo(this.id)'>Add To</button>
-                    <div class='watch-bottom-div well-sm' style=\"display:none;\" id='addToField$watchedVideoId'>
+                <button class='watch-bottom-btn btn btn-info' id='addToBtn$watchedVideoId' onclick='showHideAddTo(this.id)'>Add To</button>
+                    <div class='watch-bottom-div well-sm' style=\"display:none;\" id='addToField$watchedVideoId' onmouseleave='hideAddTo(this.id)'>
                     <p>Choose Playlist:</p>
                     <button class='btn btn-info margin-bottom-5 width-100' id='create$watchedVideoId' onclick='createPlaylist(this.id)'>Create New Playlist</button>
-                    <div id='videoButtonContainer$watchedVideoId'></div>
+                    <div class='pre-scrollable playlist-div' id='videoButtonContainer$watchedVideoId'></div>
                 </div>";
             }
 

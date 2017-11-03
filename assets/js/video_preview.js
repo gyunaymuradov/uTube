@@ -4,7 +4,7 @@ h = 400;
 
 function  previewVideo(element) {
     var preview = document.getElementById('preview');
-    video = document.getElementById('videoPreview');
+    video = document.getElementById('videoPlayer');
     video.src = URL.createObjectURL(element.files[0]);
     video.onend = function(e) {
         URL.revokeObjectURL(this.src);
@@ -32,7 +32,7 @@ function createThumbnail() {
     var h = 400;
     canvas.width = w;
     canvas.height = h;
-    var video = document.getElementById('videoPreview');
+    var video = document.getElementById('videoPlayer');
     context.fillRect(0, 0, w, h);
     context.drawImage(video, 0, 0, w, h);
     document.getElementById('thumbnailIMG').src = canvas.toDataURL();

@@ -59,7 +59,7 @@ class VideoDao {
     const GET_TOTAL_COUNT_LIKED = "SELECT COUNT(DISTINCT vld.video_id) as total_liked_count FROM videos v 
                                   JOIN video_likes_dislikes vld ON vld.video_id = v.id WHERE vld.likes = 1";
     const GET_TOTAL_COUNT = "SELECT COUNT(*) as total_count FROM videos WHERE hidden = 0";
-
+    const TITLE_EXISTS = "SELECT id, title, uploader_id FROM videos WHERE title = ? AND uploader_id = ?";
 
     private function __construct() {
         $this->pdo = DBManager::getInstance()->dbConnect();
@@ -425,5 +425,17 @@ class VideoDao {
             }
         }
         return $result;
+    }
+
+    public function checkTitleExists($title, $creatorId) {
+        $statement = $this->pdo->prepare(self::TITLE_EXISTS);
+        $statement->execute(array($title, $creatorId));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

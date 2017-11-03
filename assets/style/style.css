@@ -308,6 +308,6 @@ textarea {
     margin-left: 0px
 }
 
-#subscribes-section {
-    /*overflow: scroll;*/
+.playlist-div {
+    height: 150px;
 }

@@ -51,14 +51,17 @@ class VideoController extends BaseController {
 
                     $resultMsg = 'Your video was successfully uploaded!';
                     $videoId = '';
+                    $errors = array();
 
                     $validator = Validator::getInstance();
                     $validTitle = $validator->validateTitle($title);
+                    if ($videoDao->checkTitleExists($title, $userId)) {
+                        $errors['title'][] = "A video with this title already exists.";
+                    }
                     $validDescription = $validator->validateDescription($description);
                     $extensions = ['mp4', 'webm', 'ogg'];
                     $validVideo = $validator->validateUploadedVideo($realFileName, $tmpFileName, 52428800, 'video', $extensions);
 
-                    $errors = array();
                     if (is_array($validTitle)) {
                         foreach ($validTitle as $error) {
                             $errors['title'][] = $error;

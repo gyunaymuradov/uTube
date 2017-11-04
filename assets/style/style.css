@@ -108,6 +108,20 @@ body {
     }
     .avatar {width: 40px}
     .showing{display: block}
+    .watch-height {
+        height: auto !important;
+    }
+    .suggestions-height {
+        height: 350px !important;
+    }
+    .profile-img {width: 50% !important}
+    .text-4vw {
+        font-size: 4vw !important;
+    }
+}
+
+.profile-img {
+    width: 100%;
 }
 
 .tags-select {
@@ -142,9 +156,10 @@ body {
 }
 
 .watch-height {
-    max-height: 702px;
-    min-height: 702px;
-
+    height: 700px;
+}
+.suggestions-height {
+    height: 700px;
 }
 
 .video-top-btn {
@@ -256,7 +271,7 @@ textarea {
 .watch-bottom-btn {
     z-index: 100;
     position: absolute;
-    top: 650px;
+    bottom: 20px;
     right: 5px;
 }
 .watch-bottom-div {
@@ -266,7 +281,7 @@ textarea {
     background-color: white;
     z-index: 100;
     position: absolute;
-    top: 690px;
+    bottom: -217px;
     right: 5px;
     display: none;
 }
@@ -310,4 +325,12 @@ textarea {
 
 .playlist-div {
     height: 150px;
+}
+
+.padding-lr-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.text-4vw {
+
 }

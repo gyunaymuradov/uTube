@@ -32,4 +32,5 @@ function respondToSize() {
             containerSmall.appendChild(searchBar);
         }
     }
+    searchBar.style.display = "block";
 }

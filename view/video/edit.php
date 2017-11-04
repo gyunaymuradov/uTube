@@ -1,9 +1,15 @@
-<div class="col-md-10 justify-content-center text-center">
+<div class="col-md-10 justify-content-center text-center no-padding-right margin-center">
     <h2>Edit video</h2>
 
     <div class="row text-center margin-5" id="preview" style="display:block">
         <h4>Video Preview</h4>
-        <video width="400" src="<?= $params['video_url'] ?>" id="videoPreview" controls></video>
+        <video id="videoPlayer" class="video-js vjs-big-play-centered" controls preload="auto" width="400" height="260"  data-setup='{"aspectRatio":"600:400", "fluid": true, "playbackRates": [0.5, 1, 1.5, 2] }' style="margin-left: auto; margin-right: auto">
+            <source src="<?= $params['video_url']; ?>" type='video/mp4'>
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
         <h4>Thumbnail Generation</h4>
         <canvas id="canvas" style="display:none"></canvas>
         <div class="form-group">

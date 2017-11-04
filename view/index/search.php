@@ -1,4 +1,6 @@
 <div class="col-md-10 no-padding-right" id="search">
+    <input type="hidden" id="value" value="<?= $params['value']; ?>">
+    <input type="hidden" id="type" value="<?= $params['type']; ?>">
     <div id="cont">
 
         <?php
@@ -80,3 +82,34 @@
 
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    var start = 5;
+    var working = false;
+    $(window).scroll(function() {
+        if ($(this).scrollTop() + 1 > $('body').height() - $(window).height()) {
+            if (working == false) {
+                working = true;
+                var value = document.getElementById('value').value;
+                var type = document.getElementById('type').value;
+                $.ajax({
+                    type: "GET",
+                    url: "index.php?controller=index&action=search&start=" + start + "&value=" + value + "&type=" + type,
+                    processData: false,
+                    contentType: 'application/json',
+                    data: '',
+                    success: function(result) {
+                        document.getElementById('cont').innerHTML += result;
+                        start += 5;
+                        setTimeout(function() {
+                            working = false;
+                        }, 500)
+                    }
+                });
+            }
+        }
+    })
+
+</script>

@@ -17,7 +17,8 @@ class UserDao {
     const EDIT_WITH_PASS = "UPDATE users SET username = ?, password = ?, email = ?, first_name = ?, last_name = ? WHERE id = ?";
     const CHECK_FOR_USERNAME = "SELECT COUNT(*) as number FROM users WHERE username = ?";
     const GET_SUGGESTIONS_BY_USERNAME = "SELECT id, username FROM users WHERE username LIKE ?";
-    const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users WHERE username LIKE ?";
+    const SEARCH = "SELECT id, username, CONCAT(first_name, ' ', last_name) as full_name, user_photo_url FROM users 
+                    WHERE username LIKE ? LIMIT ? OFFSET ?";
     const GET_BY_ID = "SELECT username, first_name, last_name, email, user_photo_url, date_joined FROM users WHERE id = ?";
     const GET_SUBSCRIBERS = "SELECT u.id, u.username, u.user_photo_url 
                             FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followed_id = ?";
@@ -274,9 +275,10 @@ class UserDao {
         return $statement->fetch(PDO::FETCH_ASSOC)['number'] > 0;
     }
 
-    public function search($username) {
+    public function search($username, $limit, $offset) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::SEARCH);
-        $statement->execute(array("%$username%"));
+        $statement->execute(array("%$username%", $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }

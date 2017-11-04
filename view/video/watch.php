@@ -152,24 +152,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-//    var offsetHolder = document.getElementById('start');
-//    var offset = parseInt(offsetHolder.value);
     var working = false;
     var videoId = document.getElementById('vid-id').value;
-//    $(document).ready(function() {
-//        $.ajax({
-//            type: "GET",
-//            url: "index.php?controller=video&action=loadComments&start=" + offset + "&video-id=" + videoId,
-//            processData: false,
-//            contentType: "application/json",
-//            data: '',
-//            success: function(result) {
-//               document.getElementById('comment-section').innerHTML += result;
-//               offset = document.getElementById('start');
-//               document.getElementById('start').value = parseInt(offset.value) + 3;
-//            }
-//        })
-//    });
     $(window).scroll(function() {
         if ($(this).scrollTop() + 1 >= $('body').height() - $(window).height()) {
             if (working == false) {

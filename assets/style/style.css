@@ -120,6 +120,7 @@ body {
     }
     .row-height {
         height: auto !important;
+        padding-bottom: 70px !important;
     }
 }
 
@@ -290,7 +291,9 @@ textarea {
 }
 
 .row-height {
-    height: 320px;
+    height: 350px;
+    position: relative;
+    display: inline-block;
 }
 
 .profile-row-height {
@@ -336,4 +339,9 @@ textarea {
 }
 .text-4vw {
 
+}
+.row-buttons {
+    position: absolute;
+    bottom: 5px;
+    left: 46%;
 }

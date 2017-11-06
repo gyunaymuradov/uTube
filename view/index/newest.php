@@ -2,7 +2,13 @@
 $newest = $params['newest'];
 foreach ($newest as $video) {
     $id = $video['id'];
-    $title = htmlentities($video['title']);
+    if (strlen($video['title']) >= 45) {
+    $title = substr(htmlentities($video['title']), 0, 45);
+    $title .= "...";
+    }
+    else {
+        $title = htmlentities($video['title']);
+    }
     $thumbnailUrl = $video['thumbnail_url'];
     echo "<a href='index.php?controller=video&action=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>

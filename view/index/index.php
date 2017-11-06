@@ -8,8 +8,8 @@
             $mostLiked = $params['most_liked'];
             foreach ($mostLiked as $video) {
                 $id = $video['id'];
-                if (strlen($video['title']) >= 25) {
-                    $title = substr(htmlentities($video['title']), 0, 25);
+                if (strlen($video['title']) >= 45) {
+                    $title = substr(htmlentities($video['title']), 0, 45);
                     $title .= "...";
                 }
                 else {
@@ -26,7 +26,7 @@
             ?>
         </div>
         <input type="hidden" id="liked-pages-count" value="<?= $mostLikedPagesCount; ?>">
-        <div class="row text-center margin-top">
+        <div class="row text-center margin-top row-buttons">
             <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous Videos" onclick="previousMostLiked()"><<</button>
             <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next Videos" onclick="nextMostLiked()">>></button>
         </div>
@@ -42,8 +42,8 @@
             $newest = $params['newest'];
             foreach ($newest as $video) {
                 $id = $video['id'];
-                if (strlen($video['title']) >= 25) {
-                    $title = substr(htmlentities($video['title']), 0, 25);
+                if (strlen($video['title']) >= 45) {
+                    $title = substr(htmlentities($video['title']), 0, 45);
                     $title .= "...";
                 }
                 else {
@@ -59,7 +59,7 @@
             }
             ?>
         </div>
-        <div class="row text-center margin-top">
+        <div class="row text-center margin-top row-buttons">
             <input type="hidden" id="newest-pages-count" value="<?= $newestPagesCount; ?>">
             <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous Videos" onclick="previousNewest()"><<</button>
             <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next Videos" onclick="nextNewest()">>></button>

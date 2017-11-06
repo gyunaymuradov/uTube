@@ -476,8 +476,8 @@ class VideoDao {
                 ftp_get($this->ftpStream, $result[$key]['thumbnail_url'], "/htdocs/".$result[$key]['thumbnail_url'], FTP_BINARY);
             }
         }
-        if (count($result) < 10) {
-            $limit = 10 - count($result);
+        if (count($result) < 6) {
+            $limit = 6 - count($result);
             $moreVideos = $this->getNRandom($videoId, $limit);
             foreach ($moreVideos as $video) {
                 $result[] = $video;

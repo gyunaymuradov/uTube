@@ -65,8 +65,8 @@
                             /* @var $video \model\Video */
                             foreach ($params['videos'] as $video) {
                                 $title = $video->getTitle();
-                                if (strlen($title) >= 20) {
-                                    $title = substr(htmlentities($title), 0, 20);
+                                if (strlen($title) >= 45) {
+                                    $title = substr(htmlentities($title), 0, 45);
                                     $title .= "...";
                                 }
                                 else {
@@ -78,7 +78,7 @@
                             <div class=\"col-md-3 margin-top\" id='video$videoId' onmouseenter='showVideoButtons(this.id)' onmouseleave='hideVideoButtons(this.id)'>
                                 <a href='index.php?controller=video&action=watch&id=$videoId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
-                                    <h4 class='text-center text-muted'>$title</h4>
+                                    <h5 class='text-center text-muted'>$title</h5>
                                 </a>
                                 <a href='index.php?controller=video&action=edit&id=$videoId'><button class='video-top-btn btn btn-info' id='edit$videoId'>Edit</button></a>
                                 <button class='video-middle-btn btn btn-info' id='delete$videoId' onclick='deleteVideo(this.id)'>Delete</button>
@@ -94,7 +94,7 @@
                     </div>
                     <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
                     <input type="hidden" id="current-profile" value="<?= $params['userId']; ?>">
-                    <div class="row text-center margin-top" style="display: <?= $params['video_btns_vsblty']; ?>">
+                    <div class="row text-center margin-top row-buttons" style="display: <?= $params['video_btns_vsblty']; ?>">
                         <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPage()"><<</button>
                         <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPage()">>></button>
                     </div>
@@ -109,8 +109,8 @@
                             if (!empty($params['playlists'])) {
                                 foreach ($params['playlists'] as $playlist) {
                                     $title = $playlist->getTitle();
-                                    if (strlen($title) >= 20) {
-                                        $title = substr(htmlentities($title), 0, 20);
+                                    if (strlen($title) >= 45) {
+                                        $title = substr(htmlentities($title), 0, 45);
                                         $title .= "...";
                                     }
                                     else {
@@ -122,7 +122,7 @@
                             <div class=\"col-md-3 margin-top\" id='playlist$playlistId' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'>
                                 <a href='index.php?controller=video&action=watch&playlist-id=$playlistId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
-                                    <h4 class='text-center text-muted' id='title$playlistId'>$title</h4>
+                                    <h5 class='text-center text-muted' id='title$playlistId'>$title</h5>
                                 </a>
                                 <button class='video-top-btn btn btn-info' id='rename$playlistId' onclick='renamePlaylist(this.id)'>Rename</button>
                                 <button class='video-middle-btn btn btn-info' id='deletePlaylist$playlistId' onclick='deletePlaylist(this.id)'>Delete Playlist</button>
@@ -139,7 +139,7 @@
 
                     </div>
                     <input type="hidden" id="playlist-pages-count" value="<?= $playlistPagesCount; ?>">
-                    <div class="row text-center margin-top" style="display: <?= $params['playlist_btns_vsblty']; ?>">
+                    <div class="row text-center margin-top row-buttons" style="display: <?= $params['playlist_btns_vsblty']; ?>">
                         <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPagePlaylist()"><<</button>
                         <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPagePlaylists()">>></button>
                     </div>

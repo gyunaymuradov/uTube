@@ -66,8 +66,8 @@
                             /* @var $video \model\Video */
                             foreach ($params['videos'] as $video) {
                                 $title = $video->getTitle();
-                                if (strlen($title) >= 20) {
-                                    $title = substr(htmlentities($title), 0, 20);
+                                if (strlen($title) >= 45) {
+                                    $title = substr(htmlentities($title), 0, 45);
                                     $title .= "...";
                                 }
                                 else {
@@ -93,7 +93,7 @@
                                 <div class='col-md-3 margin-top' id='video$videoId' $videoJsFunctions>
                                     <a href='index.php?controller=video&action=watch&id=$videoId'>
                                         <img src='$thumbnail' class='img-rounded' width='100%' height='auto'>
-                                        <h4 class='text-left text-muted'>$title</h4>
+                                        <h5 class='text-center text-muted'>$title</h5>
                                     </a>
                                     $addTo
                                 </div>";
@@ -101,7 +101,7 @@
                         ?>
                     </div>
                     <input type="hidden" id="video-pages-count" value="<?= $videoPagesCount; ?>">
-                    <div class="row text-center margin-top" style="display: <?= $params['video_btns_vsblty']; ?>">
+                    <div class="row text-center margin-top row-buttons" style="display: <?= $params['video_btns_vsblty']; ?>">
                         <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPage('user')"><<</button>
                         <button class="btn btn-group btn-lg btn-info"  data-toggle="tooltip" title="Next" onclick="nextPage('user')">>></button>
                     </div>
@@ -115,8 +115,8 @@
                         if (!empty($params['playlists'])) {
                             foreach ($params['playlists'] as $playlist) {
                                 $title = $playlist->getTitle();
-                                if (strlen($title) >= 20) {
-                                    $title = substr(htmlentities($title), 0, 20);
+                                if (strlen($title) >= 45) {
+                                    $title = substr(htmlentities($title), 0, 45);
                                     $title .= "...";
                                 }
                                 else {
@@ -128,7 +128,7 @@
                             <div class=\"col-md-3 margin-top\" id='playlist$playlistId'>
                                 <a href='index.php?controller=video&action=watch&playlist-id=$playlistId'>
                                     <img src=\"$thumbnail\" class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\">
-                                    <h4 class='text-center text-muted'>$title</h4>
+                                    <h5 class='text-center text-muted'>$title</h5>
                                 </a>
                             </div>";
                             }
@@ -136,7 +136,7 @@
                         ?>
                     </div>
                 <input type="hidden" id="playlist-pages-count" value="<?= $playlistPagesCount; ?>">
-                <div class="row text-center margin-top" style="display: <?= $params['playlist_btns_vsblty']; ?>">
+                <div class="row text-center margin-top row-buttons" style="display: <?= $params['playlist_btns_vsblty']; ?>">
                     <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Previous" onclick="previousPagePlaylist('user')"><<</button>
                     <button class="btn btn-group btn-lg btn-info" data-toggle="tooltip" title="Next" onclick="nextPagePlaylists('user')">>></button>
                 </div>

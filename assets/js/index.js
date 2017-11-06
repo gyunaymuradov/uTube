@@ -29,43 +29,45 @@ function getSuggestions() {
         if (searchValue.length > 0 && searchValue.trim().length > 0) {
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    var response = JSON.parse(this.responseText);
-                    if (response.suggestions !== undefined || response.suggestions.length !== 0) {
-                        autocompleteDiv.innerHTML = '';
-                        autocompleteDiv.style.display = 'block';
-                        if (searchOption === 'video') {
-                            response.suggestions.forEach(function (suggestion) {
-                                var id = suggestion.id;
-                                var title = suggestion.title;
-                                var a = document.createElement('a');
-                                a.className = 'autocomplete-item';
-                                a.style.display = 'block';
-                                a.innerHTML = title;
-                                a.href = 'index.php?controller=video&action=watch&id=' + id;
-                                autocompleteDiv.appendChild(a);
-                            });
-                        } else if (searchOption === 'user') {
-                            response.suggestions.forEach(function (suggestion) {
-                                var id = suggestion.id;
-                                var username = suggestion.username;
-                                var a = document.createElement('a');
-                                a.className = 'autocomplete-item';
-                                a.style.display = 'block';
-                                a.innerHTML = username;
-                                a.href = 'index.php?controller=user&action=user&id=' + id;
-                                autocompleteDiv.appendChild(a);
-                            });
-                        } else {
-                            response.suggestions.forEach(function (suggestion) {
-                                var id = suggestion.id;
-                                var title = suggestion.title;
-                                var a = document.createElement('a');
-                                a.className = 'autocomplete-item';
-                                a.style.display = 'block';
-                                a.innerHTML = title;
-                                a.href = 'index.php?controller=video&action=watch&playlist-id=' + id;
-                                autocompleteDiv.appendChild(a);
-                            });
+                    if (response != '') {
+                        var response = JSON.parse(this.responseText);
+                        if (response.suggestions !== undefined || response.suggestions.length !== 0) {
+                            autocompleteDiv.innerHTML = '';
+                            autocompleteDiv.style.display = 'block';
+                            if (searchOption === 'video') {
+                                response.suggestions.forEach(function (suggestion) {
+                                    var id = suggestion.id;
+                                    var title = suggestion.title;
+                                    var a = document.createElement('a');
+                                    a.className = 'autocomplete-item';
+                                    a.style.display = 'block';
+                                    a.innerHTML = title;
+                                    a.href = 'index.php?controller=video&action=watch&id=' + id;
+                                    autocompleteDiv.appendChild(a);
+                                });
+                            } else if (searchOption === 'user') {
+                                response.suggestions.forEach(function (suggestion) {
+                                    var id = suggestion.id;
+                                    var username = suggestion.username;
+                                    var a = document.createElement('a');
+                                    a.className = 'autocomplete-item';
+                                    a.style.display = 'block';
+                                    a.innerHTML = username;
+                                    a.href = 'index.php?controller=user&action=user&id=' + id;
+                                    autocompleteDiv.appendChild(a);
+                                });
+                            } else {
+                                response.suggestions.forEach(function (suggestion) {
+                                    var id = suggestion.id;
+                                    var title = suggestion.title;
+                                    var a = document.createElement('a');
+                                    a.className = 'autocomplete-item';
+                                    a.style.display = 'block';
+                                    a.innerHTML = title;
+                                    a.href = 'index.php?controller=video&action=watch&playlist-id=' + id;
+                                    autocompleteDiv.appendChild(a);
+                                });
+                            }
                         }
                     }
                 }

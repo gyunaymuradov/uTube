@@ -28,8 +28,8 @@ class VideoDao {
                                     ORDER BY RAND() LIMIT ?";
     const GET_N_LATEST_BY_UPLOADER_ID = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, tag_id, hidden 
                                           FROM videos WHERE uploader_id = ? AND hidden = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
-    const GET_NAME_SUGGESTIONS = "SELECT id, title, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
-    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, video_url, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
+    const GET_NAME_SUGGESTIONS = "SELECT id, title, description, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0";
+    const GET_VIDEO_SUGGESTIONS = "SELECT id, title, description, video_url, thumbnail_url, hidden FROM videos WHERE title LIKE ? AND hidden = 0 LIMIT ? OFFSET ?";
     const GET_N_BY_NAME = "SELECT id, title, description, date_added, uploader_id, video_url, thumbnail_url, hidden 
                             FROM videos WHERE title LIKE ? AND hidden = 0 ORDER BY date_added DESC LIMIT ?";
     const IS_LIKED_OR_DISLIKED = "SELECT likes FROM video_likes_dislikes WHERE video_id = ? AND user_id = ?";
@@ -318,15 +318,17 @@ class VideoDao {
      * @return array
      */
     public function getNameSuggestions($partOfVideoName) {
+
         $statement = $this->pdo->prepare(self::GET_NAME_SUGGESTIONS);
         $statement->execute(array("$partOfVideoName%"));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
 
-    public function searchByName($name) {
+    public function searchByName($name, $limit, $offset) {
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::GET_VIDEO_SUGGESTIONS);
-        $statement->execute(array("%$name%"));
+        $statement->execute(array("%$name%", $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['video_url'])) {

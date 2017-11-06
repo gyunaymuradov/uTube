@@ -30,7 +30,7 @@ class PlaylistDao {
     const SEARCH_BY_NAME = "SELECT p.id as playlist_id, p.title, p.date_added, p.creator_id, p.thumbnail_url, u.username, u.user_photo_url, count(pv.video_id) as video_count 
                             FROM playlists p JOIN users u ON p.creator_id = u.id 
                             JOIN playlists_videos pv ON p.id = pv.playlist_id 
-                            WHERE p.title LIKE ? GROUP BY pv.playlist_id";
+                            WHERE p.title LIKE ? GROUP BY pv.playlist_id LIMIT ? OFFSET ?";
     const GET_VIDEOS_BY_ID = "SELECT v.id, v.title, v.uploader_id, v.thumbnail_url, u.username 
                               FROM videos v JOIN users u ON u.id = v.uploader_id 
                               JOIN playlists_videos pv ON pv.video_id = v.id 
@@ -269,10 +269,10 @@ class PlaylistDao {
      * @param int $numberOfPlaylists
      * @return array
      */
-    public function searchByName($playlistName) {
+    public function searchByName($playlistName, $limit, $offset) {
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $statement = $this->pdo->prepare(self::SEARCH_BY_NAME);
-        $statement->execute(array("%$playlistName%"));
+        $statement->execute(array("%$playlistName%", $limit, $offset));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $key => $value) {
             if (!file_exists($result[$key]['thumbnail_url'])) {

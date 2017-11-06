@@ -118,6 +118,9 @@ body {
     .text-4vw {
         font-size: 4vw !important;
     }
+    .row-height {
+        height: auto !important;
+    }
 }
 
 .profile-img {
@@ -287,7 +290,7 @@ textarea {
 }
 
 .row-height {
-    height: 200px;
+    height: 320px;
 }
 
 .profile-row-height {

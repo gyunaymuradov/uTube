@@ -19,7 +19,7 @@
             <input type="hidden" id="share-url" value="<?= $params['video_url']; ?>">
             <div class="row margin-left">
                 <div class="col-md-8">
-                    <h3><?= htmlentities($params['video_title']); ?>&nbsp;&nbsp;<div class="fb-share-button margin-top" data-href="http://utube.com/uTube/index.php?controller=watch&amp;id=67" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Futube.com%2FuTube%2Findex.php%3Fcontroller%3Dvideo%26action%3Dwatch%26id%3D67&amp;src=sdkpreparse">Share</a></div>
+                    <h3><?= htmlentities($params['video_title']); ?>&nbsp;&nbsp;<div class="fb-share-button margin-top" data-href="http://94.236.216.105/index.php?controller=video&amp;action=watch&amp;id=<?= $params['video_id']; ?>" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F94.236.216.105%2Findex.php%3Fcontroller%3Dvideo%26action%3Dwatch%26id%3D<?= $params['video_id']; ?>&amp;src=sdkpreparse">Share</a></div>
                     </h3>
                 </div>
                 <div class="col-md-4 margin-top">
@@ -114,7 +114,7 @@
                 <button class="btn btn-info btn-md form-control" onclick="comment(<?= $params['video_id']; ?>)">Comment</button>
             </div>
         </div>
-        <input type="hidden" id="start" value="3">
+        <input type="hidden" id="start" value="4">
         <div class="well-sm text-left col-md-12 row" id="comment-section">
             <?php
             $commentsArr = $params['comments'];
@@ -154,24 +154,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-//    var offsetHolder = document.getElementById('start');
-//    var offset = parseInt(offsetHolder.value);
     var working = false;
     var videoId = document.getElementById('vid-id').value;
-//    $(document).ready(function() {
-//        $.ajax({
-//            type: "GET",
-//            url: "index.php?controller=video&action=loadComments&start=" + offset + "&video-id=" + videoId,
-//            processData: false,
-//            contentType: "application/json",
-//            data: '',
-//            success: function(result) {
-//               document.getElementById('comment-section').innerHTML += result;
-//               offset = document.getElementById('start');
-//               document.getElementById('start').value = parseInt(offset.value) + 3;
-//            }
-//        })
-//    });
     $(window).scroll(function() {
         if ($(this).scrollTop() + 1 >= $('body').height() - $(window).height()) {
             if (working == false) {

@@ -3,7 +3,11 @@ function likeDislikeVideo(videoId, likeDislike) {
     var loggedUserId = document.getElementById('logged-user-id').value;
     var logged = document.getElementById('logged').value;
     if (logged === 'false') {
-        alert('Please sign in/up in order to be able like or dislike videos.');
+        swal({
+            text: "Please sign in/up in order to be able like or dislike videos!",
+            type: "info",
+            confirmButtonColor: "rgb(92, 192, 220)"
+        });
     } else {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -24,7 +28,11 @@ function likeDislikeComment(commentId, likeDislike) {
     var loggedUserId = document.getElementById('logged-user-id').value;
     var logged = document.getElementById('logged').value;
     if (logged === 'false') {
-        alert('Please sign in/up in order to be able like or dislike comments.');
+        swal({
+            text: "Please sign in/up in order to be able like or dislike comments!",
+            type: "info",
+            confirmButtonColor: "rgb(92, 192, 220)"
+        });
     } else {
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -45,7 +53,11 @@ function comment(videoId) {
     var logged = document.getElementById('logged').value;
 
     if (logged === 'false') {
-        alert('Please sign in/up in order to be able to comment videos.');
+        swal({
+            text: "Please sign in/up in order to be able comment videos!",
+            type: "info",
+            confirmButtonColor: "rgb(92, 192, 220)"
+        });
     } else {
        var commentText = document.getElementById('comment-field').value; // input field value
         if (commentText.trim().length > 0) {

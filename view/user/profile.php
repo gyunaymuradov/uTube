@@ -58,13 +58,20 @@
                     </div>
                 </div>
                 <br>
-                <div id="videos" class="tab-pane fade">
+                <div id="videos" class="tab-pane fade row-height">
                     <div class="row" id="videos-container">
                         <?php
                             $videoPagesCount = $params['video_pages_count'];
                             /* @var $video \model\Video */
                             foreach ($params['videos'] as $video) {
                                 $title = $video->getTitle();
+                                if (strlen($title) >= 20) {
+                                    $title = substr(htmlentities($title), 0, 20);
+                                    $title .= "...";
+                                }
+                                else {
+                                    $title = htmlentities($title);
+                                }
                                 $thumbnail = $video->getThumbnailURL();
                                 $videoId = $video->getId();
                                 echo "
@@ -93,7 +100,7 @@
                     </div>
                     <h4></h4>
                 </div>
-                <div id="playlists" class="tab-pane fade">
+                <div id="playlists" class="tab-pane fade row-height">
                     <div class="row" id="playlists-container">
 
                         <?php
@@ -102,6 +109,13 @@
                             if (!empty($params['playlists'])) {
                                 foreach ($params['playlists'] as $playlist) {
                                     $title = $playlist->getTitle();
+                                    if (strlen($title) >= 20) {
+                                        $title = substr(htmlentities($title), 0, 20);
+                                        $title .= "...";
+                                    }
+                                    else {
+                                        $title = htmlentities($title);
+                                    }
                                     $thumbnail = $playlist->getThumbnailURL();
                                     $playlistId = $playlist->getId();
                                     echo "

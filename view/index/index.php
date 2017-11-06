@@ -1,5 +1,5 @@
 <div class="col-md-10 justify-content-center text-center no-padding-right ">
-    <div class="well-sm text-left bg-info video-container">
+    <div class="well-sm text-left bg-info video-container row-height">
         <h3 class="remove-margin-top">Most liked</h3>
         <div class="row text-center" id="most-liked">
 
@@ -8,7 +8,13 @@
             $mostLiked = $params['most_liked'];
             foreach ($mostLiked as $video) {
                 $id = $video['id'];
-                $title = htmlentities($video['title']);
+                if (strlen($video['title']) >= 25) {
+                    $title = substr(htmlentities($video['title']), 0, 25);
+                    $title .= "...";
+                }
+                else {
+                    $title = htmlentities($video['title']);
+                }
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?controller=video&action=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>
@@ -27,7 +33,7 @@
         <h5></h5>
     </div>
 
-    <div class="well-sm text-left bg-info video-container">
+    <div class="well-sm text-left bg-info video-container row-height">
         <h3 class="remove-margin-top">Newest</h3>
         <div class="row text-center row" id="newest">
 
@@ -36,7 +42,13 @@
             $newest = $params['newest'];
             foreach ($newest as $video) {
                 $id = $video['id'];
-                $title = htmlentities($video['title']);
+                if (strlen($video['title']) >= 25) {
+                    $title = substr(htmlentities($video['title']), 0, 25);
+                    $title .= "...";
+                }
+                else {
+                    $title = htmlentities($video['title']);
+                }
                 $thumbnailUrl = $video['thumbnail_url'];
                 echo "<a href='index.php?controller=video&action=watch&id=$id'>
                         <div class='col-md-3 text-center margin-5'>

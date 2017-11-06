@@ -18,6 +18,13 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
         <script src="assets/js/video_preview.js"></script>
+        <link rel="stylesheet" href="assets/style/sweetalert2.css" type="text/css">
+        <script
+                src="https://code.jquery.com/jquery-2.2.4.js"
+                integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+                crossorigin="anonymous">
+        </script>
+        <script src="assets/js/library/sweetalert2.js"></script>
 
 <!--        For video.js player-->
         <link href="http://vjs.zencdn.net/6.2.8/video-js.css" rel="stylesheet">

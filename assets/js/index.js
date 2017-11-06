@@ -75,33 +75,3 @@ function getSuggestions() {
         }
         autocompleteDiv.style.display = 'none';
 }
-
-// function addContent() {
-//     var c = '';
-//     for (var i = 0; i < 10; i++) {
-//         c += '<a class="box"></a>';
-//     }
-//     $("#post").append(c);
-// }
-//
-// $(document).infiniteJscroll({
-//     bottomOfPage:function(){
-//         addContent();
-//     }
-// });
-//
-// $(document).infiniteJscroll({
-//
-//     // the distance from the bottom to trigger the infinite scrolling
-//     offset: 100,
-//
-//     // when you reach the top of the webpage
-//     topOfPage: function () {},
-//
-//     // when you reach the bottom of the webpage
-//     bottomOfPage: function () {},
-//
-//     // on page load
-//     pageInit: function () {}
-//
-// });

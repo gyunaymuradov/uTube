@@ -13,7 +13,11 @@ function getEditForm(userId) {
 function subscribe(profileId) {
     var logged = document.getElementById('logged').value;
     if (logged === 'false') {
-        alert('Please sign in to gain full access!');
+        swal({
+            text: "Please sign in to gain full access!",
+            type: "info",
+            confirmButtonColor: "rgb(92, 192, 220)"
+        });
     } else {
         var loggedUserId = document.getElementById('loggedUserId').value;
         var request = new XMLHttpRequest();
@@ -122,25 +126,36 @@ function hideAddButton(videoId) {
 }
 
 function deleteVideo(buttonId) {
-    if (confirm("Are you sure you want to delete this video?")) {
+    swal({
+        title: 'Are you sure you want to delete this video?',
+        text: "You will not be able to recover this video!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function () {
         var id = buttonId.replace('delete', '');
         var videoId = buttonId.replace('delete', 'video');
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
-                if (response['Result'] === 'Success'){
+                if (response['Result'] === 'Success') {
                     var video = document.getElementById(videoId);
                     video.parentNode.removeChild(video);
-                }
-                else {
-                    alert(response['Result']);
+                } else {
+                    swal({
+                        text: response['Result'],
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
             }
         };
         request.open('GET', 'index.php?controller=video&action=delete&videoId=' + id);
         request.send();
-    }
+    }).catch(swal.noop)
 }
 
 function showAddTo(buttonId, page) {
@@ -200,58 +215,95 @@ function hideAddTo(divId) {
 
 function createPlaylist(buttonId) {
     var videoId = buttonId.replace('create', '');
-    var playlistTitle = prompt("Please enter the new playlist's title:");
-    if (playlistTitle == "") {
-        alert("You can't leave an empty field!");
-    }
-    else if(playlistTitle != null){
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                var response = JSON.parse(this.responseText);
-                if (!response['Result']) {
-                    var playlistsContainer = document.getElementById('playlists');
-                    var containerContents = "";
-                    for (var i in response) {
-                        containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+    var playlistTitle = swal({
+        title: 'Please enter the new playlists title:',
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: 'Create',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function (title) {
+        if (title == '') {
+            swal({
+                text: "You can't leave an empty field!",
+                type: "warning",
+                confirmButtonColor: "rgb(92, 192, 220)"
+            });
+        } else {
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (!response['Result']) {
+                        var playlistsContainer = document.getElementById('playlists');
+                        var containerContents = "";
+                        for (var i in response) {
+                            containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
+                        }
+                        if (playlistsContainer) {
+                            playlistsContainer.innerHTML = containerContents;
+                        }
+                        swal({
+                            text: "Playlist created successfully! The video has been added in it.",
+                            type: "success",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
                     }
-                    if (playlistsContainer) {
-                        playlistsContainer.innerHTML = containerContents;
+                    else {
+                        swal({
+                            text: response['Result'],
+                            type: "info",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
                     }
-                    alert("Playlist created successfully. The video has been added in it.");
                 }
-                else {
-                    alert(response['Result']);
-                }
-            }
-        };
-        request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
-        request.send();
-    }
+            };
+            request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + title + '&videoID=' + videoId);
+            request.send();
+        }
+    }).catch(swal.noop)
 }
 
 function createPlaylistFromOther(buttonId) {
     var videoId = buttonId.replace('create', '');
-    var playlistTitle = prompt("Please enter the new playlist's title:");
-    if (playlistTitle == "") {
-        alert("You can't leave an empty field!");
-    }
-    else if(playlistTitle != null){
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                var response = JSON.parse(this.responseText);
-                if (!response['Result']) {
-                    alert("Playlist created successfully. The video has been added in it.");
+    var playlistTitle = swal({
+        title: 'Please enter the new playlists title:',
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: 'Create',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function (title) {
+        if (title == '') {
+            swal({
+                text: "You can't leave an empty field!",
+                type: "warning",
+                confirmButtonColor: "rgb(92, 192, 220)"
+            });
+        } else {
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (!response['Result']) {
+                        swal({
+                            text: "Playlist created successfully. The video has been added in it!",
+                            type: "success",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
+                } else {
+                        swal({
+                            text: response['Result'],
+                            type: "success",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
+                    }
                 }
-                else {
-                    alert(response['Result']);
-                }
-            }
-        };
-        request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + playlistTitle + '&videoID=' + videoId);
-        request.send();
-    }
+            };
+            request.open('GET', 'index.php?controller=playlist&action=createPlaylist&title=' + title + '&videoID=' + videoId);
+            request.send();
+        }
+    });
 }
 
 function insertVideo(btnId) {
@@ -269,10 +321,18 @@ function insertVideo(btnId) {
                     containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                 }
                 playlistsContainer.innerHTML = containerContents;
-                alert("Video successfully added!");
+                swal({
+                    text: "Video successfully added!",
+                    type: "success",
+                    confirmButtonColor: "rgb(92, 192, 220)"
+                });
             }
             else {
-                alert(response['Result']);
+                swal({
+                    text: response['Result'],
+                    type: "info",
+                    confirmButtonColor: "rgb(92, 192, 220)"
+                });
             }
         }
     };
@@ -289,10 +349,18 @@ function insertVideoFromOther(btnId) {
         if (this.readyState === 4 && this.status === 200) {
             var response = JSON.parse(this.responseText);
             if (!response['Result']) {
-                alert("Video successfully added!");
+                swal({
+                    text: "Video successfully added!",
+                    type: "success",
+                    confirmButtonColor: "rgb(92, 192, 220)"
+                });
             }
             else {
-                alert(response['Result']);
+                swal({
+                    text: response['Result'],
+                    type: "info",
+                    confirmButtonColor: "rgb(92, 192, 220)"
+                });
             }
         }
     };
@@ -320,27 +388,48 @@ function hidePlaylistButtons(playlistId) {
 function renamePlaylist(buttonId) {
     var playlistId = buttonId.replace('rename', '');
     var oldPlaylistTitle = document.getElementById("title" + playlistId).innerHTML;
-    var newPlaylistTitle = prompt("Enter a new title for this playlist:", oldPlaylistTitle);
-    if (newPlaylistTitle == "") {
-        alert("You cant leave an empty field!");
-    }
-    else if(newPlaylistTitle != null){
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                var response = JSON.parse(this.responseText);
-                if (response['Result'] === "Playlist successfully renamed!") {
-                    document.getElementById("title" + playlistId).innerHTML = newPlaylistTitle;
-                }
-                else {
-                    alert(response['Result']);
-                }
 
-            }
-        };
-        request.open('GET', 'index.php?controller=playlist&action=renamePlaylist&playlistID=' + playlistId + '&newTitle=' + newPlaylistTitle);
-        request.send();
-    }
+    var newPlaylistTitle = swal({
+        title: 'Please enter the new playlists title:',
+        input: 'text',
+        inputValue: oldPlaylistTitle,
+        showCancelButton: true,
+        confirmButtonText: 'Rename',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function (title) {
+        if (title == '') {
+            swal({
+                text: "You can't leave an empty field!",
+                type: "warning",
+                confirmButtonColor: "rgb(92, 192, 220)"
+            });
+        } else {
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response['Result'] === "Playlist successfully renamed!") {
+                        swal({
+                            text: "Playlist renamed successfully!",
+                            type: "success",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
+                        document.getElementById("title" + playlistId).innerHTML = title;
+                    } else {
+                        swal({
+                            text: response['Result'],
+                            type: "info",
+                            confirmButtonColor: "rgb(92, 192, 220)"
+                        });
+
+                    }
+                }
+            };
+            request.open('GET', 'index.php?controller=playlist&action=renamePlaylist&playlistID=' + playlistId + '&newTitle=' + title);
+            request.send();
+        }
+    }).catch(swal.noop);
 }
 
 function showRemoveVid(buttonId) {
@@ -367,7 +456,15 @@ function showRemoveVid(buttonId) {
 }
 
 function removeVideo(buttonId) {
-    if (confirm("Are you sure you want to remove this video from the playlist?")) {
+    swal({
+        title: 'Are you sure you want to remove this video from the playlist?',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Remove',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function () {
         var arrOfIds = buttonId.split("|");
         var videoId = arrOfIds[0];
         var playlistId = arrOfIds[1];
@@ -382,24 +479,40 @@ function removeVideo(buttonId) {
                         containerContents += "<div class='col-md-3 margin-top' id='playlist" + response[i]['id'] + "' onmouseenter='showPlaylistButtons(this.id)' onmouseleave='hidePlaylistButtons(this.id)'><a href='index.php?controller=video&action=watch&playlist-id=" + response[i]['id'] + "'> <img src='" + response[i]['thumbnailURL'] + "' class=\"img-rounded\" alt=\"\" width=\"100%\" height=\"auto\"> <h4 class='text-center text-muted' id='title" + response[i]['id'] + "'>" + response[i]['title'] + "</h4> </a> <button class='video-top-btn btn btn-info' id='rename" + response[i]['id'] + "' onclick='renamePlaylist(this.id)'>Rename</button><button class='video-middle-btn btn btn-info' id='deletePlaylist" + response[i]['id'] + "' onclick='deletePlaylist(this.id)'>Delete Playlist</button> <button class='video-bottom-btn btn btn-info' id='removeVid" + response[i]['id'] + "' onclick='showRemoveVid(this.id)'>Remove Video</button> <div class='video-bottom-div well-sm' id='removeField" + response[i]['id'] + "'> <p>Choose Video:</p> <div id='playlistButtonContainer" + response[i]['id'] + "'></div> </div> </div>";
                     }
                     playlistsContainer.innerHTML = containerContents;
-                    alert("Successfully removed video from playlist!");
+                    swal({
+                        text: "Successfully removed video from playlist!",
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
                 else if (response['Result'] === 'Playlist deleted!') {
                     var playlist = document.getElementById('playlist' + playlistId);
                     playlist.parentNode.removeChild(playlist);
                 }
                 else {
-                    alert(response['Result']);
+                    swal({
+                        text: response['Result'],
+                        type: "info",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
             }
         };
         request.open('GET', 'index.php?controller=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
         request.send();
-    }
+    }).catch(swal.noop);
 }
 
 function removeVideoInWatch(buttonId) {
-    if (confirm("Are you sure you want to remove this video from the playlist?")) {
+    swal({
+        title: 'Are you sure you want to remove this video from the playlist?',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Remove',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function () {
         var arrOfIds = buttonId.split("|");
         var playlistId = arrOfIds[0];
         var videoId = arrOfIds[1];
@@ -408,28 +521,47 @@ function removeVideoInWatch(buttonId) {
             if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
                 if (!response['Result']) {
-                    alert("Successfully removed video from playlist!");
+                    swal({
+                        text: "Successfully removed video from playlist!",
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                     var video = document.getElementById("video" + videoId);
                     video.parentNode.removeChild(video);
                 }
                 else if (response['Result'] === 'Playlist deleted!') {
-                    alert("Playlist deleted!");
+                    swal({
+                        text: "Playlist deleted!",
+                        type: "success"
+                    });
                     setTimeout(function () {
                         window.location.href = "index.php";
-                    }, 100);
+                    }, 1000);
                 }
                 else {
-                    alert(response['Result']);
+                    swal({
+                        text: response['Result'],
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
             }
         };
         request.open('GET', 'index.php?controller=playlist&action=removeVideo&playlistID=' + playlistId + '&videoID=' + videoId);
         request.send();
-    }
+    }).catch(swal.noop);
 }
 
 function deletePlaylist(buttonId) {
-    if (confirm("Are you sure you want to delete this playlist?")) {
+    swal({
+        title: 'Are you sure you want to delete this playlist?',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: 'rgb(92, 192, 220)',
+        showLoaderOnConfirm: true
+    }).then(function () {
         var id = buttonId.replace('deletePlaylist', '');
         var playlistId = buttonId.replace('deletePlaylist', 'playlist');
         var request = new XMLHttpRequest();
@@ -439,15 +571,24 @@ function deletePlaylist(buttonId) {
                 if (response['Result'] === 'Success'){
                     var playlist = document.getElementById(playlistId);
                     playlist.parentNode.removeChild(playlist);
+                    swal({
+                        text: 'Playlist deleted successfully!',
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
                 else {
-                    alert(response['Result']);
+                    swal({
+                        text: response['Result'],
+                        type: "success",
+                        confirmButtonColor: "rgb(92, 192, 220)"
+                    });
                 }
             }
         };
         request.open('GET', 'index.php?controller=playlist&action=deletePlaylist&playlistId=' + id);
         request.send();
-    }
+    }).catch(swal.noop);
 }
 
 function submitEditProfile() {

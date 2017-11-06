@@ -47,7 +47,7 @@ class PlaylistController extends BaseController
                     $result = $playlistDao->getNLatestByCreatorID($userID, 10);
                 }
                 else {
-                    $result = array("Result" => "Error! An Playlist with this title already exists!");
+                    $result = array("Result" => "Error! Playlist with this title already exists!");
                 }
 //                $result = array("Result" => "Playlist created successfully. The video has been added in it.");
             }
